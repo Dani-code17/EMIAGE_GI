@@ -1,0 +1,55 @@
+{% load static %}
+
+{% load static %}
+
+<!-- Cartographie -->
+<section class="py-16 px-6 bg-gradient-to-r from-dark to-gray-900">
+    <div class="max-w-6xl mx-auto text-center">
+        <h2 class="text-3xl font-display font-bold mb-4">Notre Cartographie</h2>
+        <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
+            Découvrez où nous sommes situés et explorez les lieux importants pour la communauté MIAGE-GI.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Base 1 -->
+            <div class="relative w-full h-96 rounded-lg overflow-hidden shadow-lg">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.4777065080357!2d-3.9886798000000003!3d5.3438065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc1eb7e0feb3189%3A0x6203db21d41ca515!2sAmphi%20IRMA%2C%20C%2051mosqu%C3%A9e%20IBn%20Baz%2C%20Abidjan!5e0!3m2!1sfr!2sci!4v1755336266494!5m2!1sfr!2sci" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+                <div class="absolute bottom-0 left-0 right-0 bg-dark/80 p-4">
+                    <p class="text-gray-300">Base 1 : Amphi IRMA, Abidjan</p>
+                </div>
+            </div>
+            
+            <!-- Base 2 -->
+            <div class="relative w-full h-96 rounded-lg overflow-hidden shadow-lg">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d990.9788010719931!2d-4.005000592843186!3d5.355481607335406!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc1eb6b8e2cb78b%3A0x142532c22db82f2e!2sGROUPE%20CESTIA-2EP!5e0!3m2!1sfr!2sci!4v1755336656410!5m2!1sfr!2sci" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+                <div class="absolute bottom-0 left-0 right-0 bg-dark/80 p-4">
+                    <p class="text-gray-300">Base 2 : Groupe Cestia 2EP</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+            <div class="p-4">
+                <h3 class="text-lg font-bold text-dark mb-2">E-MIAGE-GI</h3>
+                <p class="text-dark/80">Groupe-CESTIA 2EP</p>
+                <p class="text-dark/80">Riviera, Abidjan, Côte d'Ivoire</p>
+            </div>
+</script>
+<!-- Remplacez YOUR_API_KEY par votre clé API Google Maps -->
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+</script>

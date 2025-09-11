@@ -1,0 +1,85 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="pt-28 pb-16 px-6">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-4xl md:text-6xl font-display font-bold mb-8">Bibliothèque de Documents</h1>
+        
+        <!-- Filtres -->
+        <form method="get" class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label for="level" class="block text-sm font-medium text-gray-300 mb-2">Niveau</label>
+                <select name="level" id="level" class="w-full bg-dark text-gray-300 py-2 px-4 rounded-lg border border-gray-700">
+                    <option value="">Tous les niveaux</option>
+                    {% for value, label in levels %}
+                    <option value="{{ value }}" {% if value == selected_level %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div>
+                <label for="semester" class="block text-sm font-medium text-gray-300 mb-2">Semestre</label>
+                <select name="semester" id="semester" class="w-full bg-dark text-gray-300 py-2 px-4 rounded-lg border border-gray-700">
+                    <option value="">Tous les semestres</option>
+                    {% for value, label in semesters %}
+                    <option value="{{ value }}" {% if value == selected_semester %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div>
+                <label for="category" class="block text-sm font-medium text-gray-300 mb-2">Catégorie</label>
+                <select name="category" id="category" class="w-full bg-dark text-gray-300 py-2 px-4 rounded-lg border border-gray-700">
+                    <option value="">Toutes les catégories</option>
+                    {% for value, label in categories %}
+                    <option value="{{ value }}" {% if value == selected_category %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="md:col-span-3 bg-primary text-light font-bold py-3 px-6 rounded-full hover:bg-opacity-90 transition">
+                Filtrer
+            </button>
+        </form>
+        
+        <!-- Liste des documents -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for document in documents %}
+            <div class="glass-card rounded-2xl p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="font-display font-bold text-xl mb-2">{{ document.title }}</h3>
+                        <p class="text-gray-400 text-sm">{{ document.description }}</p>
+                    </div>
+                    <span class="bg-primary text-light text-xs font-bold px-3 py-1 rounded-full">
+                        {{ document.get_category_display }}
+                    </span>
+                </div>
+                
+                <div class="mt-4">
+                    <p class="text-sm text-gray-400">
+                        <span class="font-bold">Niveau:</span> {{ document.get_level_display }}
+                    </p>
+                    <p class="text-sm text-gray-400">
+                        <span class="font-bold">Semestre:</span> {{ document.get_semester_display }}
+                    </p>
+                </div>
+                
+                <div class="mt-6">
+                    <a href="{{ document.file.url }}" 
+                       class="inline-flex items-center justify-center bg-secondary text-light font-bold py-2 px-4 rounded-full hover:bg-opacity-90 transition">
+                        <i class="fas fa-download mr-2"></i>
+                        Télécharger
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center py-12">
+                <i class="fas fa-folder-open text-4xl text-gray-600 mb-4"></i>
+                <p class="text-gray-400">Aucun document trouvé avec ces critères.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% load static %}
+
+<!-- Navigation Bar -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-dark bg-opacity-90 backdrop-filter backdrop-blur-lg py-4 px-6 flex justify-between items-center border-b border-gray-800">
+    <div class="flex items-center space-x-8">
+        <a href="{% url 'core:home' %}" class="text-2xl font-display font-bold text-primary">E-<span class="text-secondary">MIAGE-GI</span></a>
+        <div class="hidden md:flex space-x-6 relative group">
+            <a href="{% url 'core:home' %}" class="text-gray-300 hover:text-primary transition">Accueil</a>
+            
+            <div class="relative">
+                <!-- Bouton Niveaux -->
+                <a href="{% url 'core:library' %}" class="text-gray-300 hover:text-primary transition flex items-center space-x-2">
+                    <span>Bibliothèque</span>
+                    <i class="fas fa-chevron-down text-sm"></i>
+                </a>
+            </div>
+            
+            <a href="#creatives" class="text-gray-300 hover:text-primary transition">Nos Activités</a>
+            <a href="#announcements" class="text-gray-300 hover:text-primary transition">Annonces</a>
+            <a href="#contacts" class="text-gray-300 hover:text-primary transition">Contacts</a>
+        </div>
+    </div>
+    
+    <div class="flex items-center space-x-4">
+        <div class="w-14 h-14 rounded-full bg-white flex items-center justify-center cursor-pointer overflow-hidden">
+            <img src="{% static 'core/images/3.png' %}" alt="Logo" class="w-full h-full object-cover">
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile Menu Button -->
+<button class="md:hidden fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary text-dark flex items-center justify-center shadow-xl">
+    <i class="fas fa-bars text-xl"></i>
+</button>
+
+<script>
+    // Gestion du menu déroulant
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.querySelector('.fa-bars').parentElement;
+        const navLinks = document.querySelector('nav .hidden.md\\:flex');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            // Implémenter la logique du menu mobile ici
+            navLinks.classList.toggle('hidden');
+        });
+    });
+</script>

@@ -1,0 +1,73 @@
+<!-- Section Catégories -->
+<section class="py-12 px-6 bg-glass">
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-display font-bold mb-12 text-center">Explorez Nos Différentes Catégories</h2>
+        
+        <!-- Sélection du niveau -->
+        <div class="mb-8 text-center">
+            <label for="niveau-select" class="text-gray-300 text-lg font-bold">Sélectionnez un niveau :</label>
+            <select id="niveau-select" class="bg-dark text-gray-300 py-2 px-4 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="licence1">Licence 1</option>
+                <option value="licence2">Licence 2</option>
+                <option value="licence3">Licence 3</option>
+                <option value="master1">Master 1</option>
+                <option value="master2">Master 2</option>
+            </select>
+        </div>
+
+        <!-- Sélection du semestre -->
+        <div class="mb-8 text-center">
+            <label for="semestre-select" class="text-gray-300 text-lg font-bold">Sélectionnez un semestre :</label>
+            <select id="semestre-select" class="bg-dark text-gray-300 py-2 px-4 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="semestre1">Semestre 1</option>
+                <option value="semestre2">Semestre 2</option>
+            </select>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <!-- Maquettes -->
+            <button class="glass-card rounded-2xl p-6 text-center group" onclick="loadData('maquettes')">
+                <div class="w-20 h-20 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition">
+                    <i class="fas fa-drafting-compass text-2xl text-light"></i>
+                </div>
+                <h3 class="font-display font-bold text-xl mb-2">Maquettes</h3>
+                <p class="text-gray-400 text-sm">Découvrez la maquette de votre année universitaire !</p>
+            </button>
+
+            <!-- Cours -->
+            <button class="glass-card rounded-2xl p-6 text-center group" onclick="loadData('cours')">
+                <div class="w-20 h-20 bg-gradient-to-r from-secondary to-accent rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition">
+                    <i class="fas fa-book text-2xl text-light"></i>
+                </div>
+                <h3 class="font-display font-bold text-xl mb-2">Cours</h3>
+                <p class="text-gray-400 text-sm">Ici vous trouverez vos différents cours !</p>
+            </button>
+
+            <!-- Travaux Dirigés & Pratiques -->
+            <button class="glass-card rounded-2xl p-6 text-center group" onclick="loadData('td_tp')">
+                <div class="w-20 h-20 bg-gradient-to-r from-accent to-primary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition">
+                    <i class="fas fa-tools text-2xl text-light"></i>
+                </div>
+                <h3 class="font-display font-bold text-xl mb-2">Travaux Dirigés & Pratiques</h3>
+                <p class="text-gray-400 text-sm">Découvrez ici les anciens sujets de TD & TP !</p>
+            </button>
+
+            <!-- Anciens Sujets -->
+            <button class="glass-card rounded-2xl p-6 text-center group" onclick="loadData('anciens_sujets')">
+                <div class="w-20 h-20 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition">
+                    <i class="fas fa-archive text-2xl text-light"></i>
+                </div>
+                <h3 class="font-display font-bold text-xl mb-2">Anciens Sujets</h3>
+                <p class="text-gray-400 text-sm">Quoi de mieux que de réviser avec les anciens sujets de devoirs et d'examens !</p>
+            </button>
+        </div>
+    </div>
+</section>
+
+<script>
+    function loadData(category) {
+        const niveau = document.getElementById('niveau-select').value;
+        const semestre = document.getElementById('semestre-select').value;
+        window.location.href = `/bibliotheque/?category=${category}&level=${niveau}&semester=${semestre}`;
+    }
+</script>

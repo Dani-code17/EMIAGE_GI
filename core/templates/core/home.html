@@ -1,0 +1,72 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}E-MIAGE-GI | Accueil{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="pt-28 pb-16 px-6" id="home">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="space-y-6">
+            <h4 class="text-secondary text-xl opacity-0 animate-fadeIn">Bienvenue dans</h4>
+            <h1 class="text-4xl md:text-6xl font-display font-bold opacity-0 animate-fadeIn delay-200">
+                E-MIAGE-GI <span class="text-primary" id="typed-text"></span>
+            </h1>
+            <p class="text-gray-400 text-lg opacity-0 animate-fadeIn delay-400">
+                Quand l'apprentissage rencontre la simplicité. Découvrez vos cours, TD, TP et anciens sujets, réunis dans un seul espace
+                et accessibles à tout moment. Apprenez, révisez et progressez, où que vous soyez.
+            </p>
+            <div class="flex space-x-4 opacity-0 animate-fadeIn delay-600">
+                <a href="#recipes" class="bg-primary text-light font-bold py-3 px-6 rounded-full hover:bg-opacity-90 transition">
+                    Vie Estudiantine
+                </a>
+                <a href="#creatives" class="bg-transparent text-light font-bold py-3 px-6 rounded-full border border-light hover:bg-light hover:text-dark transition">
+                    La JI-MIAGE
+                </a>
+            </div>
+        </div>
+        
+        <div class="relative opacity-0 animate-fadeIn delay-800">
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-secondary rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+            <img src="{% static 'core/images/1.jpg' %}" alt="Creative Food" class="relative z-10 rounded-2xl shadow-2xl w-full h-auto max-w-md mx-auto floating">
+        </div>
+    </div>
+</section>
+
+<!-- Section des catégories -->
+{% include 'core/includes/categories.html' %}
+
+<!-- Section Vie Estudiantine -->
+{% include 'core/includes/student_life.html' %}
+
+<!-- Section JI-MIAGE -->
+{% include 'core/includes/ji_miage.html' %}
+
+<!-- Section Annonces Rapides -->
+{% include 'core/includes/announcements.html' %}
+
+<!-- Section Annonces Vidéo -->
+{% include 'core/includes/video_announcements.html' %}
+
+<!-- Section Cartographie -->
+{% include 'core/includes/maps.html' %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Typed.js initialization
+    document.addEventListener('DOMContentLoaded', function() {
+        var typed = new Typed("#typed-text", {
+            strings: ["Éducation", "Tech", "Simplicité", "Accessibilité"],
+            typeSpeed: 60,
+            backSpeed: 45,
+            loop: true,
+            showCursor: true,
+            cursorChar: '|',
+        });
+    });
+
+    // Reste de vos scripts JavaScript ici
+</script>
+{% endblock %}

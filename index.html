@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>E-MIAGE-GI | La Platforme en ligne des Miagistes</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.10/typed.min.js"></script>
+
+    <script>
+
+        tailwind.config = {
+
+            theme: {
+
+                extend: {
+
+                    colors: {
+
+                        primary: '#FF6B6B',
+
+                        secondary: '#6C63FF',
+
+                        dark: '#1A1A2E',
+
+                        light: '#F5F5F7',
+
+                        glass: 'rgba(26, 26, 46, 0.7)',
+
+                        accent: '#4ADE80'
+
+                    },
+
+                    fontFamily: {
+
+                        sans: ['Poppins', 'sans-serif'],
+
+                        display: ['Montserrat', 'sans-serif'],
+
+                    },
+
+                    animation: {
+
+                        'float': 'float 6s ease-in-out infinite',
+
+                        'fadeIn': 'fadeIn 1s ease-in forwards',
+
+                        'fadeInUp': 'fadeInUp 1s ease-in forwards'
+
+                    },
+
+                    keyframes: {
+
+                        float: {
+
+                            '0%, 100%': { transform: 'translateY(0)' },
+
+                            '50%': { transform: 'translateY(-20px)' }
+
+                        },
+
+                        fadeIn: {
+
+                            '0%': { opacity: '0' },
+
+                            '100%': { opacity: '1' }
+
+                        },
+
+                        fadeInUp: {
+
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    </script>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+        
+
+        body {
+
+            background-color: #1A1A2E;
+
+            color: #F5F5F7;
+
+            min-height: 100vh;
+
+            overflow-x: hidden;
+
+        }
+
+        
+
+        .glass-card {
+
+            background: rgba(26, 26, 46, 0.7);
+
+            backdrop-filter: blur(10px);
+
+            -webkit-backdrop-filter: blur(10px);
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            transition: all 0.3s ease;
+
+        }
+
+        
+
+        .glass-card:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow: 0 15px 30px rgba(108, 99, 255, 0.2);
+
+        }
+
+        
+
+        .hero-overlay {
+
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+
+        }
+
+        
+
+        .floating {
+
+            animation: float 6s ease-in-out infinite;
+
+        }
+
+        
+
+        .delay-200 {
+
+            animation-delay: 0.2s;
+
+        }
+
+        
+
+        .delay-400 {
+
+            animation-delay: 0.4s;
+
+        }
+
+        
+
+        .delay-600 {
+
+            animation-delay: 0.6s;
+
+        }
+
+        
+
+        .delay-800 {
+
+            animation-delay: 0.8s;
+
+        }
+
+        
+
+        .skill-bar {
+
+            height: 10px;
+
+            background-color: rgba(255, 255, 255, 0.1);
+
+            border-radius: 5px;
+
+            overflow: hidden;
+
+        }
+
+        
+
+        .skill-progress {
+
+            height: 100%;
+
+            background-color: #6C63FF;
+
+            border-radius: 5px;
+
+            position: relative;
+
+            width: 0;
+
+            transition: width 1.5s ease-in-out;
+
+        }
+
+        
+
+        .typed-cursor {
+
+            color: #FF6B6B !important;
+
+            font-size: 3.8rem;
+
+            opacity: 1;
+
+            animation: blink 0.7s infinite;
+
+        }
+
+        
+
+        @keyframes blink { 
+
+            0% { opacity: 1; } 
+
+            50% { opacity: 0; } 
+
+            100% { opacity: 1; } 
+
+        }
+
+        
+
+        .scrollbar-hide::-webkit-scrollbar {
+
+            display: none;
+
+        }
+
+        .transition-transform {
+
+    transition: transform 0.2s ease-in-out;
+
+}
+
+    </style>
+
+</head>
+
+<body class="font-sans">
+
+    <!-- Navigation Bar -->
+
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-dark bg-opacity-90 backdrop-filter backdrop-blur-lg py-4 px-6 flex justify-between items-center border-b border-gray-800">
+
+        <div class="flex items-center space-x-8">
+
+            <a href="#" class="text-2xl font-display font-bold text-primary">E-<span class="text-secondary">MIAGE-GI</span></a>
+
+            <div class="hidden md:flex space-x-6 relative group">
+
+                <a href="#home" class="text-gray-300 hover:text-primary transition">Accueil</a>
+
+                <div class="relative">
+
+                    <!-- Bouton Niveaux -->
+
+                    <button id="dropdown-toggle" class="text-gray-300 hover:text-primary transition flex items-center space-x-2">
+
+                        <span>Niveaux</span>
+
+                        <i class="fas fa-chevron-down text-sm"></i>
+
+                    </button>
+
+                    <!-- Menu déroulant -->
+
+                    <div id="dropdown-menu" class="absolute left-0 mt-2 hidden bg-dark border border-gray-800 rounded-lg shadow-lg w-48">
+
+                        <a href="#" class="block w-full text-left px-4 py-2 text-gray-300 hover:bg-primary hover:text-light transition flex items-center space-x-2">
+
+                            <i class="fas fa-graduation-cap text-sm"></i>
+
+                            <span>Licence 1</span>
+
+                        </a>
+
+                        <a href="#" class="block w-full text-left px-4 py-2 text-gray-300 hover:bg-primary hover:text-light transition flex items-center space-x-2">
+
+                            <i class="fas fa-graduation-cap text-sm"></i>
+
+                            <span>Licence 2</span>
+
+                        </a>
+
+                        <a href="#" class="block w-full text-left px-4 py-2 text-gray-300 hover:bg-primary hover:text-light transition flex items-center space-x-2">
+
+                            <i class="fas fa-graduation-cap text-sm"></i>
+
+                            <span>Licence 3</span>
+
+                        </a>
+
+                        <a href="#" class="block w-full text-left px-4 py-2 text-gray-300 hover:bg-primary hover:text-light transition flex items-center space-x-2">
+
+                            <i class="fas fa-graduation-cap text-sm"></i>
+
+                            <span>Master 1</span>
+
+                        </a>
+
+                        <a href="#" class="block w-full text-left px-4 py-2 text-gray-300 hover:bg-primary hover:text-light transition flex items-center space-x-2">
+
+                            <i class="fas fa-graduation-cap text-sm"></i>
+
+                            <span>Master 2</span>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <a href="#creatives" class="text-gray-300 hover:text-primary transition">Nos Activités</a>
+
+                <a href="#stories" class="text-gray-300 hover:text-primary transition">Annonces</a>
+
+                <a href="#contact" class="text-gray-300 hover:text-primary transition">Contacts</a>
+
+            </div>
+
+        </div>
+
+        
+
+        <div class="flex items-center space-x-4">
+
+            
+
+            <div class="w-14 h-14 rounded-full bg-white flex items-center justify-center cursor-pointer overflow-hidden">
+
+                <img src="3.png" alt="Logo" class="w-full h-full object-cover">
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!-- Mobile Menu Button -->
+
+    <button class="md:hidden fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary text-dark flex items-center justify-center shadow-xl">
+
+        <i class="fas fa-bars text-xl"></i>
+
+    </button>
+
+    <!-- Hero Section -->
+
+    <section class="pt-28 pb-16 px-6" id="home">
+
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+
+            <div class="space-y-6">
+
+                <h4 class="text-secondary text-xl opacity-0 animate-fadeIn">Bienvenue dans</h4>
+
+                <h1 class="text-4xl md:text-6xl font-display font-bold opacity-0 animate-fadeIn delay-200">
+
+                    E-MIAGE-GI <span class="text-primary" id="typed-text"></span>
+
+                </h1>
+
+                <p class="text-gray-400 text-lg opacity-0 animate-fadeIn delay-400">
+
+                    Quand l’apprentissage rencontre la simplicité. Découvrez vos cours, TD, TP et anciens sujets, réunis dans un seul espace
+      et accessibles à tout moment. Apprenez, révisez et progressez, où que vous soyez.
+                </p>
+
+                <div class="flex space-x-4 opacity-0 animate-fadeIn delay-600">
+
+                    <a href="#recipes" class="bg-primary text-light font-bold py-3 px-6 rounded-full hover:bg-opacity-90 transition">
+
+                         Vie Estudiantine
+
+                    </a>
+
+                    <a href="#creatives" class="bg-transparent text-light font-bold py-3 px-6 rounded-full border border-light hover:bg-light hover:text-dark transition">
+
+                       La JI-MIAGE
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            
+
+            <div class="relative opacity-0 animate-fadeIn delay-800">
+
+                <div class="absolute -top-10 -left-10 w-32 h-32 bg-secondary rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+
+                <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+
+                <img src="1.jpg" 
+
+                     alt="Creative Food" class="relative z-10 rounded-2xl shadow-2xl w-full h-auto max-w-md mx-auto floating">
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Featured Categories -->
+
+    <section class="py-12 px-6 bg-glass">
+
+        <div class="max-w-6xl mx-auto">
+
+            <h2 class="text-3xl font-display font-bold mb-12 text-center">Explorez Nos Différentes Catégories</h2>
+
+            <!-- Sélection du niveau -->
+            <div class="mb-8 text-center">
+                <label for="niveau-select" class="text-gray-300 text-lg font-bold">Sélectionnez un niveau :</label>
+                <select id="niveau-select" class="bg-dark text-gray-300 py-2 px-4 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="licence1">Licence 1</option>
+                    <option value="licence2">Licence 2</option>
+                    <option value="licence3">Licence 3</option>
+                    <option value="master1">Master 1</option>
+                    <option value="master2">Master 2</option>
+                </select>
+            </div>
+
+            <!-- Sélection du semestre -->
+            <div class="mb-8 text-center">
+                <label for="semestre-select" class="text-gray-300 text-lg font-bold">Sélectionnez un semestre :</label>
+                <select id="semestre-select" class="bg-dark text-gray-300 py-2 px-4 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="semestre1">Semestre 1</option>
+                    <option value="semestre2">Semestre 2</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+                <!-- Maquettes -->
+
+                <button class="glass-card rounded-2xl p-6 text-center group" onclick="loadData('maquettes')">
+
+                    <div class="w-20 h-20 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition">
+
+                        <i class="fas fa-drafting-compass text-2xl text-light"></i>
+
+                    </div>
+
+                    <h3 class="font-display font-bold text-xl mb-2">Maquettes</h3>
+
+                    <p class="text-gray-400 text-sm">Découvrez la maquette de votre année universitaire !</p>
+
+                </button>
+
+                
+
+                <!-- Cours -->
+
+                <button class="glass-card rounded-2xl p-6 text-center group" onclick="loadData('cours')">
+
+                    <div class="w-20 h-20 bg-gradient-to-r from-secondary to-accent rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition">
+
+                        <i class="fas fa-book text-2xl text-light"></i>
+
+                    </div>
+
+                    <h3 class="font-display font-bold text-xl mb-2">Cours</h3>
+
+                    <p class="text-gray-400 text-sm">Ici vous trouverez vos différents cours !</p>
+
+                </button>
+
+                
+
+                <!-- Travaux Dirigés & Pratiques -->
+
+                <button class="glass-card rounded-2xl p-6 text-center group" onclick="loadData('td_tp')">
+
+                    <div class="w-20 h-20 bg-gradient-to-r from-accent to-primary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition">
+
+                        <i class="fas fa-tools text-2xl text-light"></i>
+
+                    </div>
+
+                    <h3 class="font-display font-bold text-xl mb-2">Travaux Dirigés & Pratiques</h3>
+
+                    <p class="text-gray-400 text-sm">Découvrez ici les anciens sujets de TD & TP !</p>
+
+                </button>
+
+                
+
+                <!-- Anciens Sujets -->
+
+                <button class="glass-card rounded-2xl p-6 text-center group" onclick="loadData('anciens_sujets')">
+
+                    <div class="w-20 h-20 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition">
+
+                        <i class="fas fa-archive text-2xl text-light"></i>
+
+                    </div>
+
+                    <h3 class="font-display font-bold text-xl mb-2">Anciens Sujets</h3>
+
+                    <p class="text-gray-400 text-sm">Quoi de mieux que de réviser avec les anciens sujets de devoirs et d'examens !</p>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Featured Recipes -->
+
+    <section class="py-12 px-6" id="recipes">
+
+        <div class="max-w-6xl mx-auto">
+
+            <div class="flex justify-between items-center mb-8">
+
+                <h2 class="text-3xl font-display font-bold">Vie Estudiantine</h2>
+
+                <a href="https://www.instagram.com/jimiage2025?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" class="text-primary hover:underline" target="_blank">Voir Plus</a>
+
+            </div>
+
+            
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Recipe 1 -->
+
+                <div class="glass-card rounded-2xl overflow-hidden">
+
+                    <div class="relative h-64">
+
+                        <img src="6.jpg" alt="Rainbow Salad" class="w-full h-full object-cover">
+
+                        <div class="absolute top-4 right-4 bg-glass rounded-full w-10 h-10 flex items-center justify-center cursor-pointer" onclick="toggleHeart(this)">
+
+                            <i class="far fa-heart text-primary transition-transform transform"></i>
+
+                        </div>
+
+                        <div class="absolute bottom-4 left-4 bg-primary text-light text-xs font-bold px-3 py-1 rounded-full">
+
+                            4.9 <i class="fas fa-star ml-1"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div class="p-6">
+
+                        <h3 class="font-display font-bold text-xl mb-2">Le MIAGE Projet Challenge</h3>
+
+                        <p class="text-gray-400 text-sm mb-4">Le Miage Project Challenge 2025 est une opportunité pour les étudiants (L1, L2, M1, M2…) de former une équipe mixte et de présenter un projet innovant sur un thème libre. Ce projet va s’axer sur le développement d’une application mobile, web ou bureau en vue de résoudre la problématique de votre projet.</p>
+
+                        <div class="flex justify-between items-center">
+
+                            <div class="flex items-center space-x-4 text-sm">
+
+                                <span class="flex items-center">
+
+                                    <i class="fas fa-clock text-secondary mr-1"></i> 
+
+                                </span>
+
+                                <span class="flex items-center">
+
+                                    <i class="fas fa-fire text-secondary mr-1"></i> 
+
+                                </span>
+
+                            </div>
+
+                            <button class="text-primary hover:text-secondary transition">
+
+                                <a href="https://www.instagram.com/p/DGY6LFjOjs-/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" rel="noopener noreferrer"><i class="fas fa-arrow-right"></i></a>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                
+
+                <!-- Recipe 2 -->
+
+                <div class="glass-card rounded-2xl overflow-hidden">
+
+                    <div class="relative h-64">
+
+                        <img src="4.jpg"
+
+                             alt="Pasta" class="w-full h-full object-cover">
+
+                        <div class="absolute top-4 right-4 bg-glass rounded-full w-10 h-10 flex items-center justify-center cursor-pointer">
+
+                            <i class="far fa-heart text-primary"></i>
+
+                        </div>
+
+                        <div class="absolute bottom-4 left-4 bg-primary text-light text-xs font-bold px-3 py-1 rounded-full">
+
+                            4.7 <i class="fas fa-star ml-1"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div class="p-6">
+
+                        <h3 class="font-display font-bold text-xl mb-2">The MIAGE Fashion Week </h3>
+
+                        <p class="text-gray-400 text-sm mb-4">La mode est un langage qui crée un lien entre le passé, le présent et le futur. Soyez prêt à écrire votre propre histoire avec notre FASHION WEEK </p>
+
+                        <div class="flex justify-between items-center">
+
+                            <div class="flex items-center space-x-4 text-sm">
+
+                                <span class="flex items-center">
+
+                                    <i class="fas fa-clock text-secondary mr-1"></i> 
+
+                                </span>
+
+                                <span class="flex items-center">
+
+                                    <i class="fas fa-fire text-secondary mr-1"></i> 
+
+                                </span>
+
+                            </div>
+
+                            <button class="text-primary hover:text-secondary transition">
+
+                               <a href="https://www.instagram.com/p/DGI8Pfnts8h/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" rel="noopener noreferrer"><i class="fas fa-arrow-right"></i></a>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                
+
+                <!-- Recipe 3 -->
+
+                <div class="glass-card rounded-2xl overflow-hidden">
+
+                    <div class="relative h-64">
+
+                        <img src="5.jpg"
+
+                             alt="Dessert" class="w-full h-full object-cover">
+
+                        <div class="absolute top-4 right-4 bg-glass rounded-full w-10 h-10 flex items-center justify-center cursor-pointer">
+
+                            <i class="fas fa-heart text-red-500"></i>
+
+                        </div>
+
+                        <div class="absolute bottom-4 left-4 bg-primary text-light text-xs font-bold px-3 py-1 rounded-full">
+
+                            4.8 <i class="fas fa-star ml-1"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div class="p-6">
+
+                        <h3 class="font-display font-bold text-xl mb-2">#NOVEMBREBLEU</h3>
+
+                        <p class="text-gray-400 text-sm mb-4">MIAGE se mobilise avec force et détermination dans ce combat contre le cancer de la prostate. Et ce n’est pas tout... Restez à l’écoute, car ce mois de novembre vous réserve des surprises exceptionnelles qui feront vibrer notre communauté MIAGE ! 🤫✨</p>
+
+                        <div class="flex justify-between items-center">
+
+                            <div class="flex items-center space-x-4 text-sm">
+
+                                <span class="flex items-center">
+
+                                    <i class="fas fa-clock text-secondary mr-1"></i>
+
+                                </span>
+
+                                <span class="flex items-center">
+
+                                    <i class="fas fa-fire text-secondary mr-1"></i> 
+
+                                </span>
+
+                            </div>
+
+                            <button class="text-primary hover:text-secondary transition">
+
+                                <a href="https://www.instagram.com/p/DCFT-jwCPUk/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==" target="_blank" rel="noopener noreferrer"><i class="fas fa-arrow-right"></i></a>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Creative Spotlight -->
+
+    <section class="py-12 px-6 bg-glass" id="creatives">
+
+        <div class="max-w-6xl mx-auto">
+
+            <h2 class="text-3xl font-display font-bold mb-12 text-center">La JI-MIAGE</h2>
+
+            
+
+            <div class="glass-card rounded-2xl overflow-hidden md:flex">
+
+                <div class="md:w-1/3 relative">
+
+                    <img src="8.jpg"
+
+                         alt="Creative Chef" class="w-full h-full object-cover">
+
+                </div>
+
+                <div class="md:w-2/3 p-8">
+
+                    <div class="flex justify-between items-start mb-6">
+
+                        <div>
+
+                            <h3 class="font-display font-bold text-2xl">La Journée d'Intégration</h3>
+
+                            <p class="text-secondary font-medium">L’intégration : la meilleure addition à ta vie étudiante !</p>
+
+                        </div>
+
+                        <!-- Bouton Follow -->
+
+                        <button class="bg-primary text-light font-bold py-2 px-6 rounded-full hover:bg-opacity-90 transition">
+
+                            <a href=https://photos.app.goo.gl/xijgvPBvXaEPwvG46 target="_blank" rel="noopener noreferrer">Voir Catalogue</a>
+
+                        </button>
+
+                    </div>
+
+                    
+
+                    <p class="text-gray-300 mb-6">
+
+                        🚀 Panel, Conférence, Débat, Miage Project et encore d’autres surprises ! Nous avons le plaisir de vous annoncer officiellement la date et le lieu de la JOURNÉE D’INTÉGRATION 2025.
+                    </p>
+
+                    
+
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+
+                        <div class="bg-dark rounded-lg p-3 text-center">
+
+                            <p class="text-primary font-bold text-xl">125+</p>
+
+                            <p class="text-xs text-gray-400">Etudiants</p>
+
+                        </div>
+
+                        <div class="bg-dark rounded-lg p-3 text-center">
+
+                            <p class="text-primary font-bold text-xl">500+</p>
+
+                            <p class="text-xs text-gray-400">Followers</p>
+
+                        </div>
+
+                        <div class="bg-dark rounded-lg p-3 text-center">
+
+                            <p class="text-primary font-bold text-xl">10+</p>
+
+                            <p class="text-xs text-gray-400">Existence</p>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <div>
+
+                        <h4 class="font-display font-bold mb-3">Aperçu</h4>
+
+                        <div class="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+
+                            <img src="12.jpg"
+
+                                 alt="Work 1" class="w-20 h-20 rounded-lg object-cover">
+
+                            <img src="10.jpg"
+
+                                 alt="Work 2" class="w-20 h-20 rounded-lg object-cover">
+
+                            <img src="11.jpg"
+
+                                 alt="Work 3" class="w-20 h-20 rounded-lg object-cover">
+
+                            <img src="13.jpg"
+
+                                 alt="Work 4" class="w-20 h-20 rounded-lg object-cover">
+                            <img src="9.jpg"
+
+                                 alt="Work 5" class="w-20 h-20 rounded-lg object-cover">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Video Annonces -->
+
+    <section class="py-12 px-6" id="stories">
+
+        <div class="max-w-6xl mx-auto">
+
+            <div class="flex justify-between items-center mb-8">
+
+                <h2 class="text-3xl font-display font-bold">Les Annonces</h2>
+
+                <a href="#" class="text-primary hover:underline">Voir tout</a>
+
+            </div>
+
+            <!-- Carousel -->
+            <div id="carousel" class="relative overflow-hidden">
+                <div id="carousel-items" class="flex transition-transform duration-500">
+                    <!-- Vidéo 1 -->
+                    <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/fC2iLHDpvd4?si=dO8KUBlgbs40FmiR')">
+                        <div class="relative">
+                            <img src="7.jpg" alt="Video thumbnail" class="w-full h-48 object-cover">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <button class="bg-primary bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition">
+                                    <i class="fas fa-play text-2xl text-light"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-4 left-4 bg-dark bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
+                                1:51
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-display font-bold text-xl mb-2">ANNONCE OFFICIELLE DE LA JOURNÉE D’INTÉGRATION 2025</h3>
+
+                            <p class="text-gray-400 mb-4">📢 ANNONCE OFFICIELLE – JOURNÉE D’INTÉGRATION MIAGE 2025 🎉.</p>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <!-- Vidéo 2 -->
+
+                    <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/r-ITA2OFiVA')">
+
+                        <div class="relative">
+
+                            <img src="16.png" alt="Video thumbnail" class="w-full h-48 object-cover">
+
+                            <div class="absolute inset-0 flex items-center justify-center">
+
+                                <button class="bg-primary bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition">
+
+                                    <i class="fas fa-play text-2xl text-light"></i>
+
+                                </button>
+
+                            </div>
+
+                            <div class="absolute bottom-4 left-4 bg-dark bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
+
+                                0:25
+
+                            </div>
+
+                        </div>
+
+                        <div class="p-6">
+
+                            <h3 class="font-display font-bold text-xl mb-2">LANCEMENT DE LA MINI JOURNÉE SPORTIVE 2025</h3>
+
+                            <p class="text-gray-400 mb-4">🏀⚽♟ LA mini Journée Sportive des MIAGistes : ce samedi 18 janvier 2024 à Génie 2000, venez briller au basket, au football ou aux jeux de société ! Que vous soyez athlète ou stratégie, fun et compétition seront au rendez-vous.
+
+Qui dominera sur les terrains ou autour des plateaux ? *C'est la L3 qui va tout rafler !*😏🔥</p>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <!-- Vidéo 3 -->
+
+                    <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/TBXKFJC3lhc?si=YsLwbcC7ZCSLhagF')">
+
+                        <div class="relative">
+
+                            <img src="14.png" alt="Video thumbnail" class="w-full h-48 object-cover">
+
+                            <div class="absolute inset-0 flex items-center justify-center">
+
+                                <button class="bg-primary bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition">
+
+                                    <i class="fas fa-play text-2xl text-light"></i>
+
+                                </button>
+
+                            </div>
+
+                            <div class="absolute bottom-4 left-4 bg-dark bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
+
+                                2:28
+
+                            </div>
+
+                        </div>
+
+                        <div class="p-6">
+
+                            <h3 class="font-display font-bold text-xl mb-2">#OCTOBREROSE</h3>
+
+                            <p class="text-gray-400 mb-4">Qui dit Octobre Rose dit Sensibilisation contre le cancer du sein. Dans un monde où tout va trop vite, nous oublions souvent ce qui compte vraiment. La vie est précieuse. La santé est précieuse. Et chaque sourire, chaque moment de bien-être partagé l'est encore plus. Ce vendredi 25 octobre, portons tous un accessoire ou des vêtements en rose 🩷pour soutenir la lutte contre le cancer du sein. #miage #octobrerose🎀 #miagerose.</p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Vidéo 4 -->
+                    <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/TzpkThGAZNU?si=SbWOaIO2c8i56X9e')">
+                        <div class="relative">
+                            <img src="15.jpg" alt="Video thumbnail" class="w-full h-48 object-cover">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <button class="bg-primary bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition">
+                                    <i class="fas fa-play text-2xl text-light"></i>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-4 left-4 bg-dark bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
+                                0:53
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-display font-bold text-xl mb-2">TOUS EN NOIR & BLANC MIAGISTE</h3>
+                            <p class="text-gray-400 mb-4">Bonsoir à tous, pour célébrer ce début de mois en finesse, en élégance et pour un futur projet, le nouveau comité d'organisation de la journée d'intégration 2025 vous propose un thème « corbeau » c'est à dire que le Jeudi 03, habillez vous de manière responsable en noir, blanc ou encore noir blanc et défilez dans les couloirs de Cestia.🥳.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contrôles du carousel -->
+
+                <div class="absolute top-1/2 left-0 right-0 transform -translate-y-1/2 flex justify-between px-4">
+
+                    <button id="prev-btn" class="bg-primary bg-opacity-90 rounded-full w-10 h-10 flex items-center justify-center hover:scale-110 transition">
+
+                        <i class="fas fa-chevron-left text-white"></i>
+
+                    </button>
+
+                    <button id="next-btn" class="bg-primary bg-opacity-90 rounded-full w-10 h-10 flex items-center justify-center hover:scale-110 transition">
+
+                        <i class="fas fa-chevron-right text-white"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Modal pour lire la vidéo -->
+
+    <div id="video-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+
+        <div class="relative w-full max-w-4xl">
+
+            <button class="absolute top-4 right-4 text-white text-2xl" onclick="closeVideo()">&times;</button>
+
+            <iframe id="video-frame" class="w-full h-96" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+        </div>
+
+    </div>
+
+   
+
+    <!-- Cartographie -->
+    <section class="py-16 px-6 bg-gradient-to-r from-dark to-gray-900">
+        <div class="max-w-6xl mx-auto text-center">
+            <h2 class="text-3xl font-display font-bold mb-4">Notre Cartographie</h2>
+            <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
+                Découvrez où nous sommes situés et explorez les lieux importants pour la communauté MIAGE-GI.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Base 1 -->
+                <div class="relative w-full h-96 rounded-lg overflow-hidden shadow-lg">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.4777065080357!2d-3.9886798000000003!3d5.3438065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc1eb7e0feb3189%3A0x6203db21d41ca515!2sAmphi%20IRMA%2C%20C%2051mosqu%C3%A9e%20IBn%20Baz%2C%20Abidjan!5e0!3m2!1sfr!2sci!4v1755336266494!5m2!1sfr!2sci" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                    <p class="text-gray-300 mt-4">Base 1 : Amphi IRMA, Abidjan</p>
+                </div>
+                <!-- Base 2 -->
+                <div class="relative w-full h-96 rounded-lg overflow-hidden shadow-lg">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d990.9788010719931!2d-4.005000592843186!3d5.355481607335406!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc1eb6b8e2cb78b%3A0x142532c22db82f2e!2sGROUPE%20CESTIA-2EP!5e0!3m2!1sfr!2sci!4v1755336656410!5m2!1sfr!2sci"" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                    <p class="text-gray-300 mt-4">Base 2 : Groupe Cestia 2EP</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+
+    <footer class="py-12 px-6 border-t border-gray-800" id="contact">
+
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+
+            <div>
+
+                <h3 class="text-xl font-display font-bold text-primary mb-4">E-</E-><span class="text-secondary">MIAGE-GI</span></h3>
+
+                <p class="text-gray-400 text-sm mb-4">
+
+                    Quand l’apprentissage rencontre la simplicité. Découvrez vos cours, TD, TP et anciens sujets, réunis dans un seul espace et accessibles à tout moment.
+
+                </p>
+
+                <div class="flex space-x-4">
+
+                    <a href="https://www.instagram.com/jimiage2025?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="text-gray-400 hover:text-primary transition"><i class="fab fa-instagram"></i></a>
+
+                    <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-pinterest"></i></a>
+
+                    <a href="http://www.youtube.com/@JI-MIAGE" target="_blank" class="text-gray-400 hover:text-primary transition"><i class="fab fa-youtube"></i></a>
+
+                    <a href="#" class="text-gray-400 hover:text-primary transition"><i class="fab fa-tiktok"></i></a>
+
+                </div>
+
+            </div>
+
+            
+
+            <div>
+
+                <h4 class="font-display font-bold mb-4">Explorez</h4>
+
+                <ul class="space-y-2">
+
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition text-sm">Nos Activités</a></li>
+
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition text-sm">Vie Estudiantine</a></li>
+
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition text-sm">JI-MIAGE</a></li>
+
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition text-sm">Annonces</a></li>
+
+                </ul>
+
+            </div>
+
+            
+
+            <div>
+
+                <h4 class="font-display font-bold mb-4">Resources</h4>
+
+                <ul class="space-y-2">
+
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition text-sm">Blog</a></li>
+
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition text-sm">Réseaux sociaux</a></li>
+
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition text-sm">Médiathèques</a></li>
+
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition text-sm">MIAGE en bref</a></li>
+
+                </ul>
+
+            </div>
+
+            
+
+            <div>
+
+                <h4 class="font-display font-bold mb-4">Contacts</h4>
+
+                <ul class="space-y-2">
+
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition text-sm">Bonjour@novaminds.com</a></li>
+
+                    <li><a href="https://fr.wikipedia.org/wiki/Master_de_m%C3%A9thodes_informatiques_appliqu%C3%A9es_%C3%A0_la_gestion_des_entreprises" target="_blank" class="text-gray-400 hover:text-primary transition text-sm"> A propos de la filière</a></li>
+
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition text-sm">Qui sommes nous ?</a></li>
+
+                    <li><a href="#" class="text-gray-400 hover:text-primary transition text-sm">A propos de Nova Minds</a></li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+        
+
+        <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
+
+            <p>© 2025 Nova Minds Hub. All rights reserved.</p>
+
+        </div>
+
+    </footer>
+
+    <script>
+
+        // Typed.js initialization
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            var typed = new Typed("#typed-text", {
+
+                strings: ["Éducation", "Tech", "Simplicité", "Accessibilité"],
+
+                typeSpeed: 60,
+
+                backSpeed: 45,
+
+                loop: true,
+
+                showCursor: true,
+
+                cursorChar: '|',
+
+            });
+
+            
+
+            // Animate skill bars when scrolled into view
+
+            const skillBars = document.querySelectorAll('.skill-progress');
+
+            const observer = new IntersectionObserver((entries) => {
+
+                entries.forEach(entry => {
+
+                    if (entry.isIntersecting) {
+
+                        const width = entry.target.parentElement.previousElementSibling.querySelector('span:last-child').textContent;
+
+                        entry.target.style.width = width;
+
+                        observer.unobserve(entry.target);
+
+                    }
+
+                });
+
+            }, { threshold: 0.2 });
+
+            
+
+            skillBars.forEach(bar => {
+
+                observer.observe(bar);
+
+            });
+            
+
+            // Mobile menu toggle
+
+            const mobileMenuBtn = document.querySelector('.fa-bars').parentElement;
+
+            const navLinks = document.querySelector('nav .hidden.md\\:flex');
+
+            
+
+            mobileMenuBtn.addEventListener('click', function() {
+
+                alert('Mobile menu would open here in a full implementation');
+
+            });
+
+            
+
+            // Scroll to top button
+
+            const scrollTopBtn = document.createElement('div');
+
+            scrollTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+
+            scrollTopBtn.className = 'fixed bottom-6 right-6 z-50 w-12 h-12 bg-primary text-light rounded-full flex items-center justify-center cursor-pointer opacity-0 invisible transition-all duration-300';
+
+            document.body.appendChild(scrollTopBtn);
+
+            
+
+            window.addEventListener('scroll', () => {
+
+                if (window.pageYOffset > 300) {
+
+                    scrollTopBtn.classList.remove('opacity-0', 'invisible');
+
+                    scrollTopBtn.classList.add('opacity-100', 'visible');
+
+                } else {
+
+                    scrollTopBtn.classList.remove('opacity-100', 'visible');
+
+                    scrollTopBtn.classList.add('opacity-0', 'invisible');
+
+                }
+
+            });
+
+            
+
+            scrollTopBtn.addEventListener('click', () => {
+
+                window.scrollTo({
+
+                    top: 0,
+
+                    behavior: 'smooth'
+
+                });
+
+            });
+
+        });
+
+
+
+        // Gestion du menu déroulant
+
+        const dropdownToggle = document.getElementById('dropdown-toggle');
+
+        const dropdownMenu = document.getElementById('dropdown-menu');
+
+        
+
+        dropdownToggle.addEventListener('click', () => {
+
+            // Toggle l'affichage du menu
+
+            dropdownMenu.classList.toggle('hidden');
+
+        });
+
+        
+
+        // Fermer le menu si on clique en dehors
+
+        document.addEventListener('click', (event) => {
+
+            if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+
+                dropdownMenu.classList.add('hidden');
+
+            }
+
+        });
+
+    </script>
+
+    <script>
+        // Fonction pour charger les données en fonction de la catégorie, du niveau et du semestre sélectionnés
+        function loadData(category) {
+            const niveau = document.getElementById('niveau-select').value; // Récupère le niveau sélectionné
+            const semestre = document.getElementById('semestre-select').value; // Récupère le semestre sélectionné
+
+            if (category === 'maquettes') {
+                // La maquette est indépendante du semestre
+                alert(`Chargement des données pour la catégorie "${category}" et le niveau "${niveau}"`);
+            } else {
+                // Les autres catégories dépendent du semestre
+                alert(`Chargement des données pour la catégorie "${category}", le niveau "${niveau}" et le semestre "${semestre}"`);
+            }
+
+            // Exemple : Vous pouvez remplacer cette alerte par une requête AJAX ou une redirection
+            // fetch(`/api/data?category=${category}&niveau=${niveau}&semestre=${semestre}`)
+            //     .then(response => response.json())
+            //     .then data => {
+            //         console.log(data);
+            //         // Affichez ou traitez les données ici
+            //     })
+            //     .catch(error => console.error('Erreur lors du chargement des données :', error));
+        }
+
+        // Fonction pour ouvrir la vidéo dans une boîte modale
+        function openVideo(videoUrl) {
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('video-frame');
+            iframe.src = videoUrl; // Définir l'URL de la vidéo
+            modal.classList.remove('hidden'); // Afficher la boîte modale
+        }
+
+        // Fonction pour fermer la boîte modale
+        function closeVideo() {
+            const modal = document.getElementById('video-modal');
+            const iframe = document.getElementById('video-frame');
+            iframe.src = ''; // Réinitialiser l'URL de la vidéo
+            modal.classList.add('hidden'); // Masquer la boîte modale
+        }
+
+        function toggleHeart(element) {
+            const icon = element.querySelector('i');
+            if (icon.classList.contains('far')) {
+                // Activer le cœur
+                icon.classList.remove('far');
+                icon.classList.add('fas', 'text-red-500');
+                icon.style.transform = 'scale(1.3)'; // Animation de mise à l'échelle
+                setTimeout(() => {
+                    icon.style.transform = 'scale(1)'; // Retour à la taille normale
+                }, 200);
+            } else {
+                // Désactiver le cœur
+                icon.classList.remove('fas', 'text-red-500');
+                icon.classList.add('far', 'text-primary');
+            }
+        }
+    </script>
+    <script>
+        const carousel = document.getElementById('carousel-items');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        let currentIndex = 0;
+
+        function slideCarousel(index) {
+            const items = document.querySelectorAll('#carousel-items > div');
+            const totalItems = items.length;
+
+            // Calculer la largeur d'un élément
+            const itemWidth = items[0].offsetWidth;
+
+            // Mettre à jour l'index
+            currentIndex = (index + totalItems) % totalItems;
+
+            // Appliquer la transformation pour défiler
+            carousel.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+        }
+
+        // Défilement automatique toutes les 5 secondes
+        setInterval(() => slideCarousel(currentIndex + 1), 5000);
+
+        // Bouton Précédent
+        prevBtn.addEventListener('click', () => slideCarousel(currentIndex - 1));
+
+        // Bouton Suivant
+        nextBtn.addEventListener('click', () => slideCarousel(currentIndex + 1));
+    </script>
+</body>
+
+</html>

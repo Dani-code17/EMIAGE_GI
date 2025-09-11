@@ -1,0 +1,80 @@
+{% load static %}
+
+<!-- Footer -->
+<footer class="bg-dark py-12 mt-auto" id="contacts">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- About Section -->
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold text-primary">E-MIAGE-GI</h3>
+                <p class="text-light/80">Plateforme d'apprentissage en ligne dédiée aux étudiants de la MIAGE.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-light hover:text-primary transition-colors">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="text-light hover:text-primary transition-colors">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-light hover:text-primary transition-colors">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="text-light hover:text-primary transition-colors">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold text-primary">Liens Rapides</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'core:home' %}" class="text-light/80 hover:text-primary transition-colors">Accueil</a></li>
+                    <li><a href="#" class="text-light/80 hover:text-primary transition-colors">À Propos</a></li>
+                    <li><a href="#" class="text-light/80 hover:text-primary transition-colors">Cours</a></li>
+                    <li><a href="{% url 'core:library' %}" class="text-light/80 hover:text-primary transition-colors">Bibliothèque</a></li>
+                </ul>
+            </div>
+
+            <!-- Resources -->
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold text-primary">Ressources</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-light/80 hover:text-primary transition-colors">FAQ</a></li>
+                    <li><a href="#" class="text-light/80 hover:text-primary transition-colors">Support</a></li>
+                    <li><a href="#" class="text-light/80 hover:text-primary transition-colors">Documentation</a></li>
+                    <li><a href="#" class="text-light/80 hover:text-primary transition-colors">Blog</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold text-primary">Contact</h3>
+                <ul class="space-y-2">
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-map-marker-alt text-primary"></i>
+                        <span class="text-light/80">Universsité Felix Houphouet-Boigny Cocody,Abidjan</span>
+                    </li>
+                    <li class="flex flex-col space-y-2">
+                        <i class="fas fa-user-tie text-primary mb-2"></i>
+                        <div class="flex flex-col">
+                            <span class="text-light/80 font-semibold">Doualy Bi Daniel</span>
+                            <span class="text-primary text-sm mb-1">Chef de projet</span>
+                            <span class="text-light/80">+225 0161344297</span>
+                        </div>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <i class="fas fa-envelope text-primary"></i>
+                        <span class="text-light/80">contact@emiage-gi.ci</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+          <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
+
+            <p>© 2025 Nova Minds Hub. All rights reserved.</p>
+
+        </div>
+    </div>
+</footer>

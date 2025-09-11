@@ -1,0 +1,54 @@
+{% load static %}
+<!-- Creative Spotlight -->
+<section class="py-12 px-6 bg-glass" id="creatives">
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-display font-bold mb-12 text-center">La JI-MIAGE</h2>
+        
+        <div class="glass-card rounded-2xl overflow-hidden md:flex">
+            <div class="md:w-1/3 relative">
+                <img src="{% static 'core/images/8.jpg' %}" alt="Creative Chef" class="w-full h-full object-cover">
+            </div>
+            <div class="md:w-2/3 p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h3 class="font-display font-bold text-2xl">La Journée d'Intégration</h3>
+                        <p class="text-secondary font-medium">L'intégration : la meilleure addition à ta vie étudiante !</p>
+                    </div>
+                    <button class="bg-primary text-light font-bold py-2 px-6 rounded-full hover:bg-opacity-90 transition">
+                        <a href="https://photos.app.goo.gl/xijgvPBvXaEPwvG46" target="_blank" rel="noopener noreferrer">Voir Catalogue</a>
+                    </button>
+                </div>
+                
+                <p class="text-gray-300 mb-6">
+                    🚀 Panel, Conférence, Débat, Miage Project et encore d'autres surprises ! Nous avons le plaisir de vous annoncer officiellement la date et le lieu de la JOURNÉE D'INTÉGRATION 2025.
+                </p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-dark rounded-lg p-3 text-center">
+                        <p class="text-primary font-bold text-xl">125+</p>
+                        <p class="text-xs text-gray-400">Etudiants</p>
+                    </div>
+                    <div class="bg-dark rounded-lg p-3 text-center">
+                        <p class="text-primary font-bold text-xl">500+</p>
+                        <p class="text-xs text-gray-400">Followers</p>
+                    </div>
+                    <div class="bg-dark rounded-lg p-3 text-center">
+                        <p class="text-primary font-bold text-xl">10+</p>
+                        <p class="text-xs text-gray-400">Existence</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-display font-bold mb-3">Aperçu</h4>
+                    <div class="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+                        <img src="{% static 'core/images/12.jpg' %}" alt="Work 1" class="w-20 h-20 rounded-lg object-cover">
+                        <img src="{% static 'core/images/10.jpg' %}" alt="Work 2" class="w-20 h-20 rounded-lg object-cover">
+                        <img src="{% static 'core/images/11.jpg' %}" alt="Work 3" class="w-20 h-20 rounded-lg object-cover">
+                        <img src="{% static 'core/images/13.jpg' %}" alt="Work 4" class="w-20 h-20 rounded-lg object-cover">
+                        <img src="{% static 'core/images/9.jpg' %}" alt="Work 5" class="w-20 h-20 rounded-lg object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
