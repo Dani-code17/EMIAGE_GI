@@ -1,0 +1,6 @@
+<form method="get" action="" class="mb-6 flex justify-center">
+    <input type="text" name="q" value="{{ request.GET.q|default_if_none:'' }}" placeholder="Recherche (mots séparés par des espaces)" class="bg-dark text-gray-300 py-2 px-4 rounded-l-lg border border-gray-700 w-2/3 focus:outline-none focus:ring-2 focus:ring-primary">
+    <input type="hidden" name="semestre" value="{{ request.GET.semestre|default:'s1' }}">
+    <input type="hidden" name="category" value="{{ request.GET.category|default_if_none:'' }}">
+    <button type="submit" class="bg-primary text-light px-4 rounded-r-lg">Rechercher</button>
+</form>
