@@ -1,0 +1,100 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}E-MIAGE-GI | Licence 3 | {{ category|default:"Documents" }}{% endblock %}
+
+{% block content %}
+<section class="pt-28 pb-16 px-6 bg-glass">
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-display font-bold mb-12 text-center">
+            Licence 3 MIAGE - 
+            {% if semestre == 's1' %}Semestre 1
+            {% elif semestre == 's2' %}Semestre 2
+            {% else %}Sélectionnez un semestre
+            {% endif %}
+            {% if category %}
+                - {{ category|title }}
+            {% endif %}
+        </h2>
+        
+        <!-- Sélection du semestre -->
+        <div class="mb-8 text-center">
+            <label for="semestre-select" class="text-gray-300 text-lg font-bold">Sélectionnez un semestre :</label>
+            <select id="semestre-select" class="bg-dark text-gray-300 py-2 px-4 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary" onchange="changeSemestre(this.value)">
+                <option value="s1" {% if semestre == 's1' %}selected{% endif %}>Semestre 1</option>
+                <option value="s2" {% if semestre == 's2' %}selected{% endif %}>Semestre 2</option>
+            </select>
+        </div>
+
+    <!-- Search form -->
+    {% include 'core/includes/search_form.html' %}
+
+    <!-- Navigation des catégories -->
+        <div class="mb-8 flex justify-center space-x-4">
+            <a href="?semestre={{ semestre }}&category=maquettes" 
+               class="px-4 py-2 rounded-lg {% if category == 'maquettes' %}bg-primary text-white{% else %}bg-dark text-gray-300{% endif %} hover:bg-primary hover:text-white transition">
+                Maquettes
+            </a>
+            <a href="?semestre={{ semestre }}&category=cours" 
+               class="px-4 py-2 rounded-lg {% if category == 'cours' %}bg-primary text-white{% else %}bg-dark text-gray-300{% endif %} hover:bg-primary hover:text-white transition">
+                Cours
+            </a>
+            <a href="?semestre={{ semestre }}&category=td_tp" 
+               class="px-4 py-2 rounded-lg {% if category == 'td_tp' %}bg-primary text-white{% else %}bg-dark text-gray-300{% endif %} hover:bg-primary hover:text-white transition">
+                TD & TP
+            </a>
+            <a href="?semestre={{ semestre }}&category=sujets" 
+               class="px-4 py-2 rounded-lg {% if category == 'sujets' %}bg-primary text-white{% else %}bg-dark text-gray-300{% endif %} hover:bg-primary hover:text-white transition">
+                Anciens Sujets
+            </a>
+        </div>
+
+        <!-- Contenu -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% if documents %}
+                {% for doc in documents %}
+                    <div class="glass-card p-6 rounded-xl">
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0">
+                                {% if doc.category == 'COURS' %}
+                                    <i class="fas fa-book text-2xl text-primary"></i>
+                                {% elif doc.category == 'TD_TP' %}
+                                    <i class="fas fa-tools text-2xl text-secondary"></i>
+                                {% elif doc.category == 'MAQUETTES' %}
+                                    <i class="fas fa-drafting-compass text-2xl text-accent"></i>
+                                {% else %}
+                                    <i class="fas fa-file-alt text-2xl text-gray-400"></i>
+                                {% endif %}
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold mb-2">{{ doc.title }}</h3>
+                                <a href="{{ doc.file.url }}" class="text-primary hover:text-secondary transition" target="_blank">
+                                    Télécharger <i class="fas fa-download ml-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-span-full text-center text-gray-400">
+                        <i class="fas fa-folder-open text-4xl mb-4"></i>
+                        <p>Aucun document disponible pour cette catégorie.</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-span-full text-center text-gray-400">
+                    <i class="fas fa-hand-point-up text-4xl mb-4"></i>
+                    <p>Veuillez sélectionner une catégorie ci-dessus.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<script>
+    function changeSemestre(semestre) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('semestre', semestre);
+        window.location.href = `?${urlParams.toString()}`;
+    }
+</script>
+{% endblock %}
