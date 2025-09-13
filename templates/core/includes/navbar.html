@@ -1,8 +1,6 @@
 {% load static %}
 <!-- Navigation Bar -->
-<nav class="fixed top-0 left-0 right-0 z-[999] bg-dark bg-opacity-90 backdrop-filter backdrop-blur-lg py-4 px-6 flex justify-between items-center border-b border-gray-800" style="background-image: url('{% static "core/images/1.jpg" %}'); background-size: cover; background-position: center;">
-    <!-- overlay to keep text readable -->
-    <div class="absolute inset-0 bg-black bg-opacity-60 pointer-events-none"></div>
+<nav class="fixed top-0 left-0 right-0 z-[999] bg-dark bg-opacity-90 backdrop-filter backdrop-blur-lg py-4 px-6 flex justify-between items-center border-b border-gray-800">
     <div class="flex items-center space-x-8 relative">
         <a href="{% url 'core:home' %}" class="text-2xl font-display font-bold text-primary">E-<span class="text-secondary">MIAGE-GI</span></a>
         <div class="hidden md:flex space-x-6 relative group">
