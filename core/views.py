@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.http import HttpResponse
 from .models import Document
 from django.db.models import Q
 import re
@@ -173,3 +174,9 @@ def about(request):
 def bibliotheque_index(request):
     """Simple index page for the médiathèques listing all niveaux."""
     return render(request, 'core/bibliotheque_index.html')
+
+
+def meta_test(request):
+    """Return a minimal HTML page containing the google-site-verification meta tag for deployment verification."""
+    html = '''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="google-site-verification" content="TS4KVTjig14AFA58XmJOZuasZ-HgvjrIqso9pt1cEeo" /><title>Meta Test</title></head><body>Meta test page</body></html>'''
+    return HttpResponse(html)

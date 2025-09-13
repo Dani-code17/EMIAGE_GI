@@ -13,4 +13,5 @@ urlpatterns = [
     path('coming-soon/', views.coming_soon, name='coming_soon'),
     path('about/', views.about, name='about'),
     path('bibliotheque/', views.bibliotheque_index, name='bibliotheque_index'),
+    path('meta-test/', views.meta_test, name='meta_test'),
 ]
