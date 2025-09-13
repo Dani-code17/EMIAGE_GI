@@ -5,13 +5,18 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="pt-28 pb-16 px-6" id="home">
+<section class="pt-28 pb-16 px-6 bg-glass" id="home">
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <div class="space-y-6">
             <h4 class="text-secondary text-xl opacity-0 animate-fadeIn">Bienvenue dans</h4>
-            <h1 class="text-4xl md:text-6xl font-display font-bold opacity-0 animate-fadeIn delay-200">
-                E-MIAGE-GI <span class="text-primary" id="typed-text"></span>
-            </h1>
+            <div class="relative">
+                <h1 class="text-4xl md:text-6xl font-display font-bold opacity-0 animate-fadeIn delay-200 flex items-center gap-2">
+                    E-MIAGE-GI
+                    <div class="h-[1.2em] overflow-hidden inline-flex items-center" style="min-width:120px;margin-left:0.15em;">
+                        <span id="typed-text" class="text-primary whitespace-nowrap text-lg md:text-xl"></span>
+                    </div>
+                </h1>
+            </div>
             <p class="text-gray-400 text-lg opacity-0 animate-fadeIn delay-400">
                 Quand l'apprentissage rencontre la simplicité. Découvrez vos cours, TD, TP et anciens sujets, réunis dans un seul espace
                 et accessibles à tout moment. Apprenez, révisez et progressez, où que vous soyez.
@@ -27,8 +32,8 @@
         </div>
         
         <div class="relative opacity-0 animate-fadeIn delay-800">
-            <div class="absolute -top-10 -left-10 w-32 h-32 bg-secondary rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-secondary rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="pointer-events:none;"></div>
+            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="pointer-events:none;"></div>
             <img src="{% static 'core/images/1.jpg' %}" alt="Creative Food" class="relative z-10 rounded-2xl shadow-2xl w-full h-auto max-w-md mx-auto floating">
         </div>
     </div>

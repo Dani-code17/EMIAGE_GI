@@ -1,7 +1,5 @@
 {% load static %}
 
-{% load static %}
-
 <!-- Video Annonces -->
 <section class="py-12 px-6" id="announcements">
     <div class="max-w-6xl mx-auto">
@@ -10,30 +8,11 @@
             <a href="#" class="text-primary hover:underline">Voir tout</a>
         </div>
 
-        <!-- Carousel -->
-        <div id="carousel" class="relative overflow-hidden">
+    <!-- Carousel: mirrored from index.html -->
+    <div id="carousel" class="relative overflow-hidden">
             <div id="carousel-items" class="flex transition-transform duration-500">
                 <!-- Vidéo 1 -->
-                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/r-ITA2OFiVA')">
-                    <div class="relative">
-                        <img src="{% static 'core/images/16.png' %}" alt="Video thumbnail" class="w-full h-48 object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <button class="bg-primary bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition">
-                                <i class="fas fa-play text-2xl text-light"></i>
-                            </button>
-                        </div>
-                        <div class="absolute bottom-4 left-4 bg-dark bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
-                            1:23
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-display font-bold text-xl mb-2">LA COUPE MIAGE ⚽️🏀</h3>
-                        <p class="text-gray-400 mb-4">La coupe MIAGE est de retour ! 🔥 Face à face pour 6 matchs de football, avec les finales le 4 novembre! 🤔 Qui dominera sur les terrains ou autour des plateaux ? C'est la L3 qui va tout rafler ! 😏🔥</p>
-                    </div>
-                </div>
-
-                <!-- Vidéo 2 -->
-                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://youtu.be/fC2iLHDpvd4')">
+                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/fC2iLHDpvd4?si=dO8KUBlgbs40FmiR')">
                     <div class="relative">
                         <img src="{% static 'core/images/7.jpg' %}" alt="Video thumbnail" class="w-full h-48 object-cover">
                         <div class="absolute inset-0 flex items-center justify-center">
@@ -46,40 +25,120 @@
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="font-display font-bold text-xl mb-2">ANNONCE OFFICIELLE DE LA JOURNÉE D'INTEGRATION 2025</h3>
-                        <p class="text-gray-400 mb-4">ANNONCE OFFICIELLE - JOURNÉE D'INTEGRATION MIAGE 2025</p>
+                        <h3 class="font-display font-bold text-xl mb-2">ANNONCE OFFICIELLE DE LA JOURNÉE D’INTÉGRATION 2025</h3>
+                        <p class="text-gray-400 mb-4">📢 ANNONCE OFFICIELLE – JOURNÉE D’INTÉGRATION MIAGE 2025 🎉.</p>
                     </div>
                 </div>
 
-                <!-- Vidéo 3 -->
-                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/TBXKFJC3lhc?si=YsLwbcC7ZCSLhagF')">
+                <!-- Vidéo 2 -->
+                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/r-ITA2OFiVA')">
+
                     <div class="relative">
+
+                        <img src="{% static 'core/images/16.png' %}" alt="Video thumbnail" class="w-full h-48 object-cover">
+
+                        <div class="absolute inset-0 flex items-center justify-center">
+
+                            <button class="bg-primary bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition">
+
+                                <i class="fas fa-play text-2xl text-light"></i>
+
+                            </button>
+
+                        </div>
+
+                        <div class="absolute bottom-4 left-4 bg-dark bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
+
+                            0:25
+
+                        </div>
+
+                    </div>
+
+                    <div class="p-6">
+
+                        <h3 class="font-display font-bold text-xl mb-2">LANCEMENT DE LA MINI JOURNÉE SPORTIVE 2025</h3>
+
+                        <p class="text-gray-400 mb-4">🏀⚽♟ LA mini Journée Sportive des MIAGistes : ce samedi 18 janvier 2024 à Génie 2000, venez briller au basket, au football ou aux jeux de société ! Que vous soyez athlète ou stratégie, fun et compétition seront au rendez-vous.</p>
+
+                    </div>
+
+                </div>
+
+                <!-- Vidéo 3 -->
+
+                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/TBXKFJC3lhc?si=YsLwbcC7ZCSLhagF')">
+
+                    <div class="relative">
+
                         <img src="{% static 'core/images/14.png' %}" alt="Video thumbnail" class="w-full h-48 object-cover">
+
+                        <div class="absolute inset-0 flex items-center justify-center">
+
+                            <button class="bg-primary bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition">
+
+                                <i class="fas fa-play text-2xl text-light"></i>
+
+                            </button>
+
+                        </div>
+
+                        <div class="absolute bottom-4 left-4 bg-dark bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
+
+                            2:28
+
+                        </div>
+
+                    </div>
+
+                    <div class="p-6">
+
+                        <h3 class="font-display font-bold text-xl mb-2">#OCTOBREROSE</h3>
+
+                        <p class="text-gray-400 mb-4">Qui dit Octobre Rose dit Sensibilisation contre le cancer du sein. Dans un monde où tout va trop vite, nous oublions souvent ce qui compte vraiment. La vie est précieuse. La santé est précieuse. Et chaque sourire, chaque moment de bien-être partagé l'est encore plus.</p>
+
+                    </div>
+
+                </div>
+
+                <!-- Vidéo 4 -->
+                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/TzpkThGAZNU?si=SbWOaIO2c8i56X9e')">
+                    <div class="relative">
+                        <img src="{% static 'core/images/15.jpg' %}" alt="Video thumbnail" class="w-full h-48 object-cover">
                         <div class="absolute inset-0 flex items-center justify-center">
                             <button class="bg-primary bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition">
                                 <i class="fas fa-play text-2xl text-light"></i>
                             </button>
                         </div>
                         <div class="absolute bottom-4 left-4 bg-dark bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
-                            2:28
+                            0:53
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="font-display font-bold text-xl mb-2">#OCTOBREROSE</h3>
-                        <p class="text-gray-400 mb-4">Qui dit Octobre Rose dit Sensibilisation contre le cancer du sein. Dans un monde où tout va trop vite, nous oublions souvent ce qui compte vraiment. La vie est précieuse. La santé est précieuse. Et chaque sourire, chaque moment de bien-être partagé l'est encore plus.</p>
+                        <h3 class="font-display font-bold text-xl mb-2">TOUS EN NOIR & BLANC MIAGISTE</h3>
+                        <p class="text-gray-400 mb-4">Bonsoir à tous, pour célébrer ce début de mois en finesse, en élégance et pour un futur projet, le nouveau comité d'organisation de la journée d'intégration 2025 vous propose un thème « corbeau » c'est à dire que le Jeudi 03, habillez vous de manière responsable en noir, blanc ou encore noir blanc et défilez dans les couloirs de Cestia.🥳.</p>
                     </div>
                 </div>
             </div>
 
             <!-- Contrôles du carousel -->
+
             <div class="absolute top-1/2 left-0 right-0 transform -translate-y-1/2 flex justify-between px-4">
+
                 <button id="prev-btn" class="bg-primary bg-opacity-90 rounded-full w-10 h-10 flex items-center justify-center hover:scale-110 transition">
+
                     <i class="fas fa-chevron-left text-white"></i>
+
                 </button>
+
                 <button id="next-btn" class="bg-primary bg-opacity-90 rounded-full w-10 h-10 flex items-center justify-center hover:scale-110 transition">
+
                     <i class="fas fa-chevron-right text-white"></i>
+
                 </button>
+
             </div>
+
         </div>
     </div>
 </section>

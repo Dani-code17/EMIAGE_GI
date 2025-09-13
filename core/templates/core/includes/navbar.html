@@ -1,18 +1,26 @@
 {% load static %}
-
 <!-- Navigation Bar -->
-<nav class="fixed top-0 left-0 right-0 z-50 bg-dark bg-opacity-90 backdrop-filter backdrop-blur-lg py-4 px-6 flex justify-between items-center border-b border-gray-800">
+<nav class="fixed top-0 left-0 right-0 z-[999] bg-dark bg-opacity-90 backdrop-filter backdrop-blur-lg py-4 px-6 flex justify-between items-center border-b border-gray-800">
     <div class="flex items-center space-x-8">
         <a href="{% url 'core:home' %}" class="text-2xl font-display font-bold text-primary">E-<span class="text-secondary">MIAGE-GI</span></a>
         <div class="hidden md:flex space-x-6 relative group">
             <a href="{% url 'core:home' %}" class="text-gray-300 hover:text-primary transition">Accueil</a>
             
-            <div class="relative">
-                <!-- Bouton Niveaux -->
-                <a href="{% url 'core:library' %}" class="text-gray-300 hover:text-primary transition flex items-center space-x-2">
-                    <span>Bibliothèque</span>
-                    <i class="fas fa-chevron-down text-sm"></i>
-                </a>
+            <!-- Menu déroulant des niveaux -->
+            <div class="relative inline-block" id="niveaux-dropdown">
+                <button id="niveaux-btn" type="button" aria-expanded="false" class="text-gray-300 hover:text-primary transition flex items-center space-x-1">
+                    <span>Niveaux</span>
+                    <i class="fas fa-chevron-down text-sm" id="niveaux-chevron"></i>
+                </button>
+                <div id="niveaux-menu" class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-dark bg-opacity-95 backdrop-blur-lg transition-all duration-200 z-[1000] hidden">
+                    <div class="py-1">
+                        <a href="{% url 'core:niveau_l1' %}" class="block px-4 py-2 text-gray-300 hover:text-primary transition">Licence 1</a>
+                        <a href="{% url 'core:niveau_l2' %}" class="block px-4 py-2 text-gray-300 hover:text-primary transition">Licence 2</a>
+                        <a href="{% url 'core:niveau_l3' %}" class="block px-4 py-2 text-gray-300 hover:text-primary transition">Licence 3</a>
+                        <a href="{% url 'core:niveau_m1' %}" class="block px-4 py-2 text-gray-300 hover:text-primary transition">Master 1</a>
+                        <a href="{% url 'core:niveau_m2' %}" class="block px-4 py-2 text-gray-300 hover:text-primary transition">Master 2</a>
+                    </div>
+                </div>
             </div>
             
             <a href="#creatives" class="text-gray-300 hover:text-primary transition">Nos Activités</a>
@@ -28,20 +36,122 @@
     </div>
 </nav>
 
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="md:hidden fixed bottom-0 left-0 right-0 bg-dark bg-opacity-95 backdrop-blur-lg transform translate-y-full transition-transform duration-300 z-40 rounded-t-3xl shadow-xl">
+    <div class="p-6 space-y-4">
+        <a href="{% url 'core:home' %}" class="block text-lg text-gray-300 hover:text-primary transition py-2">
+            <i class="fas fa-home mr-3 w-6"></i> Accueil
+        </a>
+        
+        <!-- Menu déroulant mobile des niveaux -->
+        <div class="relative">
+            <button onclick="toggleMobileSubmenu()" class="w-full text-left text-lg text-gray-300 hover:text-primary transition py-2">
+                <i class="fas fa-graduation-cap mr-3 w-6"></i> Niveaux
+                <i class="fas fa-chevron-down float-right mt-1 transition-transform" id="niveau-chevron"></i>
+            </button>
+            <div id="mobile-niveaux-submenu" class="hidden pl-9 mt-2 space-y-2">
+                <a href="{% url 'core:niveau_l1' %}" class="block text-gray-300 hover:text-primary transition py-1">Licence 1</a>
+                <a href="{% url 'core:niveau_l2' %}" class="block text-gray-300 hover:text-primary transition py-1">Licence 2</a>
+                <a href="{% url 'core:niveau_l3' %}" class="block text-gray-300 hover:text-primary transition py-1">Licence 3</a>
+                <a href="{% url 'core:niveau_m1' %}" class="block text-gray-300 hover:text-primary transition py-1">Master 1</a>
+                <a href="{% url 'core:niveau_m2' %}" class="block text-gray-300 hover:text-primary transition py-1">Master 2</a>
+            </div>
+        </div>
+        
+        <a href="#creatives" class="block text-lg text-gray-300 hover:text-primary transition py-2">
+            <i class="fas fa-users mr-3 w-6"></i> Nos Activités
+        </a>
+        <a href="#announcements" class="block text-lg text-gray-300 hover:text-primary transition py-2">
+            <i class="fas fa-bullhorn mr-3 w-6"></i> Annonces
+        </a>
+        <a href="#contacts" class="block text-lg text-gray-300 hover:text-primary transition py-2">
+            <i class="fas fa-envelope mr-3 w-6"></i> Contacts
+        </a>
+    </div>
+</div>
+
 <!-- Mobile Menu Button -->
-<button class="md:hidden fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary text-dark flex items-center justify-center shadow-xl">
-    <i class="fas fa-bars text-xl"></i>
+<button class="md:hidden fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary text-dark flex items-center justify-center shadow-xl" id="mobile-menu-btn">
+    <i class="fas fa-bars text-xl transition-transform duration-300"></i>
 </button>
 
 <script>
-    // Gestion du menu déroulant
+    // Clean, single initialization script for navbar behavior
     document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuBtn = document.querySelector('.fa-bars').parentElement;
-        const navLinks = document.querySelector('nav .hidden.md\\:flex');
-        
-        mobileMenuBtn.addEventListener('click', function() {
-            // Implémenter la logique du menu mobile ici
-            navLinks.classList.toggle('hidden');
-        });
+        initializeDesktopMenu();
+        initializeMobileMenu();
     });
+
+    function initializeDesktopMenu() {
+        const niveauxBtn = document.getElementById('niveaux-btn');
+        const niveauxMenu = document.getElementById('niveaux-menu');
+        const niveauxDropdown = document.getElementById('niveaux-dropdown');
+        const niveauxChevron = document.getElementById('niveaux-chevron');
+
+        if (!niveauxBtn || !niveauxMenu) return;
+
+        niveauxBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isHidden = niveauxMenu.classList.contains('hidden');
+            if (isHidden) {
+                niveauxMenu.classList.remove('hidden');
+                if (niveauxChevron) niveauxChevron.style.transform = 'rotate(180deg)';
+                niveauxBtn.setAttribute('aria-expanded', 'true');
+            } else {
+                niveauxMenu.classList.add('hidden');
+                if (niveauxChevron) niveauxChevron.style.transform = 'rotate(0)';
+                niveauxBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Close on outside click
+        document.addEventListener('click', function(ev) {
+            if (!niveauxDropdown.contains(ev.target)) {
+                if (!niveauxMenu.classList.contains('hidden')) {
+                    niveauxMenu.classList.add('hidden');
+                    if (niveauxChevron) niveauxChevron.style.transform = 'rotate(0)';
+                    niveauxBtn.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+
+        // Close with Escape key
+        document.addEventListener('keydown', function(ev) {
+            if (ev.key === 'Escape') {
+                if (!niveauxMenu.classList.contains('hidden')) {
+                    niveauxMenu.classList.add('hidden');
+                    if (niveauxChevron) niveauxChevron.style.transform = 'rotate(0)';
+                    niveauxBtn.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+    }
+
+    function initializeMobileMenu() {
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const menuIcon = mobileMenuBtn ? mobileMenuBtn.querySelector('i') : null;
+        let isMenuOpen = false;
+
+        if (!mobileMenuBtn || !mobileMenu) return;
+
+        mobileMenuBtn.addEventListener('click', function() {
+            isMenuOpen = !isMenuOpen;
+            mobileMenu.style.transform = isMenuOpen ? 'translateY(0)' : 'translateY(100%)';
+            if (menuIcon) {
+                menuIcon.style.transform = isMenuOpen ? 'rotate(180deg)' : 'rotate(0)';
+                menuIcon.className = isMenuOpen ? 'fas fa-times text-xl' : 'fas fa-bars text-xl';
+            }
+        });
+    }
+
+    // Mobile submenu toggle (used inline via onclick)
+    function toggleMobileSubmenu() {
+        const submenu = document.getElementById('mobile-niveaux-submenu');
+        const chevron = document.getElementById('niveau-chevron');
+        if (!submenu) return;
+        const isHidden = submenu.classList.contains('hidden');
+        submenu.classList.toggle('hidden');
+        if (chevron) chevron.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0)';
+    }
 </script>

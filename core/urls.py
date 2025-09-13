@@ -5,6 +5,12 @@ app_name = 'core'
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('bibliotheque/', views.library, name='library'),
-    path('bibliotheque/categorie/<str:category>/', views.library_category, name='library_category'),
+    path('bibliotheque/l1/', views.niveau_l1, name='niveau_l1'),
+    path('bibliotheque/l2/', views.niveau_l2, name='niveau_l2'),
+    path('bibliotheque/l3/', views.niveau_l3, name='niveau_l3'),
+    path('bibliotheque/m1/', views.niveau_m1, name='niveau_m1'),
+    path('bibliotheque/m2/', views.niveau_m2, name='niveau_m2'),
+    path('coming-soon/', views.coming_soon, name='coming_soon'),
+    path('about/', views.about, name='about'),
+    path('bibliotheque/', views.bibliotheque_index, name='bibliotheque_index'),
 ]

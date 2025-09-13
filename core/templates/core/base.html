@@ -62,6 +62,17 @@
             overflow-x: hidden;
         }
         
+        /* Style pour s'assurer que la navbar est toujours au-dessus */
+        .site-navbar {
+            position: relative;
+            z-index: 9999 !important;
+        }
+        
+        /* Style pour s'assurer que le menu déroulant est visible */
+        .site-navbar .dropdown-menu {
+            z-index: 10000 !important;
+        }
+        
         .glass-card {
             background: rgba(26, 26, 46, 0.7);
             backdrop-filter: blur(10px);

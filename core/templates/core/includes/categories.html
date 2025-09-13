@@ -1,17 +1,18 @@
 <!-- Section Catégories -->
-<section class="py-12 px-6 bg-glass">
+<section id="categories" class="py-12 px-6 bg-glass">
     <div class="max-w-6xl mx-auto">
-        <h2 class="text-3xl font-display font-bold mb-12 text-center">Explorez Nos Différentes Catégories</h2>
+        <h2 class="text-3xl font-display font-bold mb-12 text-center">Bibliothèque Miage</h2>
         
         <!-- Sélection du niveau -->
         <div class="mb-8 text-center">
-            <label for="niveau-select" class="text-gray-300 text-lg font-bold">Sélectionnez un niveau :</label>
-            <select id="niveau-select" class="bg-dark text-gray-300 py-2 px-4 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
-                <option value="licence1">Licence 1</option>
-                <option value="licence2">Licence 2</option>
-                <option value="licence3">Licence 3</option>
-                <option value="master1">Master 1</option>
-                <option value="master2">Master 2</option>
+            <label for="niveau-select" class="text-gray-300 text-lg font-bold">Sélectionnez votre niveau :</label>
+            <select id="niveau-select" class="bg-dark text-gray-300 py-2 px-4 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary" onchange="updateSemesters()">
+                <option value="">Choisir un niveau...</option>
+                <option value="l1">Licence 1</option>
+                <option value="l2">Licence 2</option>
+                <option value="l3">Licence 3</option>
+                <option value="m1">Master 1</option>
+                <option value="m2">Master 2</option>
             </select>
         </div>
 
@@ -19,8 +20,9 @@
         <div class="mb-8 text-center">
             <label for="semestre-select" class="text-gray-300 text-lg font-bold">Sélectionnez un semestre :</label>
             <select id="semestre-select" class="bg-dark text-gray-300 py-2 px-4 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary">
-                <option value="semestre1">Semestre 1</option>
-                <option value="semestre2">Semestre 2</option>
+                <option value="">Choisir un semestre...</option>
+                <option value="s1">Semestre 1</option>
+                <option value="s2">Semestre 2</option>
             </select>
         </div>
 
@@ -65,9 +67,53 @@
 </section>
 
 <script>
+    function updateSemesters() {
+        const niveau = document.getElementById('niveau-select').value;
+        const semestreSelect = document.getElementById('semestre-select');
+        semestreSelect.innerHTML = '<option value="">Choisir un semestre...</option>';
+        
+        if (niveau) {
+            // Uniformiser l'affichage : toujours Semestre 1 / Semestre 2 pour l'utilisateur
+            // Les vues côté serveur font la conversion vers S3..S10 selon le niveau.
+            let semestres = [{value: 's1', label: 'Semestre 1'}, {value: 's2', label: 'Semestre 2'}];
+            
+            semestres.forEach(sem => {
+                const option = document.createElement('option');
+                option.value = sem.value;
+                option.textContent = sem.label;
+                semestreSelect.appendChild(option);
+            });
+        }
+    }
+
     function loadData(category) {
         const niveau = document.getElementById('niveau-select').value;
         const semestre = document.getElementById('semestre-select').value;
-        window.location.href = `/bibliotheque/?category=${category}&level=${niveau}&semester=${semestre}`;
+        
+        if (!niveau || !semestre) {
+            alert('Veuillez sélectionner un niveau et un semestre');
+            return;
+        }
+        
+        const params = new URLSearchParams({
+            semestre: semestre,
+            category: category
+        });
+        window.location.href = `/bibliotheque/${niveau}/?${params.toString()}`;
     }
+
+    function scrollToCategories() {
+        const categoriesSection = document.getElementById('categories');
+        if (categoriesSection) {
+            categoriesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    // Mettre à jour les semestres au chargement de la page si un niveau est déjà sélectionné
+    document.addEventListener('DOMContentLoaded', function() {
+        const niveau = document.getElementById('niveau-select').value;
+        if (niveau) {
+            updateSemesters();
+        }
+    });
 </script>
