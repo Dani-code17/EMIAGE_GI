@@ -180,3 +180,21 @@ def meta_test(request):
     """Return a minimal HTML page containing the google-site-verification meta tag for deployment verification."""
     html = '''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="google-site-verification" content="TS4KVTjig14AFA58XmJOZuasZ-HgvjrIqso9pt1cEeo" /><title>Meta Test</title></head><body>Meta test page</body></html>'''
     return HttpResponse(html)
+
+
+def sitemap_xml(request):
+    """Serve the repository sitemap.xml file from project root so /sitemap.xml works in production.
+
+    This keeps deployment resilient when the hosting static root isn't configured to serve the repo root file.
+    """
+    import os
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sitemap_path = os.path.join(base_dir, '..', 'sitemap.xml')
+    # Normalize path
+    sitemap_path = os.path.normpath(sitemap_path)
+    try:
+        with open(sitemap_path, 'rb') as f:
+            data = f.read()
+        return HttpResponse(data, content_type='application/xml')
+    except FileNotFoundError:
+        return HttpResponse(status=404)
