@@ -187,14 +187,14 @@ def sitemap_xml(request):
 
     This keeps deployment resilient when the hosting static root isn't configured to serve the repo root file.
     """
+    from django.conf import settings
     import os
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    sitemap_path = os.path.join(base_dir, '..', 'sitemap.xml')
-    # Normalize path
-    sitemap_path = os.path.normpath(sitemap_path)
+    # Use BASE_DIR defined in settings for a robust path to project root
+    sitemap_path = os.path.join(settings.BASE_DIR, 'sitemap.xml')
     try:
         with open(sitemap_path, 'rb') as f:
             data = f.read()
         return HttpResponse(data, content_type='application/xml')
-    except FileNotFoundError:
+    except Exception:
+        # Return 404 if the file can't be read for any reason
         return HttpResponse(status=404)
