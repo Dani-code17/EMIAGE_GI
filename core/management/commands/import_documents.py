@@ -5,6 +5,7 @@ Analyse les noms de dossiers et fichiers pour mapper vers UE/ECUE
 """
 import os
 import re
+import unicodedata
 from django.core.management.base import BaseCommand
 from core.models import Document, UE, ECUE
 
@@ -28,6 +29,7 @@ class Command(BaseCommand):
             'Elements de logique': ('UE MATHEMATIQUES 2', 'Elements de Logique'),
             'Structure Algébrique': ('UE MATHEMATIQUES 2', 'Structure Algébrique'),
             'Economie': ('UE ECONOMIE', 'Economie générale'),
+            'EOE': ('UE Organisations des Entreprises', 'Organisations des Entreprises'),
             'Initiation a l\'informatique': ('UE Initiation à l\'informatique', 'Initiation à l\'informatique'),
             'Initiation à l\'algorithmique': ('UE Initiation à l\'algorithmique', 'Initiation à l\'algorithmique'),
             'Outil Bureautique': ('UE Outils Bureautiques 1', 'Outils Bureautiques 1'),
@@ -49,7 +51,7 @@ class Command(BaseCommand):
         }
         
         # Détection du semestre basée sur le contenu
-        s1_keywords = ['Suites et Fonctions', 'Calcul intégrale', 'Elements de logique', 'Structure Algébrique', 'Economie', 'Initiation a l\'informatique', 'Initiation à l\'algorithmique', 'Outil Bureautique', 'Electronique-Numérique']
+        s1_keywords = ['Suites et Fonctions', 'Calcul intégrale', 'Elements de logique', 'Structure Algébrique', 'Economie', 'EOE', 'Initiation a l\'informatique', 'Initiation à l\'algorithmique', 'Outil Bureautique', 'Electronique-Numérique']
         s2_keywords = ['Géométrie', 'Matrice-EspaceV', 'Probabilités', 'Statistique', 'LangageR', 'Algorithmique', 'Java', 'Intelligence économique', 'GRH', 'Infographie', 'Anglais', 'Maintenance']
         imported_count = 0
         errors = []
@@ -87,6 +89,13 @@ class Command(BaseCommand):
                 continue
 
             # Trouver l'ECUE en base
+            def normalize(s: str) -> str:
+                if not isinstance(s, str):
+                    return ''
+                s = unicodedata.normalize('NFKD', s)
+                s = ''.join(ch for ch in s if not unicodedata.combining(ch))
+                return re.sub(r"\s+", " ", s).strip().lower()
+
             try:
                 ecue_obj = ECUE.objects.get(
                     name__iexact=ecue_name,
@@ -95,8 +104,27 @@ class Command(BaseCommand):
                     ue__semester=semester
                 )
             except ECUE.DoesNotExist:
-                self.stdout.write(f"[ERR] ECUE non trouvée: {ue_name} - {ecue_name} ({semester})")
-                continue
+                # Fallback: recherche tolérante aux accents/espaces
+                target_ue_norm = normalize(ue_name)
+                target_ecue_norm = normalize(ecue_name)
+                candidates = ECUE.objects.filter(
+                    ue__level='L1', ue__semester=semester
+                ).select_related('ue')
+                best = None
+                for e in candidates:
+                    if normalize(e.ue.name) == target_ue_norm and normalize(e.name) == target_ecue_norm:
+                        best = e
+                        break
+                if not best:
+                    # Essayer un contains large si égalité stricte échoue
+                    for e in candidates:
+                        if target_ue_norm in normalize(e.ue.name) and target_ecue_norm in normalize(e.name):
+                            best = e
+                            break
+                if not best:
+                    self.stdout.write(f"[ERR] ECUE non trouvée: {ue_name} - {ecue_name} ({semester})")
+                    continue
+                ecue_obj = best
             except ECUE.MultipleObjectsReturned:
                 ecue_obj = ECUE.objects.filter(
                     name__iexact=ecue_name,
@@ -160,7 +188,7 @@ class Command(BaseCommand):
         """Détecte la catégorie basée sur le nom du fichier"""
         filename_lower = filename.lower()
         
-        if any(word in filename_lower for word in ['examen', 'exam', 'sujet', 'session']):
+        if any(word in filename_lower for word in ['examen', 'exam', 'sujet', 'session', 'devoir']):
             return 'EXAMS'
         elif any(word in filename_lower for word in ['td', 'tp', 'travaux', 'exercice', 'correction']):
             return 'TD_TP'
