@@ -23,9 +23,9 @@
                 </div>
             </div>
             
-            <a href="#creatives" class="text-gray-300 hover:text-primary transition">Nos Activités</a>
-            <a href="#announcements" class="text-gray-300 hover:text-primary transition">Annonces</a>
-            <a href="#contacts" class="text-gray-300 hover:text-primary transition">Contacts</a>
+            <a href="{% url 'core:home' %}#creatives" class="text-gray-300 hover:text-primary transition">Nos Activités</a>
+            <a href="{% url 'core:home' %}#announcements" class="text-gray-300 hover:text-primary transition">Annonces</a>
+            <a href="{% url 'core:home' %}#contacts" class="text-gray-300 hover:text-primary transition">Contacts</a>
         </div>
     </div>
     
@@ -58,13 +58,13 @@
             </div>
         </div>
         
-        <a href="#creatives" class="block text-lg text-gray-300 hover:text-primary transition py-2">
+        <a href="{% url 'core:home' %}#creatives" class="block text-lg text-gray-300 hover:text-primary transition py-2">
             <i class="fas fa-users mr-3 w-6"></i> Nos Activités
         </a>
-        <a href="#announcements" class="block text-lg text-gray-300 hover:text-primary transition py-2">
+        <a href="{% url 'core:home' %}#announcements" class="block text-lg text-gray-300 hover:text-primary transition py-2">
             <i class="fas fa-bullhorn mr-3 w-6"></i> Annonces
         </a>
-        <a href="#contacts" class="block text-lg text-gray-300 hover:text-primary transition py-2">
+        <a href="{% url 'core:home' %}#contacts" class="block text-lg text-gray-300 hover:text-primary transition py-2">
             <i class="fas fa-envelope mr-3 w-6"></i> Contacts
         </a>
     </div>
