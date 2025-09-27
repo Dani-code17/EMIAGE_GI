@@ -13,9 +13,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--dry-run', action='store_true', help='Simulation sans créer de documents')
+        parser.add_argument('--only-semester', default=None, help='Limiter l\'import à un semestre précis (ex: S1 ou S2)')
 
     def handle(self, *args, **options):
         dry_run = options['dry_run']
+        only_semester = options['only_semester']
         media_path = 'media/documents'
         
         # Mapping des dossiers vers UE/ECUE
@@ -44,13 +46,11 @@ class Command(BaseCommand):
             'Infographie': ('UE Infographie(Montage vidéo,etc..)', 'Infographie(Montage vidéo,etc..)'),
             'Anglais': ('UE Anglais', 'Anglais'),
             'Maintenance': ('UE Atelier de maintenance', 'Atelier de maintenance'),
-            'EOE': ('UE TECHNIQUE D\'EXPRESSION ET METHODOLOGIE DU TRAVAIL', 'Methodologie de travail'),
         }
         
         # Détection du semestre basée sur le contenu
         s1_keywords = ['Suites et Fonctions', 'Calcul intégrale', 'Elements de logique', 'Structure Algébrique', 'Economie', 'Initiation a l\'informatique', 'Initiation à l\'algorithmique', 'Outil Bureautique', 'Electronique-Numérique']
-        s2_keywords = ['Géométrie', 'Matrice-EspaceV', 'Probabilités', 'Statistique', 'LangageR', 'Algorithmique', 'Java', 'Intelligence économique', 'GRH', 'Infographie', 'Anglais', 'Maintenance', 'EOE']
-        
+        s2_keywords = ['Géométrie', 'Matrice-EspaceV', 'Probabilités', 'Statistique', 'LangageR', 'Algorithmique', 'Java', 'Intelligence économique', 'GRH', 'Infographie', 'Anglais', 'Maintenance']
         imported_count = 0
         errors = []
         
@@ -65,7 +65,7 @@ class Command(BaseCommand):
             elif any(kw.lower() in folder_name.lower() for kw in s2_keywords):
                 semester = 'S2'
             else:
-                self.stdout.write(f"⚠️  Semestre indéterminé pour: {folder_name}")
+                self.stdout.write(f"[WARN] Semestre indéterminé pour: {folder_name}")
                 continue
             
             # Trouver la UE/ECUE correspondante
@@ -79,9 +79,13 @@ class Command(BaseCommand):
                     break
             
             if not ue_name:
-                self.stdout.write(f"⚠️  UE non trouvée pour: {folder_name}")
+                self.stdout.write(f"[WARN] UE non trouvée pour: {folder_name}")
                 continue
             
+            # Si un semestre précis est demandé, ignorer les dossiers d\'un autre semestre
+            if only_semester and semester != only_semester:
+                continue
+
             # Trouver l'ECUE en base
             try:
                 ecue_obj = ECUE.objects.get(
@@ -91,7 +95,7 @@ class Command(BaseCommand):
                     ue__semester=semester
                 )
             except ECUE.DoesNotExist:
-                self.stdout.write(f"❌ ECUE non trouvée: {ue_name} - {ecue_name} ({semester})")
+                self.stdout.write(f"[ERR] ECUE non trouvée: {ue_name} - {ecue_name} ({semester})")
                 continue
             except ECUE.MultipleObjectsReturned:
                 ecue_obj = ECUE.objects.filter(
@@ -100,7 +104,7 @@ class Command(BaseCommand):
                     ue__level='L1',
                     ue__semester=semester
                 ).first()
-                self.stdout.write(f"⚠️  Plusieurs ECUE trouvées, utilisation de la première: {ecue_obj}")
+                self.stdout.write(f"[WARN] Plusieurs ECUE trouvées, utilisation de la première: {ecue_obj}")
             
             # Analyser les fichiers du dossier
             for filename in os.listdir(folder_path):
@@ -112,8 +116,19 @@ class Command(BaseCommand):
                     # Générer un titre
                     title = self.generate_title(filename, folder_name)
                     
+                    # Éviter les doublons exacts (même titre, niveau, semestre, ECUE)
+                    existing = Document.objects.filter(
+                        title=title,
+                        level='L1',
+                        semester=semester,
+                        ecue=ecue_obj
+                    ).first()
+                    if existing:
+                        self.stdout.write(f"[SKIP] Déjà présent: {title} -> {ue_name} - {ecue_name}")
+                        continue
+
                     if dry_run:
-                        self.stdout.write(f"📄 [DRY-RUN] {title} -> {ue_name} - {ecue_name} ({category})")
+                        self.stdout.write(f"[DRY-RUN] {title} -> {ue_name} - {ecue_name} ({category})")
                     else:
                         try:
                             # Créer le document
@@ -127,17 +142,17 @@ class Command(BaseCommand):
                                 file=file_path
                             )
                             imported_count += 1
-                            self.stdout.write(f"✅ Importé: {title}")
+                            self.stdout.write(f"[OK] Importé: {title}")
                         except Exception as e:
-                            error_msg = f"❌ Erreur import {filename}: {str(e)}"
+                            error_msg = f"[ERR] Erreur import {filename}: {str(e)}"
                             errors.append(error_msg)
                             self.stdout.write(error_msg)
         
         # Résumé
-        self.stdout.write(f"\n📊 Résumé:")
-        self.stdout.write(f"✅ Documents importés: {imported_count}")
+        self.stdout.write(f"\n[SUMMARY]")
+        self.stdout.write(f"[OK] Documents importés: {imported_count}")
         if errors:
-            self.stdout.write(f"❌ Erreurs: {len(errors)}")
+            self.stdout.write(f"[ERR] Erreurs: {len(errors)}")
             for error in errors:
                 self.stdout.write(f"   {error}")
     
