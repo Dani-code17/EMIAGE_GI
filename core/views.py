@@ -58,6 +58,12 @@ def niveau_l1(request):
             context['selected_ue'] = selected_ue
             ecues = selected_ue.ecues.all().order_by('name')
             context['ecues'] = ecues
+            
+            # Si l'UE n'a qu'une seule ECUE, la sélectionner automatiquement
+            if ecues.count() == 1:
+                selected_ecue = ecues.first()
+                context['selected_ecue'] = selected_ecue
+                documents = documents.filter(ecue=selected_ecue)
         except UE.DoesNotExist:
             selected_ue = None
 
@@ -85,9 +91,10 @@ def niveau_l1(request):
             documents = documents.filter(q_obj)
 
     # Afficher les documents si :
-    # 1. Une ECUE est choisie ET qu'une catégorie ou une recherche est fournie
+    # 1. Une ECUE est choisie ET qu'une catégorie est fournie
     # 2. OU si c'est une maquette (toujours visible)
-    if (selected_ecue and (category or query)) or (category == 'maquettes'):
+    # 3. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
+    if (selected_ecue and category) or (category == 'maquettes') or (selected_ue and ecues and ecues.count() == 1 and category):
         context['documents'] = documents
     
     return render(request, 'core/niveau/l1.html', context)
@@ -121,6 +128,12 @@ def niveau_l2(request):
             context['selected_ue'] = selected_ue
             ecues = selected_ue.ecues.all().order_by('name')
             context['ecues'] = ecues
+            
+            # Si l'UE n'a qu'une seule ECUE, la sélectionner automatiquement
+            if ecues.count() == 1:
+                selected_ecue = ecues.first()
+                context['selected_ecue'] = selected_ecue
+                documents = documents.filter(ecue=selected_ecue)
         except UE.DoesNotExist:
             selected_ue = None
 
@@ -144,9 +157,10 @@ def niveau_l2(request):
             documents = documents.filter(q_obj)
     
     # Afficher les documents si :
-    # 1. Une ECUE est choisie ET qu'une catégorie ou une recherche est fournie
+    # 1. Une ECUE est choisie ET qu'une catégorie est fournie
     # 2. OU si c'est une maquette (toujours visible)
-    if (selected_ecue and (category or query)) or (category == 'maquettes'):
+    # 3. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
+    if (selected_ecue and category) or (category == 'maquettes') or (selected_ue and ecues and ecues.count() == 1 and category):
         context['documents'] = documents
     
     return render(request, 'core/niveau/l2.html', context)
