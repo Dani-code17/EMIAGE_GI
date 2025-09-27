@@ -92,9 +92,9 @@ def niveau_l1(request):
 
     # Afficher les documents si :
     # 1. Une ECUE est choisie ET qu'une catégorie est fournie
-    # 2. OU si c'est une maquette (toujours visible)
+    # 2. OU si c'est une maquette ET qu'une UE est sélectionnée (maquettes toujours visibles pour les UE)
     # 3. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
-    if (selected_ecue and category) or (category == 'maquettes') or (selected_ue and ecues and ecues.count() == 1 and category):
+    if (selected_ecue and category) or (category == 'maquettes' and selected_ue) or (selected_ue and ecues and ecues.count() == 1 and category):
         context['documents'] = documents
     
     return render(request, 'core/niveau/l1.html', context)
@@ -158,9 +158,9 @@ def niveau_l2(request):
     
     # Afficher les documents si :
     # 1. Une ECUE est choisie ET qu'une catégorie est fournie
-    # 2. OU si c'est une maquette (toujours visible)
+    # 2. OU si c'est une maquette ET qu'une UE est sélectionnée (maquettes toujours visibles pour les UE)
     # 3. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
-    if (selected_ecue and category) or (category == 'maquettes') or (selected_ue and ecues and ecues.count() == 1 and category):
+    if (selected_ecue and category) or (category == 'maquettes' and selected_ue) or (selected_ue and ecues and ecues.count() == 1 and category):
         context['documents'] = documents
     
     return render(request, 'core/niveau/l2.html', context)
@@ -169,23 +169,69 @@ def niveau_l3(request):
     semestre = request.GET.get('semestre', 's1')
     category = request.GET.get('category')
     query = request.GET.get('q')
+    ue_slug = request.GET.get('ue')
+    ecue_slug = request.GET.get('ecue')
     
     context = {
         'semestre': semestre,
         'category': category
     }
+    # Build base queryset for this level + semester
     real_semestre = get_semester_mapping('L3', semestre)
     documents = Document.objects.filter(level='L3', semester=real_semestre)
+
+    # Charger les UE du semestre
+    ues = UE.objects.filter(level='L3', semester=real_semestre).order_by('code', 'name')
+    context['ues'] = ues
+
+    selected_ue = None
+    selected_ecue = None
+    ecues = None
+
+    # Filtrage par UE/ECUE via slugs
+    if ue_slug:
+        try:
+            selected_ue = UE.objects.get(slug=ue_slug, level='L3', semester=real_semestre)
+            context['selected_ue'] = selected_ue
+            ecues = selected_ue.ecues.all().order_by('name')
+            context['ecues'] = ecues
+            
+            # Si l'UE n'a qu'une seule ECUE, la sélectionner automatiquement
+            if ecues.count() == 1:
+                selected_ecue = ecues.first()
+                context['selected_ecue'] = selected_ecue
+                documents = documents.filter(ecue=selected_ecue)
+        except UE.DoesNotExist:
+            selected_ue = None
+
+    if ecue_slug:
+        try:
+            selected_ecue = ECUE.objects.select_related('ue').get(slug=ecue_slug, ue__level='L3', ue__semester=real_semestre)
+            context['selected_ecue'] = selected_ecue
+            # Restreindre les documents à cette ECUE
+            documents = documents.filter(ecue=selected_ecue)
+        except ECUE.DoesNotExist:
+            selected_ecue = None
+
+    # Narrow by category if provided
     if category:
         documents = documents.filter(category=category.upper())
+
+    # If a search query is present, tokenize and apply OR across tokens
     if query:
+        # Split on whitespace, ignore empty tokens
         tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
         if tokens:
             q_obj = Q()
             for token in tokens:
                 q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
             documents = documents.filter(q_obj)
-    if category or query:
+
+    # Afficher les documents si :
+    # 1. Une ECUE est choisie ET qu'une catégorie est fournie
+    # 2. OU si c'est une maquette ET qu'une UE est sélectionnée (maquettes toujours visibles pour les UE)
+    # 3. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
+    if (selected_ecue and category) or (category == 'maquettes' and selected_ue) or (selected_ue and ecues and ecues.count() == 1 and category):
         context['documents'] = documents
     
     return render(request, 'core/niveau/l3.html', context)
@@ -194,23 +240,69 @@ def niveau_m1(request):
     semestre = request.GET.get('semestre', 's1')
     category = request.GET.get('category')
     query = request.GET.get('q')
+    ue_slug = request.GET.get('ue')
+    ecue_slug = request.GET.get('ecue')
     
     context = {
         'semestre': semestre,
         'category': category
     }
+    # Build base queryset for this level + semester
     real_semestre = get_semester_mapping('M1', semestre)
     documents = Document.objects.filter(level='M1', semester=real_semestre)
+
+    # Charger les UE du semestre
+    ues = UE.objects.filter(level='M1', semester=real_semestre).order_by('code', 'name')
+    context['ues'] = ues
+
+    selected_ue = None
+    selected_ecue = None
+    ecues = None
+
+    # Filtrage par UE/ECUE via slugs
+    if ue_slug:
+        try:
+            selected_ue = UE.objects.get(slug=ue_slug, level='M1', semester=real_semestre)
+            context['selected_ue'] = selected_ue
+            ecues = selected_ue.ecues.all().order_by('name')
+            context['ecues'] = ecues
+            
+            # Si l'UE n'a qu'une seule ECUE, la sélectionner automatiquement
+            if ecues.count() == 1:
+                selected_ecue = ecues.first()
+                context['selected_ecue'] = selected_ecue
+                documents = documents.filter(ecue=selected_ecue)
+        except UE.DoesNotExist:
+            selected_ue = None
+
+    if ecue_slug:
+        try:
+            selected_ecue = ECUE.objects.select_related('ue').get(slug=ecue_slug, ue__level='M1', ue__semester=real_semestre)
+            context['selected_ecue'] = selected_ecue
+            # Restreindre les documents à cette ECUE
+            documents = documents.filter(ecue=selected_ecue)
+        except ECUE.DoesNotExist:
+            selected_ecue = None
+
+    # Narrow by category if provided
     if category:
         documents = documents.filter(category=category.upper())
+
+    # If a search query is present, tokenize and apply OR across tokens
     if query:
+        # Split on whitespace, ignore empty tokens
         tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
         if tokens:
             q_obj = Q()
             for token in tokens:
                 q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
             documents = documents.filter(q_obj)
-    if category or query:
+
+    # Afficher les documents si :
+    # 1. Une ECUE est choisie ET qu'une catégorie est fournie
+    # 2. OU si c'est une maquette ET qu'une UE est sélectionnée (maquettes toujours visibles pour les UE)
+    # 3. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
+    if (selected_ecue and category) or (category == 'maquettes' and selected_ue) or (selected_ue and ecues and ecues.count() == 1 and category):
         context['documents'] = documents
     
     return render(request, 'core/niveau/m1.html', context)
@@ -219,23 +311,69 @@ def niveau_m2(request):
     semestre = request.GET.get('semestre', 's1')
     category = request.GET.get('category')
     query = request.GET.get('q')
+    ue_slug = request.GET.get('ue')
+    ecue_slug = request.GET.get('ecue')
     
     context = {
         'semestre': semestre,
         'category': category
     }
+    # Build base queryset for this level + semester
     real_semestre = get_semester_mapping('M2', semestre)
     documents = Document.objects.filter(level='M2', semester=real_semestre)
+
+    # Charger les UE du semestre
+    ues = UE.objects.filter(level='M2', semester=real_semestre).order_by('code', 'name')
+    context['ues'] = ues
+
+    selected_ue = None
+    selected_ecue = None
+    ecues = None
+
+    # Filtrage par UE/ECUE via slugs
+    if ue_slug:
+        try:
+            selected_ue = UE.objects.get(slug=ue_slug, level='M2', semester=real_semestre)
+            context['selected_ue'] = selected_ue
+            ecues = selected_ue.ecues.all().order_by('name')
+            context['ecues'] = ecues
+            
+            # Si l'UE n'a qu'une seule ECUE, la sélectionner automatiquement
+            if ecues.count() == 1:
+                selected_ecue = ecues.first()
+                context['selected_ecue'] = selected_ecue
+                documents = documents.filter(ecue=selected_ecue)
+        except UE.DoesNotExist:
+            selected_ue = None
+
+    if ecue_slug:
+        try:
+            selected_ecue = ECUE.objects.select_related('ue').get(slug=ecue_slug, ue__level='M2', ue__semester=real_semestre)
+            context['selected_ecue'] = selected_ecue
+            # Restreindre les documents à cette ECUE
+            documents = documents.filter(ecue=selected_ecue)
+        except ECUE.DoesNotExist:
+            selected_ecue = None
+
+    # Narrow by category if provided
     if category:
         documents = documents.filter(category=category.upper())
+
+    # If a search query is present, tokenize and apply OR across tokens
     if query:
+        # Split on whitespace, ignore empty tokens
         tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
         if tokens:
             q_obj = Q()
             for token in tokens:
                 q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
             documents = documents.filter(q_obj)
-    if category or query:
+
+    # Afficher les documents si :
+    # 1. Une ECUE est choisie ET qu'une catégorie est fournie
+    # 2. OU si c'est une maquette ET qu'une UE est sélectionnée (maquettes toujours visibles pour les UE)
+    # 3. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
+    if (selected_ecue and category) or (category == 'maquettes' and selected_ue) or (selected_ue and ecues and ecues.count() == 1 and category):
         context['documents'] = documents
     
     return render(request, 'core/niveau/m2.html', context)
