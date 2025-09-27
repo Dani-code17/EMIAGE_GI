@@ -76,26 +76,38 @@ def niveau_l1(request):
         except ECUE.DoesNotExist:
             selected_ecue = None
 
-    # Narrow by category if provided
-    if category:
-        documents = documents.filter(category=category.upper())
-
-    # If a search query is present, tokenize and apply OR across tokens
-    if query:
-        # Split on whitespace, ignore empty tokens
-        tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
-        if tokens:
-            q_obj = Q()
-            for token in tokens:
-                q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
-            documents = documents.filter(q_obj)
-
-    # Afficher les documents si :
-    # 1. Une ECUE est choisie ET qu'une catégorie est fournie
-    # 2. OU si c'est une maquette ET qu'une UE est sélectionnée (maquettes toujours visibles pour les UE)
-    # 3. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
-    if (selected_ecue and category) or (category == 'maquettes' and selected_ue) or (selected_ue and ecues and ecues.count() == 1 and category):
+    # Cas spécial: afficher toutes les maquettes du niveau (L1) quel que soit le semestre/UE/ECUE
+    if category == 'maquettes':
+        documents = Document.objects.filter(level='L1', category='MAQUETTES')
+        # Appliquer la recherche éventuelle
+        if query:
+            tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
+            if tokens:
+                q_obj = Q()
+                for token in tokens:
+                    q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
+                documents = documents.filter(q_obj)
         context['documents'] = documents
+    else:
+        # Narrow by category if provided (autres catégories)
+        if category:
+            documents = documents.filter(category=category.upper())
+
+        # If a search query is present, tokenize and apply OR across tokens
+        if query:
+            # Split on whitespace, ignore empty tokens
+            tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
+            if tokens:
+                q_obj = Q()
+                for token in tokens:
+                    q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
+                documents = documents.filter(q_obj)
+
+        # Afficher les documents si :
+        # 1. Une ECUE est choisie ET qu'une catégorie est fournie
+        # 2. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
+        if (selected_ecue and category) or (selected_ue and ecues and ecues.count() == 1 and category):
+            context['documents'] = documents
     
     return render(request, 'core/niveau/l1.html', context)
 
@@ -146,22 +158,33 @@ def niveau_l2(request):
         except ECUE.DoesNotExist:
             selected_ecue = None
 
-    if category:
-        documents = documents.filter(category=category.upper())
-    if query:
-        tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
-        if tokens:
-            q_obj = Q()
-            for token in tokens:
-                q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
-            documents = documents.filter(q_obj)
-    
-    # Afficher les documents si :
-    # 1. Une ECUE est choisie ET qu'une catégorie est fournie
-    # 2. OU si c'est une maquette ET qu'une UE est sélectionnée (maquettes toujours visibles pour les UE)
-    # 3. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
-    if (selected_ecue and category) or (category == 'maquettes' and selected_ue) or (selected_ue and ecues and ecues.count() == 1 and category):
+    # Cas spécial: afficher toutes les maquettes du niveau (L2) quel que soit le semestre/UE/ECUE
+    if category == 'maquettes':
+        documents = Document.objects.filter(level='L2', category='MAQUETTES')
+        if query:
+            tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
+            if tokens:
+                q_obj = Q()
+                for token in tokens:
+                    q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
+                documents = documents.filter(q_obj)
         context['documents'] = documents
+    else:
+        if category:
+            documents = documents.filter(category=category.upper())
+        if query:
+            tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
+            if tokens:
+                q_obj = Q()
+                for token in tokens:
+                    q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
+                documents = documents.filter(q_obj)
+        
+        # Afficher les documents si :
+        # 1. Une ECUE est choisie ET qu'une catégorie est fournie
+        # 2. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
+        if (selected_ecue and category) or (selected_ue and ecues and ecues.count() == 1 and category):
+            context['documents'] = documents
     
     return render(request, 'core/niveau/l2.html', context)
 
