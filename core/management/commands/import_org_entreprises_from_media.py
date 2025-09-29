@@ -67,6 +67,15 @@ class Command(BaseCommand):
                 continue
 
             try:
+                # store a relative path under MEDIA_ROOT (strip leading 'media/')
+                rel = fpath.replace('\\', '/')
+                if '/media/' in rel:
+                    rel = rel.split('/media/', 1)[1]
+                elif rel.startswith('media/'):
+                    rel = rel[len('media/'):]
+                # fallback: ensure documents/ prefix present if path contains it
+                if 'documents/' not in rel:
+                    rel = f"documents/EOE/{os.path.basename(fpath)}"
                 Document.objects.create(
                     title=title,
                     description=f"Importé depuis {folder}",
@@ -74,7 +83,7 @@ class Command(BaseCommand):
                     level='L1',
                     semester='S1',
                     ecue=ecue,
-                    file=fpath
+                    file=rel
                 )
                 created += 1
             except Exception as e:
