@@ -24,7 +24,7 @@
             {% endif %}
         </nav>
 
-        <h2 class="text-3xl font-display font-bold mb-4 text-center">
+        <h2 class="text-2xl md:text-3xl font-display font-bold mb-4 text-center">
             {{ niveau_label }} MIAGE -
             {% if semestre == 's1' %}Semestre 1
             {% elif semestre == 's2' %}Semestre 2
@@ -35,26 +35,27 @@
             {% endif %}
         </h2>
 
-        <!-- Indicateur d'étapes : Semestre -> UE -> ECUE -> Catégorie -->
-        <div class="flex items-center justify-center gap-2 md:gap-4 mb-10 text-xs md:text-sm" aria-hidden="true">
-            <span class="flex items-center gap-1 md:gap-2">
-                <span class="w-6 h-6 rounded-full flex items-center justify-center font-bold {% if semestre %}bg-primary text-white{% else %}bg-dark text-gray-400 border border-gray-700{% endif %}">1</span>
-                <span class="{% if semestre %}text-gray-200{% else %}text-gray-500{% endif %}">Semestre</span>
+        <!-- Indicateur d'étapes : Semestre -> UE -> ECUE -> Catégorie
+             (compact sur mobile : seuls les numéros restent visibles) -->
+        <div class="flex items-center justify-center gap-2 sm:gap-4 mb-8 sm:mb-10 text-xs sm:text-sm" aria-hidden="true">
+            <span class="flex items-center gap-1 sm:gap-2">
+                <span class="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold {% if semestre %}bg-primary text-white{% else %}bg-dark text-gray-400 border border-gray-700{% endif %}">1</span>
+                <span class="hidden sm:inline {% if semestre %}text-gray-200{% else %}text-gray-500{% endif %}">Semestre</span>
             </span>
-            <i class="fas fa-chevron-right text-gray-600"></i>
-            <span class="flex items-center gap-1 md:gap-2">
-                <span class="w-6 h-6 rounded-full flex items-center justify-center font-bold {% if selected_ue %}bg-primary text-white{% else %}bg-dark text-gray-400 border border-gray-700{% endif %}">2</span>
-                <span class="{% if selected_ue %}text-gray-200{% else %}text-gray-500{% endif %}">UE</span>
+            <i class="fas fa-chevron-right text-gray-600 text-xs"></i>
+            <span class="flex items-center gap-1 sm:gap-2">
+                <span class="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold {% if selected_ue %}bg-primary text-white{% else %}bg-dark text-gray-400 border border-gray-700{% endif %}">2</span>
+                <span class="hidden sm:inline {% if selected_ue %}text-gray-200{% else %}text-gray-500{% endif %}">UE</span>
             </span>
-            <i class="fas fa-chevron-right text-gray-600"></i>
-            <span class="flex items-center gap-1 md:gap-2">
-                <span class="w-6 h-6 rounded-full flex items-center justify-center font-bold {% if selected_ecue %}bg-primary text-white{% else %}bg-dark text-gray-400 border border-gray-700{% endif %}">3</span>
-                <span class="{% if selected_ecue %}text-gray-200{% else %}text-gray-500{% endif %}">ECUE</span>
+            <i class="fas fa-chevron-right text-gray-600 text-xs"></i>
+            <span class="flex items-center gap-1 sm:gap-2">
+                <span class="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold {% if selected_ecue %}bg-primary text-white{% else %}bg-dark text-gray-400 border border-gray-700{% endif %}">3</span>
+                <span class="hidden sm:inline {% if selected_ecue %}text-gray-200{% else %}text-gray-500{% endif %}">ECUE</span>
             </span>
-            <i class="fas fa-chevron-right text-gray-600"></i>
-            <span class="flex items-center gap-1 md:gap-2">
-                <span class="w-6 h-6 rounded-full flex items-center justify-center font-bold {% if category %}bg-primary text-white{% else %}bg-dark text-gray-400 border border-gray-700{% endif %}">4</span>
-                <span class="{% if category %}text-gray-200{% else %}text-gray-500{% endif %}">Type de document</span>
+            <i class="fas fa-chevron-right text-gray-600 text-xs"></i>
+            <span class="flex items-center gap-1 sm:gap-2">
+                <span class="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold {% if category %}bg-primary text-white{% else %}bg-dark text-gray-400 border border-gray-700{% endif %}">4</span>
+                <span class="hidden sm:inline {% if category %}text-gray-200{% else %}text-gray-500{% endif %}">Type de document</span>
             </span>
         </div>
 
@@ -99,25 +100,25 @@
         <!-- Navigation des catégories -->
         <div class="mb-4 flex flex-wrap justify-center gap-3">
             <a href="?semestre={{ semestre }}{% if selected_ue %}&ue={{ selected_ue.slug }}{% endif %}{% if selected_ecue %}&ecue={{ selected_ecue.slug }}{% endif %}&category=maquettes"
-               class="px-4 py-2 rounded-lg flex items-center gap-2 {% if category == 'maquettes' %}bg-primary text-white{% else %}bg-dark text-gray-300{% endif %} hover:bg-primary hover:text-white transition"
+               class="w-full sm:w-auto justify-center px-4 py-2 rounded-lg flex items-center gap-2 {% if category == 'maquettes' %}bg-primary text-white{% else %}bg-dark text-gray-300{% endif %} hover:bg-primary hover:text-white transition"
                title="Voir toutes les maquettes du niveau">
                 <i class="fas fa-drafting-compass"></i> Maquettes
                 <span class="text-xs font-bold px-1.5 py-0.5 rounded {% if category == 'maquettes' %}bg-white/20{% else %}bg-gray-700{% endif %}">{{ category_counts.maquettes|default:0 }}</span>
             </a>
             <a href="?semestre={{ semestre }}{% if selected_ue %}&ue={{ selected_ue.slug }}{% endif %}{% if selected_ecue %}&ecue={{ selected_ecue.slug }}{% endif %}&category=cours"
-               class="px-4 py-2 rounded-lg flex items-center gap-2 {% if not selected_ecue %}opacity-50 cursor-not-allowed{% endif %} {% if category == 'cours' %}bg-primary text-white{% else %}bg-dark text-gray-300{% endif %} hover:bg-primary hover:text-white transition"
+               class="w-full sm:w-auto justify-center px-4 py-2 rounded-lg flex items-center gap-2 {% if not selected_ecue %}opacity-50 cursor-not-allowed{% endif %} {% if category == 'cours' %}bg-primary text-white{% else %}bg-dark text-gray-300{% endif %} hover:bg-primary hover:text-white transition"
                {% if not selected_ecue %}aria-disabled="true" title="Sélectionnez d'abord une UE puis une ECUE" onclick="return false;"{% else %}title="Voir les cours de cette ECUE"{% endif %}>
                 <i class="fas fa-book"></i> Cours
                 <span class="text-xs font-bold px-1.5 py-0.5 rounded {% if category == 'cours' %}bg-white/20{% else %}bg-gray-700{% endif %}">{{ category_counts.cours|default:0 }}</span>
             </a>
             <a href="?semestre={{ semestre }}{% if selected_ue %}&ue={{ selected_ue.slug }}{% endif %}{% if selected_ecue %}&ecue={{ selected_ecue.slug }}{% endif %}&category=td_tp"
-               class="px-4 py-2 rounded-lg flex items-center gap-2 {% if not selected_ecue %}opacity-50 cursor-not-allowed{% endif %} {% if category == 'td_tp' %}bg-primary text-white{% else %}bg-dark text-gray-300{% endif %} hover:bg-primary hover:text-white transition"
+               class="w-full sm:w-auto justify-center px-4 py-2 rounded-lg flex items-center gap-2 {% if not selected_ecue %}opacity-50 cursor-not-allowed{% endif %} {% if category == 'td_tp' %}bg-primary text-white{% else %}bg-dark text-gray-300{% endif %} hover:bg-primary hover:text-white transition"
                {% if not selected_ecue %}aria-disabled="true" title="Sélectionnez d'abord une UE puis une ECUE" onclick="return false;"{% else %}title="Voir les TD/TP de cette ECUE"{% endif %}>
                 <i class="fas fa-tools"></i> TD & TP
                 <span class="text-xs font-bold px-1.5 py-0.5 rounded {% if category == 'td_tp' %}bg-white/20{% else %}bg-gray-700{% endif %}">{{ category_counts.td_tp|default:0 }}</span>
             </a>
             <a href="?semestre={{ semestre }}{% if selected_ue %}&ue={{ selected_ue.slug }}{% endif %}{% if selected_ecue %}&ecue={{ selected_ecue.slug }}{% endif %}&category=exams"
-               class="px-4 py-2 rounded-lg flex items-center gap-2 {% if not selected_ecue %}opacity-50 cursor-not-allowed{% endif %} {% if category == 'exams' %}bg-primary text-white{% else %}bg-dark text-gray-300{% endif %} hover:bg-primary hover:text-white transition"
+               class="w-full sm:w-auto justify-center px-4 py-2 rounded-lg flex items-center gap-2 {% if not selected_ecue %}opacity-50 cursor-not-allowed{% endif %} {% if category == 'exams' %}bg-primary text-white{% else %}bg-dark text-gray-300{% endif %} hover:bg-primary hover:text-white transition"
                {% if not selected_ecue %}aria-disabled="true" title="Sélectionnez d'abord une UE puis une ECUE" onclick="return false;"{% else %}title="Voir les anciens sujets de cette ECUE"{% endif %}>
                 <i class="fas fa-clipboard-list"></i> Anciens Sujets
                 <span class="text-xs font-bold px-1.5 py-0.5 rounded {% if category == 'exams' %}bg-white/20{% else %}bg-gray-700{% endif %}">{{ category_counts.exams|default:0 }}</span>
@@ -172,7 +173,7 @@
                         {% endif %}
                         <div class="mt-auto pt-3 flex items-center justify-between">
                             <span class="text-xs text-gray-500"><i class="far fa-calendar-alt mr-1"></i>{{ doc.upload_date|date:"d/m/Y" }}</span>
-                            <a href="{{ doc.file.url }}" class="text-primary hover:text-secondary transition font-semibold" target="_blank" rel="noopener">
+                            <a href="{{ doc.file.url }}" class="text-primary hover:text-secondary transition font-semibold px-2 py-1.5 -m-1" target="_blank" rel="noopener">
                                 Télécharger <i class="fas fa-download ml-1"></i>
                             </a>
                         </div>
