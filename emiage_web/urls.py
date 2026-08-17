@@ -30,3 +30,18 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# En production (Render, DEBUG=False), les statiques sont servies par WhiteNoise.
+# Les fichiers média (documents pédagogiques) sont servis par Django lui-même :
+# acceptable à cette échelle (site de ~130 Mo), permet de rester sur le plan gratuit
+# sans service de stockage externe.
+if not settings.DEBUG:
+    from django.views.static import serve as media_serve
+
+    urlpatterns += [
+        path(
+            f'{settings.MEDIA_URL.lstrip("/")}<path:path>',
+            media_serve,
+            {'document_root': settings.MEDIA_ROOT},
+        ),
+    ]

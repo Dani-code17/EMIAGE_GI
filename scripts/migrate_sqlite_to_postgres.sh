@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# =============================================================================
+# Migration des données SQLite -> PostgreSQL
+# -----------------------------------------------------------------------------
+# Usage (depuis la racine du projet) :
+#
+#   1) Export depuis SQLite (BD locale par défaut) :
+#        bash scripts/migrate_sqlite_to_postgres.sh export
+#      -> produit backup/data.json (UIDs préservés, données de l'app core + auth)
+#
+#   2) Import dans PostgreSQL (DATABASE_URL doit pointer vers la BD cible) :
+#        DATABASE_URL="postgres://user:pass@host:5432/emiage_gi" \
+#          bash scripts/migrate_sqlite_to_postgres.sh import
+#      -> applique les migrations, charge le dump, réinitialise les séquences
+#
+#   Variante Render : exporter localement, puis exécuter l'import sur Render
+#   (Shell) avec DATABASE_URL fourni automatiquement par Render.
+# =============================================================================
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+MODE="${1:-}"
+DUMP_FILE="backup/data.json"
+EXCLUDES=(contenttypes auth.permission admin.logentry sessions)
+
+case "$MODE" in
+  export)
+    echo "[1/1] Export depuis SQLite (aucune DATABASE_URL ne doit être définie)..."
+    test -z "${DATABASE_URL:-}" || { echo "ERREUR: DATABASE_URL définie ! Désactivez-la pour exporter depuis SQLite."; exit 1; }
+    mkdir -p backup
+    PYTHONUTF8=1 python manage.py dumpdata \
+      --exclude contenttypes \
+      --exclude auth.permission \
+      --exclude admin.logentry \
+      --exclude sessions \
+      --output "$DUMP_FILE"
+    echo "OK -> $DUMP_FILE"
+    ;;
+  import)
+    echo "[1/4] Vérification de DATABASE_URL..."
+    test -n "${DATABASE_URL:-}" || { echo "ERREUR: DATABASE_URL non définie (cible PostgreSQL)."; exit 1; }
+    test -f "$DUMP_FILE" || { echo "ERREUR: $DUMP_FILE introuvable. Lancez d'abord: $0 export"; exit 1; }
+
+    echo "[2/4] Application des migrations sur PostgreSQL..."
+    python manage.py migrate --noinput
+
+    echo "[3/4] Chargement des données..."
+    python manage.py loaddata "$DUMP_FILE"
+
+    echo "[4/4] Réinitialisation des séquences..."
+    python manage.py shell -c "
+from django.db import connection
+from django.core.management.color import no_style
+from django.apps import apps
+models = list(apps.get_models())
+sql = connection.ops.sequence_reset_sql(no_style(), models)
+with connection.cursor() as c:
+    for s in sql:
+        c.execute(s)
+print('Séquences réinitialisées')
+"
+
+    echo "OK. Vérification rapide :"
+    python manage.py shell -c \
+      "from core.models import Document, UE, ECUE; print(f'Documents={Document.objects.count()} UE={UE.objects.count()} ECUE={ECUE.objects.count()}')"
+    ;;
+  *)
+    echo "Usage: $0 {export|import}"
+    exit 1
+    ;;
+esac

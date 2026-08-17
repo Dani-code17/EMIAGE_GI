@@ -1,2 +1,17 @@
 node_modules/
 .env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Reasonix / agent
+.reasonix/
+reasonix.toml
+
+# Artefacts de transfert de données (regénérés par scripts/migrate_sqlite_to_postgres.sh)
+backup/
+
+# Statiques collectées (regénérées par `collectstatic` au build Render)
+staticfiles/

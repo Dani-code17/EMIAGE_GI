@@ -1,0 +1,32 @@
+# Render Blueprint — E-MIAGE-GI
+# Déploiement : https://dashboard.render.com/blueprints (connecter ce dépôt)
+# Le service web utilise PostgreSQL (base de données gérée par Render).
+# Après le premier déploiement, importer les données existantes :
+#   voir README.md -> section "Migration des données vers PostgreSQL".
+
+databases:
+  - name: emiage-gi-db
+    plan: free
+
+services:
+  - type: web
+    name: emiage-gi
+    runtime: python
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate --noinput
+    startCommand: gunicorn emiage_web.wsgi:application --bind 0.0.0.0:$PORT --workers 2
+    healthCheckPath: /
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        value: emiage-gi.onrender.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: emiage-gi-db
+          property: connectionString

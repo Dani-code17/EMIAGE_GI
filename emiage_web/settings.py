@@ -10,22 +10,43 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+def env_bool(name: str, default: bool = False) -> bool:
+    """Lit une variable d'environnement comme booléen."""
+    return os.environ.get(name, str(default)).strip().lower() in ('1', 'true', 'yes', 'on')
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--%*3_6-72fvd^g&imu-f_b9%n1zrd(d=5_ik9^*#5*y$_o2y=b'
+# En production, définir DJANGO_SECRET_KEY dans l'environnement (ex: Render).
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure--%*3_6-72fvd^g&imu-f_b9%n1zrd(d=5_ik9^*#5*y$_o2y=b')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# En production, définir DJANGO_DEBUG=False dans l'environnement.
+DEBUG = env_bool('DJANGO_DEBUG', default=True)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'emiage-gi.onrender.com']
+ALLOWED_HOSTS = os.environ.get(
+    'DJANGO_ALLOWED_HOSTS',
+    '127.0.0.1,localhost,emiage-gi.onrender.com',
+).split(',')
+
+# Autoriser les requêtes HTTPS depuis Render (nécessaire quand DEBUG=False)
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get(
+        'DJANGO_CSRF_TRUSTED_ORIGINS',
+        'https://emiage-gi.onrender.com',
+    ).split(',')
+    if origin.strip()
+]
 
 
 
@@ -43,6 +64,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -56,7 +78,7 @@ ROOT_URLCONF = 'emiage_web.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [BASE_DIR / 'core' / 'templates', BASE_DIR / 'templates'],
+    'DIRS': [BASE_DIR / 'core' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,12 +97,17 @@ WSGI_APPLICATION = 'emiage_web.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# En production (Render), définir DATABASE_URL (PostgreSQL).
+# En local, si DATABASE_URL est absent, on retombe sur SQLite (db.sqlite3).
+
+import dj_database_url
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 
@@ -123,6 +150,16 @@ STATICFILES_DIRS = [
     BASE_DIR / 'core' / 'static',
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# WhiteNoise : sert les fichiers statiques collectés en production (Render)
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+    },
+}
 
 # Media files (Uploaded files)
 MEDIA_URL = '/media/'
