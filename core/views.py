@@ -3,7 +3,21 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from .models import Document, UE, ECUE
 from django.db.models import Q
+from collections import Counter
 import re
+
+
+def _niveau_extra_context(niveau_label, level, documents):
+    """Contexte UI supplémentaire pour les pages niveau :
+    libellé du niveau + compteurs de documents par catégorie pour la
+    sélection courante (le bouton « Maquettes » compte niveau entier)."""
+    counts = Counter(documents.values_list('category', flat=True))
+    counts['MAQUETTES'] = Document.objects.filter(level=level, category='MAQUETTES').count()
+    return {
+        'niveau_label': niveau_label,
+        'category_counts': {c.lower(): n for c, n in counts.items()},
+        'selection_count': documents.count(),
+    }
 
 def home(request):
     total_documents = Document.objects.count()
@@ -75,6 +89,9 @@ def niveau_l1(request):
             documents = documents.filter(ecue=selected_ecue)
         except ECUE.DoesNotExist:
             selected_ecue = None
+
+    # Contexte UI : libellé du niveau + compteurs de documents par catégorie
+    context.update(_niveau_extra_context('Licence 1', 'L1', documents))
 
     # Cas spécial: afficher toutes les maquettes du niveau (L1) quel que soit le semestre/UE/ECUE
     if category == 'maquettes':
@@ -158,6 +175,9 @@ def niveau_l2(request):
         except ECUE.DoesNotExist:
             selected_ecue = None
 
+    # Contexte UI : libellé du niveau + compteurs de documents par catégorie
+    context.update(_niveau_extra_context('Licence 2', 'L2', documents))
+
     # Cas spécial: afficher toutes les maquettes du niveau (L2) quel que soit le semestre/UE/ECUE
     if category == 'maquettes':
         documents = Document.objects.filter(level='L2', category='MAQUETTES')
@@ -236,26 +256,34 @@ def niveau_l3(request):
         except ECUE.DoesNotExist:
             selected_ecue = None
 
+    # Contexte UI : libellé du niveau + compteurs de documents par catégorie
+    context.update(_niveau_extra_context('Licence 3', 'L3', documents))
+
     # Narrow by category if provided
-    if category:
-        documents = documents.filter(category=category.upper())
-
-    # If a search query is present, tokenize and apply OR across tokens
-    if query:
-        # Split on whitespace, ignore empty tokens
-        tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
-        if tokens:
-            q_obj = Q()
-            for token in tokens:
-                q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
-            documents = documents.filter(q_obj)
-
-    # Afficher les documents si :
-    # 1. Une ECUE est choisie ET qu'une catégorie est fournie
-    # 2. OU si c'est une maquette ET qu'une UE est sélectionnée (maquettes toujours visibles pour les UE)
-    # 3. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
-    if (selected_ecue and category) or (category == 'maquettes' and selected_ue) or (selected_ue and ecues and ecues.count() == 1 and category):
+    # Cas spécial: afficher toutes les maquettes du niveau quel que soit le
+    # semestre/UE/ECUE (comportement identique à L1/L2)
+    if category == 'maquettes':
+        documents = Document.objects.filter(level='L3', category='MAQUETTES')
         context['documents'] = documents
+    else:
+        if category:
+            documents = documents.filter(category=category.upper())
+
+        # If a search query is present, tokenize and apply OR across tokens
+        if query:
+            # Split on whitespace, ignore empty tokens
+            tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
+            if tokens:
+                q_obj = Q()
+                for token in tokens:
+                    q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
+                documents = documents.filter(q_obj)
+
+        # Afficher les documents si :
+        # 1. Une ECUE est choisie ET qu'une catégorie est fournie
+        # 2. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
+        if (selected_ecue and category) or (selected_ue and ecues and ecues.count() == 1 and category):
+            context['documents'] = documents
     
     return render(request, 'core/niveau/l3.html', context)
 
@@ -307,26 +335,34 @@ def niveau_m1(request):
         except ECUE.DoesNotExist:
             selected_ecue = None
 
+    # Contexte UI : libellé du niveau + compteurs de documents par catégorie
+    context.update(_niveau_extra_context('Master 1', 'M1', documents))
+
     # Narrow by category if provided
-    if category:
-        documents = documents.filter(category=category.upper())
-
-    # If a search query is present, tokenize and apply OR across tokens
-    if query:
-        # Split on whitespace, ignore empty tokens
-        tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
-        if tokens:
-            q_obj = Q()
-            for token in tokens:
-                q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
-            documents = documents.filter(q_obj)
-
-    # Afficher les documents si :
-    # 1. Une ECUE est choisie ET qu'une catégorie est fournie
-    # 2. OU si c'est une maquette ET qu'une UE est sélectionnée (maquettes toujours visibles pour les UE)
-    # 3. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
-    if (selected_ecue and category) or (category == 'maquettes' and selected_ue) or (selected_ue and ecues and ecues.count() == 1 and category):
+    # Cas spécial: afficher toutes les maquettes du niveau quel que soit le
+    # semestre/UE/ECUE (comportement identique à L1/L2)
+    if category == 'maquettes':
+        documents = Document.objects.filter(level='M1', category='MAQUETTES')
         context['documents'] = documents
+    else:
+        if category:
+            documents = documents.filter(category=category.upper())
+
+        # If a search query is present, tokenize and apply OR across tokens
+        if query:
+            # Split on whitespace, ignore empty tokens
+            tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
+            if tokens:
+                q_obj = Q()
+                for token in tokens:
+                    q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
+                documents = documents.filter(q_obj)
+
+        # Afficher les documents si :
+        # 1. Une ECUE est choisie ET qu'une catégorie est fournie
+        # 2. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
+        if (selected_ecue and category) or (selected_ue and ecues and ecues.count() == 1 and category):
+            context['documents'] = documents
     
     return render(request, 'core/niveau/m1.html', context)
 
@@ -378,26 +414,34 @@ def niveau_m2(request):
         except ECUE.DoesNotExist:
             selected_ecue = None
 
+    # Contexte UI : libellé du niveau + compteurs de documents par catégorie
+    context.update(_niveau_extra_context('Master 2', 'M2', documents))
+
     # Narrow by category if provided
-    if category:
-        documents = documents.filter(category=category.upper())
-
-    # If a search query is present, tokenize and apply OR across tokens
-    if query:
-        # Split on whitespace, ignore empty tokens
-        tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
-        if tokens:
-            q_obj = Q()
-            for token in tokens:
-                q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
-            documents = documents.filter(q_obj)
-
-    # Afficher les documents si :
-    # 1. Une ECUE est choisie ET qu'une catégorie est fournie
-    # 2. OU si c'est une maquette ET qu'une UE est sélectionnée (maquettes toujours visibles pour les UE)
-    # 3. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
-    if (selected_ecue and category) or (category == 'maquettes' and selected_ue) or (selected_ue and ecues and ecues.count() == 1 and category):
+    # Cas spécial: afficher toutes les maquettes du niveau quel que soit le
+    # semestre/UE/ECUE (comportement identique à L1/L2)
+    if category == 'maquettes':
+        documents = Document.objects.filter(level='M2', category='MAQUETTES')
         context['documents'] = documents
+    else:
+        if category:
+            documents = documents.filter(category=category.upper())
+
+        # If a search query is present, tokenize and apply OR across tokens
+        if query:
+            # Split on whitespace, ignore empty tokens
+            tokens = [t.strip() for t in re.split(r"\s+", query) if t.strip()]
+            if tokens:
+                q_obj = Q()
+                for token in tokens:
+                    q_obj |= Q(title__icontains=token) | Q(description__icontains=token)
+                documents = documents.filter(q_obj)
+
+        # Afficher les documents si :
+        # 1. Une ECUE est choisie ET qu'une catégorie est fournie
+        # 2. OU si une UE avec une seule ECUE est sélectionnée ET qu'une catégorie est fournie
+        if (selected_ecue and category) or (selected_ue and ecues and ecues.count() == 1 and category):
+            context['documents'] = documents
     
     return render(request, 'core/niveau/m2.html', context)
 
@@ -412,8 +456,29 @@ def about(request):
 
 
 def bibliotheque_index(request):
-    """Simple index page for the médiathèques listing all niveaux."""
-    return render(request, 'core/bibliotheque_index.html')
+    """Index de la médiathèque : liste des niveaux avec leur nombre de documents."""
+    from django.urls import reverse
+    levels = [
+        ('L1', 'Licence 1', 'fa-graduation-cap'),
+        ('L2', 'Licence 2', 'fa-graduation-cap'),
+        ('L3', 'Licence 3', 'fa-graduation-cap'),
+        ('M1', 'Master 1', 'fa-user-graduate'),
+        ('M2', 'Master 2', 'fa-user-graduate'),
+    ]
+    context = {
+        'levels': [
+            {
+                'code': code,
+                'label': label,
+                'icon': icon,
+                'count': Document.objects.filter(level=code).count(),
+                'url': reverse(f'core:niveau_{code.lower()}'),
+            }
+            for code, label, icon in levels
+        ],
+        'total_documents': Document.objects.count(),
+    }
+    return render(request, 'core/bibliotheque_index.html', context)
 
 
 def meta_test(request):

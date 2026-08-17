@@ -131,6 +131,10 @@ class PageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Cours de test')
         self.assertEqual(len(response.context['documents']), 1)
+        # Contexte UI : libellé du niveau + compteurs de documents par catégorie
+        self.assertEqual(response.context['niveau_label'], 'Licence 1')
+        self.assertEqual(response.context['category_counts']['cours'], 1)
+        self.assertIn('selection_count', response.context)
 
     def test_niveau_categorie_maquettes(self):
         """La catégorie maquettes affiche les maquettes du niveau même sans UE."""
@@ -153,3 +157,17 @@ class PageTests(TestCase):
         response = self.client.get('/sitemap.xml')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/xml')
+
+    def test_bibliotheque_index_context(self):
+        """L'index de la médiathèque fournit les compteurs par niveau."""
+        response = self.client.get(reverse('core:bibliotheque_index'))
+        self.assertEqual(response.status_code, 200)
+        levels = response.context['levels']
+        self.assertEqual(len(levels), 5)
+        # Chaque niveau a une URL et un libellé
+        self.assertTrue(all(l['url'] and l['label'] for l in levels))
+        # Le total correspond à la somme des compteurs
+        self.assertEqual(
+            response.context['total_documents'],
+            sum(l['count'] for l in levels),
+        )

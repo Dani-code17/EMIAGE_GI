@@ -48,6 +48,12 @@ class Document(models.Model):
     def __str__(self):
         return f"{self.title} ({self.level} - {self.semester})"
 
+    @property
+    def extension(self):
+        """Extension du fichier en majuscules (ex: PDF, DOCX) pour l'affichage."""
+        name = self.file.name or ''
+        return name.rsplit('.', 1)[-1].upper() if '.' in name else ''
+
     def delete(self, *args, **kwargs):
         self.file.delete()
         super().delete(*args, **kwargs)

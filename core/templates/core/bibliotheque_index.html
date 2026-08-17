@@ -4,15 +4,45 @@
 {% block content %}
 <section class="pt-28 pb-16 px-6">
     <div class="max-w-6xl mx-auto">
-        <h1 class="text-3xl font-display font-bold mb-6">Médiathèques</h1>
-        <p class="text-gray-400 mb-6">Accédez rapidement aux niveaux et recherchez des cours par mot-clé.</p>
+        <!-- Fil d'Ariane -->
+        <nav class="mb-8 text-sm text-gray-400 flex items-center flex-wrap gap-2" aria-label="Fil d'Ariane">
+            <a href="{% url 'core:home' %}" class="hover:text-primary transition"><i class="fas fa-home mr-1"></i>Accueil</a>
+            <i class="fas fa-chevron-right text-xs text-gray-600"></i>
+            <span class="text-gray-200 font-semibold">Bibliothèque</span>
+        </nav>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <a href="{% url 'core:niveau_l1' %}" class="p-6 bg-dark rounded-lg hover:shadow-lg transition">Licence 1</a>
-            <a href="{% url 'core:niveau_l2' %}" class="p-6 bg-dark rounded-lg hover:shadow-lg transition">Licence 2</a>
-            <a href="{% url 'core:niveau_l3' %}" class="p-6 bg-dark rounded-lg hover:shadow-lg transition">Licence 3</a>
-            <a href="{% url 'core:niveau_m1' %}" class="p-6 bg-dark rounded-lg hover:shadow-lg transition">Master 1</a>
-            <a href="{% url 'core:niveau_m2' %}" class="p-6 bg-dark rounded-lg hover:shadow-lg transition">Master 2</a>
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-display font-bold mb-2">Médiathèques</h1>
+            <p class="text-gray-400">
+                {{ total_documents }} document{{ total_documents|pluralize }} réparti{{ total_documents|pluralize:"s" }} sur {{ levels|length }} niveaux.
+                Choisissez votre niveau pour accéder aux cours, TD/TP, anciens sujets et maquettes.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for level in levels %}
+                <a href="{{ level.url }}" class="glass-card p-6 rounded-xl group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br {% cycle 'from-primary to-secondary' 'from-secondary to-accent' 'from-accent to-primary' 'from-primary to-accent' 'from-secondary to-primary' %} rounded-full flex items-center justify-center group-hover:scale-110 transition">
+                            <i class="fas {{ level.icon }} text-xl text-light"></i>
+                        </div>
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-dark border border-gray-700 text-gray-300">
+                            {{ level.count }} doc{{ level.count|pluralize }}
+                        </span>
+                    </div>
+                    <h2 class="text-xl font-display font-bold mb-1 group-hover:text-primary transition">{{ level.label }}</h2>
+                    <p class="text-sm text-gray-400 mb-4">
+                        {% if level.count > 0 %}
+                            Cours, TD/TP, anciens sujets et maquettes disponibles.
+                        {% else %}
+                            Bibliothèque en cours de préparation.
+                        {% endif %}
+                    </p>
+                    <span class="text-primary font-semibold text-sm inline-flex items-center gap-1">
+                        Explorer <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i>
+                    </span>
+                </a>
+            {% endfor %}
         </div>
     </div>
 </section>

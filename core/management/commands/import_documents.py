@@ -357,10 +357,10 @@ class Command(BaseCommand):
             return 'EXAMS'
         elif any(word in filename_lower for word in ['td', 'tp', 'travaux', 'exercice', 'correction']):
             return 'TD_TP'
+        elif 'maquette' in filename_lower:
+            return 'MAQUETTES'
         elif any(word in filename_lower for word in ['cours', 'cm', 'chapitre', 'chap', 'support']):
             return 'COURS'
-        elif any(word in filename_lower for word in ['maquette', 'planning', 'programme']):
-            return 'MAQUETTES'
         else:
             return 'COURS'  # Par défaut
 
