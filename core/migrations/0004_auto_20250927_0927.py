@@ -115,7 +115,7 @@ def reverse_attach_documents(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0003_ecue_document_ecue_ue_ecue_ue_and_more'),
+        ('core', '0003c_alter_document_file'),
     ]
 
     operations = [

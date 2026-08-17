@@ -36,7 +36,7 @@ class Document(models.Model):
     level = models.CharField(max_length=2, choices=LEVEL_CHOICES, verbose_name='Niveau')
     semester = models.CharField(max_length=3, choices=SEMESTER_CHOICES, verbose_name='Semestre')
     ecue = models.ForeignKey('ECUE', null=True, blank=True, on_delete=models.SET_NULL, related_name='documents', verbose_name='ECUE')
-    file = models.FileField(upload_to='documents/', verbose_name='Fichier')
+    file = models.FileField(upload_to='documents/', max_length=255, verbose_name='Fichier')
     upload_date = models.DateTimeField(auto_now_add=True, verbose_name='Date d\'ajout')
     last_modified = models.DateTimeField(auto_now=True, verbose_name='Dernière modification')
 
@@ -54,7 +54,7 @@ class Document(models.Model):
 
 
 class UE(models.Model):
-    code = models.CharField(max_length=50, verbose_name='Code UE')
+    code = models.CharField(max_length=200, verbose_name='Code UE')
     name = models.CharField(max_length=200, verbose_name='Nom UE')
     slug = models.SlugField(max_length=220, unique=True, verbose_name='Slug UE')
     level = models.CharField(max_length=2, choices=Document.LEVEL_CHOICES, verbose_name='Niveau')

@@ -15,3 +15,7 @@ backup/
 
 # Statiques collectées (regénérées par `collectstatic` au build Render)
 staticfiles/
+
+# Dossiers sources d'import (contenu déjà copié dans media/documents)
+L2_MIAGE 23-24/
+Cours L3/

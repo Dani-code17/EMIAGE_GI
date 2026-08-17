@@ -5,22 +5,37 @@ Script d'import automatique des documents (multi-niveaux : L1/L2/L3/M1/M2)
 Analyse les dossiers de media/documents pour mapper vers UE/ECUE, puis classe
 chaque fichier en COURS / TD_TP / EXAMS / MAQUETTES selon son nom.
 
+Seuls les fichiers de type document sont importés (voir DOC_EXTENSIONS) ;
+les images, CSS, archives, sources de projets, etc. sont ignorés.
+
 Usage :
     python manage.py import_documents --dry-run            # simulation
-    python manage.py import_documents --level L1           # un niveau
+    python manage.py import_documents --level L2           # un niveau
     python manage.py import_documents --folder "Anglais"   # un dossier de matière
-    python manage.py import_documents --only-semester S1   # un semestre (S1..S10)
+    python manage.py import_documents --only-semester S3   # un semestre (S1..S10)
 """
 import os
 import re
+import sys
 import unicodedata
 from django.core.management.base import BaseCommand
 from core.models import Document, UE, ECUE
 
-# Mapping dossier -> (niveau, semestre, nom UE, nom ECUE)
-# Ajouter ici les nouvelles matières (L2, L3, M1...) au fur et à mesure.
+# La console Windows (cp1252) ne peut pas encoder certains caractères de noms
+# de fichiers (ex: U+2560) ; sans cela, l'import s'interrompt en plein milieu.
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
+# Extensions de fichiers considérées comme des documents pédagogiques.
+DOC_EXTENSIONS = {'.pdf', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.odt', '.odp', '.ods'}
+
+# Mapping dossier -> cible UE/ECUE.
+# Valeur possible :
+#   - tuple (niveau, semestre, nom UE, nom ECUE) : tous les fichiers du dossier
+#   - dict {sous-dossier: (niveau, semestre, nom UE, nom ECUE)} : fichiers
+#     dispatchés selon le sous-dossier (ex: Données semi-structurées...)
 FOLDER_MAPPING = {
-    # L1 S1
+    # ============================ L1 S1 =====================================
     'Suites et Fonctions': ('L1', 'S1', 'UE MATHEMATIQUES 1', 'suites et fonctions'),
     'Calcul intégrale': ('L1', 'S1', 'UE MATHEMATIQUES 1', 'Calcul intégral'),
     'Elements de logique': ('L1', 'S1', 'UE MATHEMATIQUES 2', 'Elements de Logique'),
@@ -32,7 +47,7 @@ FOLDER_MAPPING = {
     'Outil Bureautique': ('L1', 'S1', 'UE Outils Bureautiques 1', 'Outils Bureautiques 1'),
     'Electronique-Numérique': ('L1', 'S1', 'UE Electronique Numérique', 'Electronique Numérique'),
 
-    # L1 S2
+    # ============================ L1 S2 =====================================
     'Géométrie': ('L1', 'S2', 'UE MATHEMATIQUES 3', 'Géometrie'),
     'Matrice-EspaceV': ('L1', 'S2', 'UE MATHEMATIQUES 3', 'Calcul matriciel'),
     'Probabilités': ('L1', 'S2', 'UE PROBABILITES ET STATISTIQUE 1', 'Probabilité'),
@@ -45,15 +60,67 @@ FOLDER_MAPPING = {
     'Infographie': ('L1', 'S2', 'UE Infographie(Montage vidéo,etc..)', 'Infographie(Montage vidéo,etc..)'),
     'Anglais': ('L1', 'S2', 'UE Anglais', 'Anglais'),
     'Maintenance': ('L1', 'S2', 'UE Atelier de maintenance', 'Atelier de maintenance'),
+
+    # ============================ L2 S3 =====================================
+    'Algèbre': ('L2', 'S3', 'Mathématiques 4', 'Algèbre'),
+    'Analyse': ('L2', 'S3', 'Mathématiques 4', 'Analyse 3'),
+    'Analyse de donnée': ('L2', 'S3', 'Probabilités et statistique 2', 'Analyse de données'),
+    'L2-Anglais': ('L2', 'S3', 'Anglais', 'Anglais'),
+    'Comptabilité': ('L2', 'S3', 'Comptabilité generale', 'Comptabilité'),
+    'Fondamentaux POO': ('L2', 'S3', 'Programmation orientée objet', 'Fondements de la POO'),
+    'Outils formels': ('L2', 'S3', 'Programmation orientée objet', 'outils formels pour l\'informatique'),
+    'Probabilité': ('L2', 'S3', 'Probabilités et statistique 2', 'Probabilités 2'),
+    'Programmation Orientée Objet Java': ('L2', 'S3', 'Programmation orientée objet', 'POO en Java'),
+    'Renforcemnt Java': ('L2', 'S3', 'Programmation orientée objet', 'POO en Java'),
+    'L2-Statistique': ('L2', 'S3', 'Probabilités et statistique 2', 'Statistique 2'),
+
+    # ============================ L2 S4 =====================================
+    'Arithmétique': ('L2', 'S4', 'Mathématiques 5', 'Arithmétique'),
+    'Base de données relationnelles': ('L2', 'S4', 'Données semi-structurées et bases de données', 'Base de données relationnelles'),
+    'Contrôle Budgétaire': ('L2', 'S4', 'Contrôle budgétaire', 'Contrôle budgétaire'),
+    'Cryptographie': ('L2', 'S4', 'Initiation Python', 'Application à la cryptographie'),
+    'Données semi-structurées et bases de données': {
+        'Base de données et applications': ('L2', 'S4', 'Données semi-structurées et bases de données', 'base de données et applications'),
+        'Base de données relationnelles': ('L2', 'S4', 'Données semi-structurées et bases de données', 'Base de données relationnelles'),
+        'Données semi-structurées': ('L2', 'S4', 'Données semi-structurées et bases de données', 'Données semi-structurées'),
+    },
+    'Génie logiciel': ('L2', 'S4', 'Génie logiciel', 'Atelier de Génie Logiciel'),
+    'Programmation Web': ('L2', 'S4', 'Programmation web', 'Programmation web'),
+    'scala': ('L2', 'S4', 'Génie logiciel', 'Initiation au Langage SCALA'),
+
+    # ============================ L3 S5 =====================================
+    'ALGORITHMIQUE DES GRAPHES': ('L3', 'S5', 'ALGORITHMIQUE DES GRAPHES', 'ALGORITHMIQUE DES GRAPHES'),
+    'BASE DE DONNEES AVANCEES': ('L3', 'S5', 'BASE DE DONNEES AVANCEES', 'BASE DE DONNEES AVANCEES'),
+    'COMPTABILITE ANALYTIQUE': ('L3', 'S5', 'COMPTABILITE ANALYTIQUE', 'COMPTABILITE ANALYTIQUE'),
+    'COURS DE PROGRAMMATION': ('L3', 'S5', 'COURS DE PROGRAMMATION', 'COURS DE PROGRAMMATION'),
+    'PROGRAMMATION LINEAIRE': ('L3', 'S5', 'PROGRAMMATION LINEAIRE', 'PROGRAMMATION LINEAIRE'),
+    'PROGRAMMATION WEB CLIENT': ('L3', 'S5', 'PROGRAMMATION WEB CLIENT', 'PROGRAMMATION WEB CLIENT'),
+    'SYSTEME D\'EXPLOITATION': ('L3', 'S5', 'SYSTEME D\'EXPLOITATION', 'SYSTEME D\'EXPLOITATION'),
+    'UNIX_C': ('L3', 'S5', 'UNIX_C', 'UNIX_C'),
+
+    # ============================ L3 S6 =====================================
+    'ANALYSE DE DONNEES': ('L3', 'S6', 'ANALYSE DE DONNEES', 'ANALYSE DE DONNEES'),
+    'L3-Anglais': ('L3', 'S6', 'ANGLAIS', 'ANGLAIS'),
+    'ENVIRONNEMENT JURIDIQUE': ('L3', 'S6', 'ENVIRONNEMENT JURIDIQUE', 'ENVIRONNEMENT JURIDIQUE'),
+    'FILE D\'ATTENTE ET GESTION DE STOCKS': ('L3', 'S6', 'FILE D\'ATTENTE ET GESTION DE STOCKS', 'FILE D\'ATTENTE ET GESTION DE STOCKS'),
+    'GEESTION FINANCIERE': ('L3', 'S6', 'GESTION FINANCIERE', 'GESTION FINANCIERE'),
+    'GENIE LOGICIEL JAVA': ('L3', 'S6', 'GENIE LOGICIEL JAVA', 'GENIE LOGICIEL JAVA'),
+    'INTERNET-INTRANET': ('L3', 'S6', 'INTERNET-INTRANET', 'INTERNET-INTRANET'),
+    'PROGRAMMATION D\'APPLICATION': ('L3', 'S6', 'PROGRAMMATION D\'APPLICATION', 'PROGRAMMATION D\'APPLICATION'),
+    'RESEAU': ('L3', 'S6', 'RESEAU', 'RESEAU'),
+    'THEORIE DU LANGUAGE': ('L3', 'S6', 'THEORIE DU LANGUAGE', 'THEORIE DU LANGUAGE'),
+    'UML': ('L3', 'S6', 'UML', 'UML'),
 }
 
 
 def normalize(s: str) -> str:
-    """Normalise une chaîne : minuscules, sans accents, espaces uniques."""
+    """Normalise une chaîne : minuscules, sans accents, apostrophes unifiées."""
     if not isinstance(s, str):
         return ''
     s = unicodedata.normalize('NFKD', s)
     s = ''.join(ch for ch in s if not unicodedata.combining(ch))
+    # Unifier les apostrophes (droite ', courbe ’, guillemet '02BC, etc.)
+    s = s.replace('\u2019', "'").replace('\u2018', "'").replace('\u02bc', "'")
     return re.sub(r"\s+", " ", s).strip().lower()
 
 
@@ -73,11 +140,10 @@ class Command(BaseCommand):
         dry_run = options['dry_run']
         only_level = options['level']
         only_semester = options['only_semester']
-        only_folder = options['folder']
+        only_folder = normalize(options['folder']) if options['folder'] else None
         media_path = 'media/documents'
 
         imported_count = 0
-        skipped_count = 0
         errors = []
 
         # --- 1) Maquettes à la racine de media/documents -------------------
@@ -89,40 +155,48 @@ class Command(BaseCommand):
             if not os.path.isdir(folder_path):
                 continue  # fichiers à la racine déjà traités
 
-            if only_folder and normalize(folder_name) != normalize(only_folder):
-                continue
-
-            # Résoudre le mapping dossier -> UE/ECUE
-            entry = None
-            for pattern, mapped in FOLDER_MAPPING.items():
-                if pattern.lower() in folder_name.lower():
-                    entry = mapped
-                    break
-
-            if not entry:
+            entry = self.match_folder(folder_name)
+            if entry is None:
                 self.stdout.write(f"[WARN] Aucun mapping UE/ECUE pour: {folder_name}")
                 continue
 
-            level, semester, ue_name, ecue_name = entry
-
-            # Filtres niveau / semestre
-            if only_level and level != only_level:
-                continue
-            if only_semester and semester != only_semester:
+            if only_folder and normalize(folder_name) != only_folder:
                 continue
 
-            ecue_obj = self.find_ecue(ue_name, ecue_name, level, semester)
-            if ecue_obj is None:
-                errors.append(f"ECUE introuvable: {ue_name} - {ecue_name} ({level} {semester})")
-                continue
-
-            # Importer chaque fichier du dossier
-            for filename in sorted(os.listdir(folder_path)):
-                if not os.path.isfile(os.path.join(folder_path, filename)):
+            if isinstance(entry, dict):
+                # Sous-dossiers -> ECUE distinctes
+                for sub_name, sub_entry in entry.items():
+                    sub_path = os.path.join(folder_path, sub_name)
+                    if not os.path.isdir(sub_path):
+                        self.stdout.write(f"[WARN] Sous-dossier absent: {sub_name}")
+                        continue
+                    level, semester, ue_name, ecue_name = sub_entry
+                    if only_level and level != only_level:
+                        continue
+                    if only_semester and semester != only_semester:
+                        continue
+                    ecue_obj = self.find_ecue(ue_name, ecue_name, level, semester)
+                    if ecue_obj is None:
+                        errors.append(f"ECUE introuvable: {ue_name} - {ecue_name} ({level} {semester})")
+                        continue
+                    for rel in self.walk_docs(sub_path):
+                        imported_count += self.import_file(
+                            rel, folder_name, level, semester, ecue_obj, dry_run
+                        )
+            else:
+                level, semester, ue_name, ecue_name = entry
+                if only_level and level != only_level:
                     continue
-                imported_count += self.import_file(
-                    filename, folder_name, level, semester, ecue_obj, dry_run
-                )
+                if only_semester and semester != only_semester:
+                    continue
+                ecue_obj = self.find_ecue(ue_name, ecue_name, level, semester)
+                if ecue_obj is None:
+                    errors.append(f"ECUE introuvable: {ue_name} - {ecue_name} ({level} {semester})")
+                    continue
+                for rel in self.walk_docs(folder_path):
+                    imported_count += self.import_file(
+                        rel, folder_name, level, semester, ecue_obj, dry_run
+                    )
 
         # Résumé
         self.stdout.write(self.style.SUCCESS(
@@ -136,6 +210,27 @@ class Command(BaseCommand):
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
+    def match_folder(self, folder_name):
+        """Trouve l'entrée du mapping par correspondance normalisée exacte."""
+        target = normalize(folder_name)
+        for pattern, entry in FOLDER_MAPPING.items():
+            if normalize(pattern) == target:
+                return entry
+        return None
+
+    def walk_docs(self, folder_path):
+        """Parcourt récursivement un dossier et renvoie les chemins relatifs
+        (depuis media/documents) des fichiers de type document."""
+        rels = []
+        for root, dirs, files in os.walk(folder_path):
+            for f in sorted(files):
+                if f.startswith('~$'):
+                    continue  # fichiers temporaires Word/Office
+                if os.path.splitext(f)[1].lower() in DOC_EXTENSIONS:
+                    abs_path = os.path.join(root, f)
+                    rels.append(os.path.relpath(abs_path, 'media/documents'))
+        return sorted(rels)
+
     def import_root_maquettes(self, media_path, dry_run):
         """Importe les fichiers maquettes posés à la racine de media/documents."""
         count = 0
@@ -216,11 +311,15 @@ class Command(BaseCommand):
                 return e
         return None
 
-    def import_file(self, filename, folder_name, level, semester, ecue_obj, dry_run):
-        """Importe un fichier d'un dossier de matière dans l'ECUE cible."""
+    def import_file(self, rel_path, folder_name, level, semester, ecue_obj, dry_run):
+        """Importe un fichier (chemin relatif documents/...) dans l'ECUE cible."""
+        filename = os.path.basename(rel_path)
         category = self.detect_category(filename)
         title = self.generate_title(filename, folder_name)
-        rel_path = f'documents/{folder_name}/{filename}'
+        rel_path = rel_path.replace('\\', '/')
+        # Garantir le préfixe documents/
+        if not rel_path.startswith('documents/'):
+            rel_path = f'documents/{rel_path}'
 
         # Éviter les doublons exacts (même titre, niveau, semestre, ECUE)
         existing = Document.objects.filter(

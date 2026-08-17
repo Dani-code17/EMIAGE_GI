@@ -55,6 +55,7 @@ STRUCTURE = {
         ],
         'Comptabilité generale': [
             'Modèle comptable', 'Opérations comptables', 'Opérations d\'inventaires',
+            'Comptabilité',  # dossier "Comptabilité" du dépôt L2 (cours généraux)
         ],
         'Anglais': ['Anglais'],
     },
@@ -71,6 +72,33 @@ STRUCTURE = {
         'Contrôle budgétaire': ['Contrôle budgétaire'],
         'Initiation Python': ['Application à la cryptographie'],
         'Projet': ['Projet'],
+    },
+    # ------------------------------- L3 S5 ----------------------------------
+    # Source : dossiers "Cours L3/Cours L3/SEMESTRE 1" (structure provisoire,
+    # à affiner quand la maquette L3 officielle sera fournie).
+    ('L3', 'S5'): {
+        'ALGORITHMIQUE DES GRAPHES': ['ALGORITHMIQUE DES GRAPHES'],
+        'BASE DE DONNEES AVANCEES': ['BASE DE DONNEES AVANCEES'],
+        'COMPTABILITE ANALYTIQUE': ['COMPTABILITE ANALYTIQUE'],
+        'COURS DE PROGRAMMATION': ['COURS DE PROGRAMMATION'],
+        'PROGRAMMATION LINEAIRE': ['PROGRAMMATION LINEAIRE'],
+        'PROGRAMMATION WEB CLIENT': ['PROGRAMMATION WEB CLIENT'],
+        "SYSTEME D'EXPLOITATION": ["SYSTEME D'EXPLOITATION"],
+        'UNIX_C': ['UNIX_C'],
+    },
+    # ------------------------------- L3 S6 ----------------------------------
+    ('L3', 'S6'): {
+        'ANALYSE DE DONNEES': ['ANALYSE DE DONNEES'],
+        'ANGLAIS': ['ANGLAIS'],
+        'ENVIRONNEMENT JURIDIQUE': ['ENVIRONNEMENT JURIDIQUE'],
+        "FILE D'ATTENTE ET GESTION DE STOCKS": ["FILE D'ATTENTE ET GESTION DE STOCKS"],
+        'GESTION FINANCIERE': ['GESTION FINANCIERE'],
+        'GENIE LOGICIEL JAVA': ['GENIE LOGICIEL JAVA'],
+        'INTERNET-INTRANET': ['INTERNET-INTRANET'],
+        "PROGRAMMATION D'APPLICATION": ["PROGRAMMATION D'APPLICATION"],
+        'RESEAU': ['RESEAU'],
+        'THEORIE DU LANGUAGE': ['THEORIE DU LANGUAGE'],
+        'UML': ['UML'],
     },
 }
 

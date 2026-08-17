@@ -44,6 +44,19 @@ case "$MODE" in
     echo "[2/4] Application des migrations sur PostgreSQL..."
     python manage.py migrate --noinput
 
+    echo "[2b/4] Purge des données seedées par les migrations (UE/ECUE/EOE)..."
+    # Les migrations 0004/0007 créent des UE/ECUE et des documents EOE qui
+    # entreraient en conflit avec le dump. On vide les tables core via SQL brut
+    # pour ne PAS déclencher Document.delete() (qui supprimerait les fichiers).
+    python manage.py shell -c "
+from django.db import connection
+with connection.cursor() as c:
+    c.execute('DELETE FROM core_document')
+    c.execute('DELETE FROM core_ecue')
+    c.execute('DELETE FROM core_ue')
+print('Tables core purgées')
+"
+
     echo "[3/4] Chargement des données..."
     python manage.py loaddata "$DUMP_FILE"
 
