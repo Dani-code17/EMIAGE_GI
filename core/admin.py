@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Document, UE, ECUE, Student, StudentStat, Prize, QuizQuestion, QuizAnswer
+from .models import Document, UE, ECUE, Student, StudentStat, Prize, QuizQuestion, QuizAnswer, QuizAttempt
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
@@ -58,3 +58,11 @@ class QuizQuestionAdmin(admin.ModelAdmin):
     list_filter = ('ue__level', 'ue', 'difficulty')
     search_fields = ('question', 'explanation')
     inlines = [QuizAnswerInline]
+
+
+@admin.register(QuizAttempt)
+class QuizAttemptAdmin(admin.ModelAdmin):
+    list_display = ('student', 'ue', 'note', 'correct', 'total', 'difficulty', 'created_at')
+    list_filter = ('ue', 'difficulty', 'created_at')
+    search_fields = ('student__first_name', 'student__last_name', 'student__student_id', 'ue__name')
+    date_hierarchy = 'created_at'

@@ -333,3 +333,8 @@ class QuizFlowTests(TestCase):
         self.assertContains(response, '/20')
         self.assertEqual(response.context['note'], 20.0)
         self.assertEqual(response.context['correct'], 2)
+        # La tentative est enregistrée (historique)
+        from .models import QuizAttempt
+        attempt = QuizAttempt.objects.get(student__student_id='quiz-1')
+        self.assertEqual(attempt.note, 20.0)
+        self.assertEqual(attempt.correct, 2)

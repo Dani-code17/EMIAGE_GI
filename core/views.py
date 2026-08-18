@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.urls import reverse
-from .models import Document, UE, ECUE, Student, StudentStat, Prize, QuizQuestion, QuizAnswer
+from .models import Document, UE, ECUE, Student, StudentStat, Prize, QuizQuestion, QuizAnswer, QuizAttempt
 from django.db.models import Q
 from collections import Counter
 import re
@@ -603,6 +603,15 @@ def espace(request):
     # Prix du mois
     prizes = Prize.objects.filter(month=month).select_related('student').order_by('-id')
 
+    # Historique des quiz (progression)
+    attempts = student.quiz_attempts.select_related('ue')[:10]
+    attempts_count = student.quiz_attempts.count()
+    best = student.quiz_attempts.order_by('-note').first()
+    avg = None
+    if attempts_count:
+        from django.db.models import Avg
+        avg = student.quiz_attempts.aggregate(a=Avg('note'))['a']
+
     return render(request, 'core/espace.html', {
         'student': student,
         'my_stat': my_stat,
@@ -610,6 +619,10 @@ def espace(request):
         'ranking': ranking[:10],
         'prizes': prizes,
         'month': month,
+        'attempts': attempts,
+        'attempts_count': attempts_count,
+        'best': best,
+        'avg': avg,
         'level_counts': {c.lower(): n for c, n in level_counts.items()},
         'ues': ues,
         'niveau_url': reverse(f'core:niveau_{student.level.lower()}'),
@@ -656,6 +669,7 @@ def quiz_choose(request):
             else:
                 request.session['quiz_questions'] = [q.id for q in qs]
                 request.session['quiz_ue'] = ue.name
+                request.session['quiz_difficulty'] = difficulty
                 return redirect('core:quiz_play')
 
     return render(request, 'core/quiz_choose.html', {
@@ -719,6 +733,17 @@ def quiz_result(request):
 
     total = len(ordered)
     note = round((correct / total) * 20, 1) if total else 0
+
+    # Enregistre la tentative (historique de progression)
+    ue = UE.objects.filter(name=request.session.get('quiz_ue', '')).first()
+    QuizAttempt.objects.create(
+        student=student,
+        ue=ue,
+        difficulty=request.session.get('quiz_difficulty', ''),
+        correct=correct,
+        total=total,
+        note=note,
+    )
 
     return render(request, 'core/quiz_result.html', {
         'student': student,

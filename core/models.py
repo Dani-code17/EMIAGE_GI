@@ -212,3 +212,27 @@ class QuizAnswer(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class QuizAttempt(models.Model):
+    """Tentative de quiz d'un étudiant (pour suivre la progression)."""
+
+    student = models.ForeignKey(Student, related_name='quiz_attempts', on_delete=models.CASCADE)
+    ue = models.ForeignKey(UE, related_name='quiz_attempts', on_delete=models.SET_NULL, null=True, verbose_name='UE')
+    difficulty = models.CharField(max_length=10, blank=True, verbose_name='Difficulté')
+    correct = models.PositiveIntegerField(default=0, verbose_name='Bonnes réponses')
+    total = models.PositiveIntegerField(default=0, verbose_name='Questions')
+    note = models.DecimalField(max_digits=4, decimal_places=1, default=0, verbose_name='Note /20')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Date')
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Tentative de quiz'
+        verbose_name_plural = 'Tentatives de quiz'
+
+    def __str__(self):
+        return f'{self.student} — {self.ue} : {self.note}/20'
+
+    @property
+    def percentage(self):
+        return round((self.correct / self.total) * 100) if self.total else 0

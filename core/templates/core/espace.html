@@ -129,7 +129,7 @@
                 </div>
             </div>
 
-            <!-- Colonne droite : stats + prix -->
+            <!-- Colonne droite : stats + progression + prix -->
             <div class="space-y-6">
                 <div>
                     <p class="section-eyebrow mb-4">En chiffres</p>
@@ -152,6 +152,47 @@
                         </div>
                     </div>
                 </div>
+
+                {% if attempts %}
+                    <div>
+                        <p class="section-eyebrow mb-4">Ma progression</p>
+                        <div class="glass-card rounded-3xl p-5 mb-3 flex items-center justify-around text-center">
+                            <div>
+                                <p class="font-display font-bold text-xl text-gradient">{{ attempts_count }}</p>
+                                <p class="text-[10px] text-gray-400 uppercase tracking-wider">Quiz faits</p>
+                            </div>
+                            <div class="w-px h-10 bg-white/10"></div>
+                            <div>
+                                <p class="font-display font-bold text-xl text-gradient">{{ best.note|floatformat:1 }}/20</p>
+                                <p class="text-[10px] text-gray-400 uppercase tracking-wider">Meilleure note</p>
+                            </div>
+                            <div class="w-px h-10 bg-white/10"></div>
+                            <div>
+                                <p class="font-display font-bold text-xl text-gradient">{{ avg|floatformat:1 }}/20</p>
+                                <p class="text-[10px] text-gray-400 uppercase tracking-wider">Moyenne</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2.5">
+                            {% for a in attempts %}
+                                <div class="glass-card rounded-2xl px-4 py-3 flex items-center gap-3">
+                                    <span class="w-9 h-9 rounded-xl flex items-center justify-center font-display font-bold text-sm shrink-0
+                                        {% if a.note >= 12 %}bg-accent/15 text-accent{% elif a.note >= 8 %}bg-yellow-400/15 text-yellow-400{% else %}bg-red-500/15 text-red-400{% endif %}">
+                                        {{ a.note|floatformat:0 }}
+                                    </span>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-semibold truncate">{{ a.ue.name|default:"Quiz" }}</p>
+                                        <p class="text-xs text-gray-500">{{ a.correct }}/{{ a.total }} bonnes réponses · {{ a.created_at|date:"d/m" }}</p>
+                                    </div>
+                                    {% if a.difficulty %}
+                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {% if a.difficulty == 'facile' %}bg-accent/15 text-accent{% elif a.difficulty == 'difficile' %}bg-red-500/15 text-red-400{% else %}bg-secondary/15 text-secondary{% endif %}">
+                                            {{ a.difficulty }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
 
                 {% if prizes %}
                     <div>
