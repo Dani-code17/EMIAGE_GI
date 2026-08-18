@@ -645,7 +645,7 @@ def deconnexion(request):
 # ============================================================
 
 def quiz_choose(request):
-    """Choix : UE (de SON niveau) → difficulté → nombre de questions."""
+    """Choix : UE (de SON niveau) → ECUE → difficulté → nombre de questions."""
     student = _current_student(request)
     if not student:
         return redirect('core:connexion')
@@ -655,6 +655,7 @@ def quiz_choose(request):
     ues = UE.objects.filter(level=student.level).exclude(code='UE MAQUETTES').order_by('semester', 'code')
     if request.method == 'POST':
         ue_id = request.POST.get('ue')
+        ecue_id = request.POST.get('ecue', '')
         difficulty = request.POST.get('difficulte', '')
         number = int(request.POST.get('nombre', 5) or 5)
         ue = UE.objects.filter(id=ue_id, level=student.level).first()
@@ -662,11 +663,13 @@ def quiz_choose(request):
             error = 'Merci de choisir une UE de ton niveau.'
         else:
             qs = QuizQuestion.objects.filter(ue=ue)
+            if ecue_id:
+                qs = qs.filter(ecue_id=ecue_id)
             if difficulty in ('facile', 'normal', 'difficile'):
                 qs = qs.filter(difficulty=difficulty)
             qs = list(qs.order_by('?')[:number])
             if not qs:
-                error = 'Aucune question disponible pour cette UE pour le moment. Reviens plus tard !'
+                error = 'Aucune question disponible pour cette sélection pour le moment. Reviens plus tard !'
             else:
                 request.session['quiz_questions'] = [q.id for q in qs]
                 request.session['quiz_ue'] = ue.name
@@ -676,6 +679,7 @@ def quiz_choose(request):
     return render(request, 'core/quiz_choose.html', {
         'student': student,
         'ues': ues,
+        'ecues': ECUE.objects.filter(ue__level=student.level).select_related('ue').order_by('ue__code', 'name'),
         'error': error,
     })
 

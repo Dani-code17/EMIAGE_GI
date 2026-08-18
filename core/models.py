@@ -189,6 +189,7 @@ class QuizQuestion(models.Model):
     ]
 
     ue = models.ForeignKey(UE, related_name='questions', on_delete=models.CASCADE, verbose_name='UE')
+    ecue = models.ForeignKey(ECUE, related_name='questions', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='ECUE')
     question = models.TextField(verbose_name='Question')
     difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES, default='normal', verbose_name='Difficulté')
     explanation = models.TextField(blank=True, verbose_name='Explication / correction')
