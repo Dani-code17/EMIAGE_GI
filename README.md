@@ -58,6 +58,7 @@ python manage.py runserver
 | `AWS_STORAGE_BUCKET_NAME` | — | Nom du bucket R2 |
 | `AWS_S3_ENDPOINT_URL` | — | `https://<account_id>.r2.cloudflarestorage.com` |
 | `AWS_S3_CUSTOM_DOMAIN` | — | Domaine public du bucket (optionnel, sinon URL S3) |
+| `MEDIA_BASE_URL` | `/media/` | Base des URLs de fichiers. En attendant R2 : `https://raw.githubusercontent.com/Dani-code17/emiage-media/main/media/` (fichiers servis depuis le dépôt GitHub `emiage-media`) |
 
 ## Tests
 

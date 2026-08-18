@@ -190,7 +190,10 @@ else:
     }
 
 # Media files (Uploaded files)
-MEDIA_URL = '/media/'
+# En local : disque (media/). En production sans R2 : fichiers servis depuis
+# un dépôt GitHub via MEDIA_BASE_URL (ex: https://raw.githubusercontent.com/Dani-code17/emiage-media/main/)
+MEDIA_BASE_URL = os.environ.get('MEDIA_BASE_URL', '/media/')
+MEDIA_URL = MEDIA_BASE_URL if MEDIA_BASE_URL.endswith('/') else MEDIA_BASE_URL + '/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
