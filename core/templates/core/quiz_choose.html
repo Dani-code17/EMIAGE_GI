@@ -21,23 +21,27 @@
 
         <form method="post" class="glass-card rounded-3xl p-7 space-y-5">
             {% csrf_token %}
-            <div>
-                <label for="niveau" class="block text-sm font-semibold mb-2">Niveau</label>
-                <select id="niveau" class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
-                    <option value="" class="bg-navy" disabled selected>Choisis ton niveau...</option>
-                    {% for code, label in student.LEVEL_CHOICES %}
-                        <option value="{{ code }}" class="bg-navy" {% if code == student.level %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
-                </select>
+            <div class="flex items-center gap-3 glass-card rounded-2xl px-4 py-3 mb-2">
+                <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-white shrink-0">
+                    <i class="fas fa-graduation-cap"></i>
+                </span>
+                <div>
+                    <p class="text-xs text-gray-400 uppercase tracking-wider">Ton niveau</p>
+                    <p class="font-display font-bold">{{ student.get_level_display }}</p>
+                </div>
+                <span class="ml-auto text-xs font-semibold text-accent"><i class="fas fa-lock mr-1"></i>Quiz de ton niveau uniquement</span>
             </div>
             <div>
                 <label for="ue" class="block text-sm font-semibold mb-2">Unité d'enseignement</label>
                 <select id="ue" name="ue" required class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
                     <option value="" class="bg-navy" disabled selected>Choisis une UE...</option>
                     {% for ue in ues %}
-                        <option value="{{ ue.id }}" class="bg-navy" data-level="{{ ue.level }}">{{ ue.get_level_display }} · {{ ue.code }} — {{ ue.name }}</option>
+                        <option value="{{ ue.id }}" class="bg-navy">{{ ue.code }} — {{ ue.name }}</option>
                     {% endfor %}
                 </select>
+                {% if not ues %}
+                    <p class="text-xs text-gray-500 mt-1.5"><i class="fas fa-info-circle mr-1"></i>Aucune UE disponible pour ton niveau pour le moment.</p>
+                {% endif %}
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -63,21 +67,4 @@
         </form>
     </div>
 </section>
-
-<script>
-    // Filtre les UE selon le niveau choisi
-    document.addEventListener('DOMContentLoaded', function () {
-        const niveau = document.getElementById('niveau');
-        const ue = document.getElementById('ue');
-        function filterUes() {
-            const level = niveau.value;
-            Array.from(ue.options).forEach(function (opt) {
-                if (!opt.value) return;
-                opt.hidden = opt.dataset.level !== level;
-            });
-            ue.value = '';
-        }
-        niveau.addEventListener('change', filterUes);
-    });
-</script>
 {% endblock %}

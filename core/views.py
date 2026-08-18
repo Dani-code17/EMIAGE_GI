@@ -521,7 +521,7 @@ def inscription(request):
         elif level not in valid_levels:
             error = 'Merci de choisir un niveau valide.'
         elif len(student_id) < 3:
-            error = 'Choisis un identifiant d\'au moins 3 caractères (ex: ton matricule).'
+            error = 'Choisis un identifiant permanent (IP) d\'au moins 3 caractères.'
         elif Student.objects.filter(student_id__iexact=student_id).exists():
             error = 'Cet identifiant est déjà utilisé. Choisis-en un autre.'
         elif len(password) < 6:
@@ -551,7 +551,7 @@ def connexion(request):
         identifier = request.POST.get('identifiant', '').strip()
         password = request.POST.get('mdp', '')
 
-        # L'identifiant peut être le matricule OU « prénom nom »
+        # L'identifiant peut être l'IP OU « prénom nom »
         parts = identifier.split()
         student = Student.objects.filter(student_id__iexact=identifier).first()
         if not student and len(parts) >= 2:
@@ -645,20 +645,21 @@ def deconnexion(request):
 # ============================================================
 
 def quiz_choose(request):
-    """Choix : niveau → UE → difficulté → nombre de questions."""
+    """Choix : UE (de SON niveau) → difficulté → nombre de questions."""
     student = _current_student(request)
     if not student:
         return redirect('core:connexion')
 
     error = None
-    ues = UE.objects.exclude(code='UE MAQUETTES').order_by('level', 'semester', 'code')
+    # L'étudiant ne peut faire que les quiz de SON niveau
+    ues = UE.objects.filter(level=student.level).exclude(code='UE MAQUETTES').order_by('semester', 'code')
     if request.method == 'POST':
         ue_id = request.POST.get('ue')
         difficulty = request.POST.get('difficulte', '')
         number = int(request.POST.get('nombre', 5) or 5)
-        ue = UE.objects.filter(id=ue_id).first()
+        ue = UE.objects.filter(id=ue_id, level=student.level).first()
         if not ue:
-            error = 'Merci de choisir une UE.'
+            error = 'Merci de choisir une UE de ton niveau.'
         else:
             qs = QuizQuestion.objects.filter(ue=ue)
             if difficulty in ('facile', 'normal', 'difficile'):

@@ -111,7 +111,7 @@ class Student(models.Model):
     first_name = models.CharField(max_length=100, verbose_name='Prénom')
     last_name = models.CharField(max_length=100, verbose_name='Nom')
     level = models.CharField(max_length=2, choices=LEVEL_CHOICES, verbose_name='Niveau')
-    student_id = models.CharField(max_length=50, unique=True, verbose_name='Identifiant / matricule')
+    student_id = models.CharField(max_length=50, unique=True, verbose_name='Identifiant permanent (IP)')
     # default='' uniquement pour la migration ; les comptes créés passent par set_password()
     password = models.CharField(max_length=128, default='', verbose_name='Mot de passe')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date d'inscription")

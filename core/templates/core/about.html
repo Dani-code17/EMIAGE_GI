@@ -1,14 +1,53 @@
 {% extends 'core/base.html' %}
-{% block title %}Qui sommes nous ? - E-MIAGE-GI{% endblock %}
+{% block title %}Qui sommes-nous ? - E-MIAGE-GI{% endblock %}
 
 {% block content %}
-<section class="pt-28 pb-16 px-6">
-    <div class="max-w-4xl mx-auto text-left">
-        <h1 class="text-3xl font-display font-bold mb-6">Qui sommes nous ?</h1>
-        <p class="text-gray-400 mb-4">Nous sommes un groupe d'étudiant en Licence 2 Miage à L'UFHB passionnés d'informatique. Nous avons réalisé ce site dans l'optique d'améliorer nos compétences web mais aussi parce que le besoin est réel : l'école n'a pas de site, aucun endroit où trouver les cours — c'est uniquement du bouche-à-oreille.</p>
-        <p class="text-gray-400 mb-4">Nous sommes des informaticiens, donc nous apportons cette solution pour vous, pour nous et pour tous. Et comme on dit ici :</p>
-        <blockquote class="bg-dark p-4 rounded-lg text-primary font-bold mb-6">"MIAGE C'EST FAMILLE" — bienvenue dans la famille, chers tous.</blockquote>
-        <p class="text-gray-400">Merci de votre confiance. Si vous souhaitez contribuer, contactez-nous via <a href="mailto:Bonjour@novaminds.com" class="text-primary hover:underline">Bonjour@novaminds.com</a>.</p>
+<section class="pt-28 md:pt-36 pb-16 px-4 md:px-6">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+            <p class="section-eyebrow">À propos</p>
+            <h1 class="section-title text-3xl md:text-5xl mt-2">Qui sommes-nous ?</h1>
+            <div class="underline-gradient w-16 mx-auto mt-3"></div>
+        </div>
+
+        <div class="glass-card rounded-3xl p-7 md:p-10 space-y-6">
+            <div class="flex items-center gap-4">
+                <span class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-2xl shrink-0">
+                    <i class="fas fa-code"></i>
+                </span>
+                <div>
+                    <h2 class="font-display font-bold text-xl">MetydaTech</h2>
+                    <p class="text-sm text-gray-400">L'équipe derrière E-MIAGE-GI</p>
+                </div>
+            </div>
+
+            <p class="text-gray-300 leading-relaxed">
+                Nous sommes des étudiants en Licence MIAGE à l'<span class="text-light font-medium">UFHB</span>, passionnés
+                d'informatique et membres de la communauté MetydaTech. Nous avons réalisé cette plateforme dans l'optique
+                d'améliorer nos compétences web, mais aussi — et surtout — parce que le besoin est réel : l'école n'avait
+                aucun espace centralisé pour les cours, les TD, les examens et les maquettes. Tout se passait par
+                bouche-à-oreille.
+            </p>
+            <p class="text-gray-300 leading-relaxed">
+                E-MIAGE-GI est né de cette envie : mettre à la disposition de chaque miagiste une bibliothèque
+                numérique complète, un espace d'entraînement avec des quiz par matière, et un classement mensuel pour
+                encourager la régularité. Comme des informaticiens, nous avons décidé de bâtir la solution nous-mêmes —
+                pour vous, pour nous, pour tous.
+            </p>
+
+            <blockquote class="bg-white/5 border-l-4 border-primary rounded-r-2xl p-5 text-primary font-bold">
+                "MIAGE C'EST FAMILLE" — bienvenue dans la famille, chers tous.
+            </blockquote>
+
+            <p class="text-gray-400 text-sm leading-relaxed">
+                Merci de votre confiance. Pour toute question, suggestion ou contribution,
+                écrivez-nous à <a href="mailto:metydatech@gmail.com" class="text-primary hover:underline font-semibold">metydatech@gmail.com</a>.
+            </p>
+
+            <p class="text-gray-500 text-xs border-t border-white/5 pt-4">
+                Version 2 de la plateforme — implémentée par Yeo Daniel.
+            </p>
+        </div>
     </div>
 </section>
 {% endblock %}
