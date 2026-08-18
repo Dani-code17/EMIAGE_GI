@@ -4,16 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1A1A2E">
+    <meta name="theme-color" content="#0B0B1E">
     <meta name="google-site-verification" content="TS4KVTjig14AFA58XmJOZuasZ-HgvjrIqso9pt1cEeo" />
-    <!-- Deployed commit: a7df3b3 -->
-    <title>{% block title %}E-MIAGE-GI | La Platforme en ligne des Miagistes{% endblock %}</title>
-    
+    <title>{% block title %}E-MIAGE-GI | La Plateforme en ligne des Miagistes{% endblock %}</title>
+
     <!-- CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.10/typed.min.js"></script>
-    
+
     <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
@@ -22,9 +21,9 @@
                     colors: {
                         primary: '#FF6B6B',
                         secondary: '#6C63FF',
-                        dark: '#1A1A2E',
+                        dark: '#0B0B1E',
+                        navy: '#14142B',
                         light: '#F5F5F7',
-                        glass: 'rgba(26, 26, 46, 0.7)',
                         accent: '#4ADE80'
                     },
                     fontFamily: {
@@ -34,19 +33,20 @@
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
                         'fadeIn': 'fadeIn 1s ease-in forwards',
-                        'fadeInUp': 'fadeInUp 1s ease-in forwards'
+                        'fadeInUp': 'fadeInUp .9s cubic-bezier(.22,1,.36,1) forwards',
+                        'pulse-slow': 'pulse 5s ease-in-out infinite',
                     },
                     keyframes: {
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' }
+                            '50%': { transform: 'translateY(-16px)' }
                         },
                         fadeIn: {
                             '0%': { opacity: '0' },
                             '100%': { opacity: '1' }
                         },
                         fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '0%': { opacity: '0', transform: 'translateY(28px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' }
                         }
                     }
@@ -54,140 +54,155 @@
             }
         }
     </script>
-    
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Poppins:wght@300;400;500;600&display=swap');
+
+        html { scroll-behavior: smooth; }
+
         body {
-            background-color: #1A1A2E;
+            background-color: #0B0B1E;
             color: #F5F5F7;
             min-height: 100vh;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
-        
-        /* Style pour s'assurer que la navbar est toujours au-dessus */
-        .site-navbar {
-            position: relative;
-            z-index: 9999 !important;
+
+        /* Fond : nébuleuse violette/corail subtile */
+        .site-bg::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background:
+                radial-gradient(600px 400px at 85% -5%, rgba(108, 99, 255, .16), transparent 60%),
+                radial-gradient(700px 500px at -10% 20%, rgba(255, 107, 107, .12), transparent 60%),
+                radial-gradient(500px 400px at 60% 110%, rgba(74, 222, 128, .07), transparent 60%),
+                #0B0B1E;
         }
-        
-        /* Style pour s'assurer que le menu déroulant est visible */
-        .site-navbar .dropdown-menu {
-            z-index: 10000 !important;
+        .site-bg::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+            background-size: 26px 26px;
+            pointer-events: none;
         }
-        
+
+        /* Cartes glass modernes */
         .glass-card {
-            background: rgba(26, 26, 46, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.045);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .35s ease;
         }
-        
         .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(108, 99, 255, 0.2);
+            transform: translateY(-6px);
+            border-color: rgba(108, 99, 255, .35);
+            box-shadow: 0 18px 40px -12px rgba(108, 99, 255, .35);
         }
-        
-        .hero-overlay {
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+
+        /* Texte dégradé */
+        .text-gradient {
+            background: linear-gradient(92deg, #FF6B6B, #6C63FF 60%, #4ADE80);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-        
-        .floating {
-            animation: float 6s ease-in-out infinite;
+
+        /* Boutons */
+        .btn-primary {
+            background: linear-gradient(92deg, #FF6B6B, #6C63FF);
+            color: #fff;
+            box-shadow: 0 8px 24px -8px rgba(108, 99, 255, .55);
+            transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
         }
-        
-        .delay-200 {
-            animation-delay: 0.2s;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.08);
+            box-shadow: 0 14px 30px -8px rgba(108, 99, 255, .65);
         }
-        
-        .delay-400 {
-            animation-delay: 0.4s;
+        .btn-ghost {
+            border: 1px solid rgba(255, 255, 255, .25);
+            transition: all .25s ease;
         }
-        
-        .delay-600 {
-            animation-delay: 0.6s;
+        .btn-ghost:hover {
+            border-color: #FF6B6B;
+            color: #FF6B6B;
+            transform: translateY(-2px);
         }
-        
-        .delay-800 {
-            animation-delay: 0.8s;
+
+        /* Titres de section */
+        .section-eyebrow {
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            font-size: .72rem;
+            font-weight: 600;
+            color: #6C63FF;
         }
-        
-        .skill-bar {
-            height: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            overflow: hidden;
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            letter-spacing: -.02em;
         }
-        
-        .skill-progress {
-            height: 100%;
-            background-color: #6C63FF;
-            border-radius: 5px;
-            position: relative;
-            width: 0;
-            transition: width 1.5s ease-in-out;
+        .underline-gradient {
+            background: linear-gradient(92deg, #FF6B6B, #6C63FF);
+            height: 4px;
+            border-radius: 999px;
         }
-        
-        .typed-cursor {
-            color: #FF6B6B !important;
-            font-size: 3.8rem;
-            opacity: 1;
-            animation: blink 0.7s infinite;
-        }
-        
-        @keyframes blink { 
-            0% { opacity: 1; } 
-            50% { opacity: 0; } 
-            100% { opacity: 1; } 
-        }
-        
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .transition-transform {
-            transition: transform 0.2s ease-in-out;
-        }
+
+        .delay-200 { animation-delay: .2s; }
+        .delay-400 { animation-delay: .4s; }
+        .delay-600 { animation-delay: .6s; }
+        .delay-800 { animation-delay: .8s; }
+
+        .typed-cursor { color: #FF6B6B !important; opacity: 1; animation: blink .7s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { scrollbar-width: none; }
+
+        /* Zone de sécurité pour la barre de navigation mobile */
+        .safe-bottom { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); }
+
+        /* Fichiers en attente de chargement (vignettes) */
+        .aspect-video { aspect-ratio: 16 / 9; }
     </style>
     {% block extra_css %}{% endblock %}
     {% block extra_head %}{% endblock %}
 </head>
-<body class="font-sans">
-    <!-- Navigation Bar -->
+<body class="font-sans site-bg">
+    <!-- Navigation -->
     {% include 'core/includes/navbar.html' %}
-    
-    <!-- Main Content -->
-    {% block content %}{% endblock %}
-    
+
+    <!-- Contenu principal -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
     <!-- Footer -->
     {% include 'core/includes/footer.html' %}
-    
-    <!-- Scripts -->
+
+    <!-- Bouton remonter (au-dessus de la barre mobile) -->
+    <div id="scroll-top-btn"
+         class="fixed bottom-24 md:bottom-6 right-4 md:right-6 z-40 w-11 h-11 rounded-full btn-primary flex items-center justify-center cursor-pointer opacity-0 invisible transition-all duration-300"
+         aria-label="Remonter en haut">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Scroll to top button
-            const scrollTopBtn = document.createElement('div');
-            scrollTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
-            scrollTopBtn.className = 'fixed bottom-24 md:bottom-6 right-6 z-50 w-12 h-12 bg-primary text-light rounded-full flex items-center justify-center cursor-pointer opacity-0 invisible transition-all duration-300';
-            document.body.appendChild(scrollTopBtn);
-            
+        document.addEventListener('DOMContentLoaded', function () {
+            const btn = document.getElementById('scroll-top-btn');
             window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 300) {
-                    scrollTopBtn.classList.remove('opacity-0', 'invisible');
-                    scrollTopBtn.classList.add('opacity-100', 'visible');
-                } else {
-                    scrollTopBtn.classList.remove('opacity-100', 'visible');
-                    scrollTopBtn.classList.add('opacity-0', 'invisible');
-                }
-            });
-            
-            scrollTopBtn.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
+                const show = window.pageYOffset > 300;
+                btn.classList.toggle('opacity-0', !show);
+                btn.classList.toggle('invisible', !show);
+                btn.classList.toggle('opacity-100', show);
+                btn.classList.toggle('visible', show);
+            }, { passive: true });
+            btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
         });
     </script>
     {% block extra_js %}{% endblock %}

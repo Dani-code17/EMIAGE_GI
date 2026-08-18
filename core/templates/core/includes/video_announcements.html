@@ -1,188 +1,135 @@
 {% load static %}
-
-<!-- Video Annonces -->
-<section class="py-12 px-6" id="announcements">
+<!-- ===== Annonces vidéo ===== -->
+<section class="py-16 md:py-24 px-4 md:px-6" id="annonces">
     <div class="max-w-6xl mx-auto">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-display font-bold">Les Annonces</h2>
-            <a href="#" class="text-primary hover:underline">Voir tout</a>
+        <div class="flex items-end justify-between gap-4 mb-10">
+            <div>
+                <p class="section-eyebrow">À la une</p>
+                <h2 class="section-title text-3xl md:text-4xl mt-2">Les Annonces</h2>
+                <div class="underline-gradient w-14 mt-3"></div>
+            </div>
         </div>
 
-    <!-- Carousel: mirrored from index.html -->
-    <div id="carousel" class="relative overflow-hidden">
-            <div id="carousel-items" class="flex transition-transform duration-500">
-                <!-- Vidéo 1 -->
-                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/fC2iLHDpvd4?si=dO8KUBlgbs40FmiR')">
-                    <div class="relative">
-                        <img src="{% static 'core/images/7.jpg' %}" alt="Video thumbnail" class="w-full h-48 object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <button class="bg-primary bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition">
-                                <i class="fas fa-play text-2xl text-light"></i>
-                            </button>
+        <div class="relative">
+            <div id="carousel" class="overflow-hidden rounded-3xl">
+                <div id="carousel-items" class="flex transition-transform duration-500 ease-out">
+                    <!-- Vidéo 1 -->
+                    <div class="glass-card rounded-3xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-[calc(50%-12px)] md:mr-6" onclick="openVideo('https://www.youtube.com/embed/fC2iLHDpvd4?si=dO8KUBlgbs40FmiR')">
+                        <div class="relative aspect-video">
+                            <img src="{% static 'core/images/7.jpg' %}" alt="Vignette" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/10 transition">
+                                <button class="w-16 h-16 rounded-full btn-primary flex items-center justify-center hover:scale-110 transition">
+                                    <i class="fas fa-play text-xl text-white ml-1"></i>
+                                </button>
+                            </div>
+                            <span class="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-2.5 py-1 rounded-full backdrop-blur">1:51</span>
                         </div>
-                        <div class="absolute bottom-4 left-4 bg-dark bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
-                            1:51
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-display font-bold text-xl mb-2">ANNONCE OFFICIELLE DE LA JOURNÉE D’INTÉGRATION 2025</h3>
-                        <p class="text-gray-400 mb-4">📢 ANNONCE OFFICIELLE – JOURNÉE D’INTÉGRATION MIAGE 2025 🎉.</p>
-                    </div>
-                </div>
-
-                <!-- Vidéo 2 -->
-                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/r-ITA2OFiVA')">
-
-                    <div class="relative">
-
-                        <img src="{% static 'core/images/16.png' %}" alt="Video thumbnail" class="w-full h-48 object-cover">
-
-                        <div class="absolute inset-0 flex items-center justify-center">
-
-                            <button class="bg-primary bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition">
-
-                                <i class="fas fa-play text-2xl text-light"></i>
-
-                            </button>
-
-                        </div>
-
-                        <div class="absolute bottom-4 left-4 bg-dark bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
-
-                            0:25
-
-                        </div>
-
-                    </div>
-
-                    <div class="p-6">
-
-                        <h3 class="font-display font-bold text-xl mb-2">LANCEMENT DE LA MINI JOURNÉE SPORTIVE 2025</h3>
-
-                        <p class="text-gray-400 mb-4">🏀⚽♟ LA mini Journée Sportive des MIAGistes : ce samedi 18 janvier 2024 à Génie 2000, venez briller au basket, au football ou aux jeux de société ! Que vous soyez athlète ou stratégie, fun et compétition seront au rendez-vous.</p>
-
-                    </div>
-
-                </div>
-
-                <!-- Vidéo 3 -->
-
-                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/TBXKFJC3lhc?si=YsLwbcC7ZCSLhagF')">
-
-                    <div class="relative">
-
-                        <img src="{% static 'core/images/14.png' %}" alt="Video thumbnail" class="w-full h-48 object-cover">
-
-                        <div class="absolute inset-0 flex items-center justify-center">
-
-                            <button class="bg-primary bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition">
-
-                                <i class="fas fa-play text-2xl text-light"></i>
-
-                            </button>
-
-                        </div>
-
-                        <div class="absolute bottom-4 left-4 bg-dark bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
-
-                            2:28
-
-                        </div>
-
-                    </div>
-
-                    <div class="p-6">
-
-                        <h3 class="font-display font-bold text-xl mb-2">#OCTOBREROSE</h3>
-
-                        <p class="text-gray-400 mb-4">Qui dit Octobre Rose dit Sensibilisation contre le cancer du sein. Dans un monde où tout va trop vite, nous oublions souvent ce qui compte vraiment. La vie est précieuse. La santé est précieuse. Et chaque sourire, chaque moment de bien-être partagé l'est encore plus.</p>
-
-                    </div>
-
-                </div>
-
-                <!-- Vidéo 4 -->
-                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-1/2" onclick="openVideo('https://www.youtube.com/embed/TzpkThGAZNU?si=SbWOaIO2c8i56X9e')">
-                    <div class="relative">
-                        <img src="{% static 'core/images/15.jpg' %}" alt="Video thumbnail" class="w-full h-48 object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <button class="bg-primary bg-opacity-90 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition">
-                                <i class="fas fa-play text-2xl text-light"></i>
-                            </button>
-                        </div>
-                        <div class="absolute bottom-4 left-4 bg-dark bg-opacity-70 text-white text-xs px-3 py-1 rounded-full">
-                            0:53
+                        <div class="p-6">
+                            <h3 class="font-display font-bold text-lg mb-2 leading-snug">ANNONCE OFFICIELLE DE LA JOURNÉE D'INTÉGRATION 2025</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">📢 ANNONCE OFFICIELLE – JOURNÉE D'INTÉGRATION MIAGE 2025 🎉</p>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <h3 class="font-display font-bold text-xl mb-2">TOUS EN NOIR & BLANC MIAGISTE</h3>
-                        <p class="text-gray-400 mb-4">Bonsoir à tous, pour célébrer ce début de mois en finesse, en élégance et pour un futur projet, le nouveau comité d'organisation de la journée d'intégration 2025 vous propose un thème « corbeau » c'est à dire que le Jeudi 03, habillez vous de manière responsable en noir, blanc ou encore noir blanc et défilez dans les couloirs de Cestia.🥳.</p>
+
+                    <!-- Vidéo 2 -->
+                    <div class="glass-card rounded-3xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-[calc(50%-12px)] md:mr-6" onclick="openVideo('https://www.youtube.com/embed/r-ITA2OFiVA')">
+                        <div class="relative aspect-video">
+                            <img src="{% static 'core/images/16.png' %}" alt="Vignette" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                <button class="w-16 h-16 rounded-full btn-primary flex items-center justify-center hover:scale-110 transition">
+                                    <i class="fas fa-play text-xl text-white ml-1"></i>
+                                </button>
+                            </div>
+                            <span class="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-2.5 py-1 rounded-full backdrop-blur">0:25</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-display font-bold text-lg mb-2 leading-snug">LANCEMENT DE LA MINI JOURNÉE SPORTIVE 2025</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">🏀⚽♟ Samedi à Génie 2000 : basket, foot et jeux de société — fun et compétition garantis !</p>
+                        </div>
+                    </div>
+
+                    <!-- Vidéo 3 -->
+                    <div class="glass-card rounded-3xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-[calc(50%-12px)] md:mr-6" onclick="openVideo('https://www.youtube.com/embed/TBXKFJC3lhc?si=YsLwbcC7ZCSLhagF')">
+                        <div class="relative aspect-video">
+                            <img src="{% static 'core/images/14.png' %}" alt="Vignette" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                <button class="w-16 h-16 rounded-full btn-primary flex items-center justify-center hover:scale-110 transition">
+                                    <i class="fas fa-play text-xl text-white ml-1"></i>
+                                </button>
+                            </div>
+                            <span class="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-2.5 py-1 rounded-full backdrop-blur">2:28</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-display font-bold text-lg mb-2 leading-snug">#OCTOBREROSE</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Sensibilisation contre le cancer du sein : la vie est précieuse, la santé est précieuse.</p>
+                        </div>
+                    </div>
+
+                    <!-- Vidéo 4 -->
+                    <div class="glass-card rounded-3xl overflow-hidden cursor-pointer flex-shrink-0 w-full md:w-[calc(50%-12px)] md:mr-6" onclick="openVideo('https://www.youtube.com/embed/TzpkThGAZNU?si=SbWOaIO2c8i56X9e')">
+                        <div class="relative aspect-video">
+                            <img src="{% static 'core/images/15.jpg' %}" alt="Vignette" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                <button class="w-16 h-16 rounded-full btn-primary flex items-center justify-center hover:scale-110 transition">
+                                    <i class="fas fa-play text-xl text-white ml-1"></i>
+                                </button>
+                            </div>
+                            <span class="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-2.5 py-1 rounded-full backdrop-blur">0:53</span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-display font-bold text-lg mb-2 leading-snug">TOUS EN NOIR & BLANC MIAGISTE</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Habille-toi en noir, blanc ou noir & blanc et défile dans les couloirs de Cestia. 🥳</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Contrôles du carousel -->
-
-            <div class="absolute top-1/2 left-0 right-0 transform -translate-y-1/2 flex justify-between px-4">
-
-                <button id="prev-btn" class="bg-primary bg-opacity-90 rounded-full w-10 h-10 flex items-center justify-center hover:scale-110 transition">
-
-                    <i class="fas fa-chevron-left text-white"></i>
-
-                </button>
-
-                <button id="next-btn" class="bg-primary bg-opacity-90 rounded-full w-10 h-10 flex items-center justify-center hover:scale-110 transition">
-
-                    <i class="fas fa-chevron-right text-white"></i>
-
-                </button>
-
-            </div>
-
+            <!-- Contrôles -->
+            <button id="prev-btn" class="absolute top-1/2 -left-3 md:-left-5 -translate-y-1/2 w-11 h-11 rounded-full btn-primary flex items-center justify-center z-10" aria-label="Précédent">
+                <i class="fas fa-chevron-left text-white"></i>
+            </button>
+            <button id="next-btn" class="absolute top-1/2 -right-3 md:-right-5 -translate-y-1/2 w-11 h-11 rounded-full btn-primary flex items-center justify-center z-10" aria-label="Suivant">
+                <i class="fas fa-chevron-right text-white"></i>
+            </button>
         </div>
     </div>
 </section>
 
-<!-- Modal pour lire la vidéo -->
-<div id="video-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+<!-- Modal vidéo -->
+<div id="video-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center hidden z-[120] p-4">
     <div class="relative w-full max-w-4xl">
-        <button class="absolute top-4 right-4 text-white text-2xl" onclick="closeVideo()">&times;</button>
-        <iframe id="video-frame" class="w-full h-96" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <button class="absolute -top-12 right-0 text-white text-2xl w-10 h-10 rounded-full hover:bg-white/10 transition" onclick="closeVideo()" aria-label="Fermer">
+            &times;
+        </button>
+        <iframe id="video-frame" class="w-full aspect-video rounded-2xl bg-black" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
 </div>
 
-<!-- Scripts pour le carousel et les vidéos -->
 <script>
     function openVideo(videoUrl) {
-        const modal = document.getElementById('video-modal');
-        const iframe = document.getElementById('video-frame');
-        iframe.src = videoUrl;
-        modal.classList.remove('hidden');
+        document.getElementById('video-frame').src = videoUrl;
+        document.getElementById('video-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
     }
-
     function closeVideo() {
-        const modal = document.getElementById('video-modal');
-        const iframe = document.getElementById('video-frame');
-        iframe.src = '';
-        modal.classList.add('hidden');
+        document.getElementById('video-frame').src = '';
+        document.getElementById('video-modal').classList.add('hidden');
+        document.body.style.overflow = '';
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const carousel = document.getElementById('carousel-items');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
-        let currentIndex = 0;
+        let current = 0;
 
-        function slideCarousel(index) {
+        function go(index) {
             const items = document.querySelectorAll('#carousel-items > div');
-            const totalItems = items.length;
-            const itemWidth = items[0].offsetWidth;
-            currentIndex = (index + totalItems) % totalItems;
-            carousel.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+            const total = items.length;
+            current = (index + total) % total;
+            carousel.style.transform = 'translateX(-' + current * 100 + '%)';
         }
 
-        setInterval(() => slideCarousel(currentIndex + 1), 5000);
-        prevBtn.addEventListener('click', () => slideCarousel(currentIndex - 1));
-        nextBtn.addEventListener('click', () => slideCarousel(currentIndex + 1));
+        setInterval(() => go(current + 1), 6000);
+        prevBtn.addEventListener('click', () => go(current - 1));
+        nextBtn.addEventListener('click', () => go(current + 1));
     });
 </script>

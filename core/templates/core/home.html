@@ -4,74 +4,105 @@
 {% block title %}E-MIAGE-GI | Accueil{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="pt-28 pb-16 px-6 bg-glass" id="home">
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div class="space-y-6">
-            <h4 class="text-secondary text-xl opacity-0 animate-fadeIn">Bienvenue dans</h4>
-            <div class="relative">
-                <h1 class="text-3xl md:text-6xl font-display font-bold opacity-0 animate-fadeIn delay-200 flex flex-wrap items-center gap-2">
-                    E-MIAGE-GI
-                    <div class="h-[1.2em] overflow-hidden inline-flex items-center" style="min-width:120px;margin-left:0.15em;">
-                        <span id="typed-text" class="text-primary whitespace-nowrap text-lg md:text-xl"></span>
-                    </div>
-                </h1>
-            </div>
-            <p class="text-gray-400 text-base md:text-lg opacity-0 animate-fadeIn delay-400">
-                Quand l'apprentissage rencontre la simplicité. Découvrez vos cours, TD, TP et anciens sujets, réunis dans un seul espace
-                et accessibles à tout moment. Apprenez, révisez et progressez, où que vous soyez.
+<!-- ===== Hero ===== -->
+<section class="pt-28 md:pt-40 pb-16 md:pb-24 px-4 md:px-6" id="home">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="space-y-6 text-center lg:text-left">
+            <span class="inline-flex items-center gap-2 glass-card rounded-full px-4 py-1.5 text-xs font-medium text-gray-300 opacity-0 animate-fadeIn">
+                <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                La plateforme officielle des Miagistes
+            </span>
+            <h1 class="text-4xl sm:text-5xl xl:text-6xl font-display font-extrabold leading-[1.05] tracking-tight opacity-0 animate-fadeIn delay-200">
+                Bienvenue dans
+                <span class="block mt-2">E-MIAGE-GI
+                    <span class="block text-gradient mt-1 h-[1.15em] overflow-hidden">
+                        <span id="typed-text" class="text-2xl sm:text-3xl xl:text-4xl font-bold"></span>
+                    </span>
+                </span>
+            </h1>
+            <p class="text-gray-400 text-base md:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0 opacity-0 animate-fadeIn delay-400">
+                Quand l'apprentissage rencontre la simplicité. Découvrez vos <span class="text-light font-medium">cours</span>,
+                <span class="text-light font-medium">TD</span>, <span class="text-light font-medium">TP</span> et anciens
+                <span class="text-light font-medium">sujets</span>, réunis dans un seul espace — accessibles où que tu sois.
             </p>
-            <div class="flex flex-wrap gap-4 opacity-0 animate-fadeIn delay-600">
-                <a href="#recipes" class="bg-primary text-light font-bold py-3 px-6 rounded-full hover:bg-opacity-90 transition">
-                    Vie Estudiantine
+            <div class="flex flex-wrap justify-center lg:justify-start gap-4 opacity-0 animate-fadeIn delay-600">
+                <a href="{% url 'core:bibliotheque_index' %}" class="btn-primary inline-flex items-center gap-2 font-semibold px-7 py-3.5 rounded-full">
+                    <i class="fas fa-book-open"></i> Accéder à la bibliothèque
                 </a>
-                <a href="#creatives" class="bg-transparent text-light font-bold py-3 px-6 rounded-full border border-light hover:bg-light hover:text-dark transition">
-                    La JI-MIAGE
+                <a href="#vie" class="btn-ghost inline-flex items-center gap-2 font-semibold px-7 py-3.5 rounded-full text-gray-200">
+                    <i class="fas fa-play text-primary"></i> Nos activités
                 </a>
+            </div>
+            <div class="flex items-center justify-center lg:justify-start gap-6 pt-2 opacity-0 animate-fadeIn delay-800">
+                <div>
+                    <p class="font-display font-extrabold text-xl text-gradient">849+</p>
+                    <p class="text-xs text-gray-500">Documents</p>
+                </div>
+                <div class="w-px h-8 bg-white/10"></div>
+                <div>
+                    <p class="font-display font-extrabold text-xl text-gradient">5</p>
+                    <p class="text-xs text-gray-500">Niveaux (L1 → M2)</p>
+                </div>
+                <div class="w-px h-8 bg-white/10"></div>
+                <div>
+                    <p class="font-display font-extrabold text-xl text-gradient">52</p>
+                    <p class="text-xs text-gray-500">Unités d'enseignement</p>
+                </div>
             </div>
         </div>
-        
-        <div class="relative opacity-0 animate-fadeIn delay-800">
-            <div class="absolute -top-10 -left-10 w-32 h-32 bg-secondary rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="pointer-events:none;"></div>
-            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="pointer-events:none;"></div>
-            <img src="{% static 'core/images/1.jpg' %}" alt="Creative Food" class="relative z-10 rounded-2xl shadow-2xl w-full h-auto max-w-md mx-auto floating">
+
+        <!-- Visuel -->
+        <div class="relative hidden lg:block opacity-0 animate-fadeIn delay-800">
+            <div class="absolute -top-8 -left-8 w-40 h-40 rounded-full bg-secondary/30 blur-3xl animate-pulse-slow"></div>
+            <div class="absolute -bottom-10 -right-6 w-44 h-44 rounded-full bg-primary/25 blur-3xl animate-pulse-slow"></div>
+            <div class="relative z-10 grid grid-cols-2 gap-4">
+                <img src="{% static 'core/images/1.jpg' %}" alt="Vie MIAGE" class="rounded-3xl object-cover w-full h-64 floating shadow-2xl shadow-black/40">
+                <img src="{% static 'core/images/6.jpg' %}" alt="MIAGE Project" class="rounded-3xl object-cover w-full h-64 mt-10 floating shadow-2xl shadow-black/40" style="animation-delay: 1.2s;">
+                <div class="col-span-2 glass-card rounded-3xl p-5 flex items-center gap-4">
+                    <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent to-secondary flex items-center justify-center text-white shrink-0">
+                        <i class="fas fa-graduation-cap text-lg"></i>
+                    </span>
+                    <div>
+                        <p class="font-display font-bold">MIAGE UFHB</p>
+                        <p class="text-sm text-gray-400">Abidjan · Côte d'Ivoire 🇨🇮</p>
+                    </div>
+                    <span class="ml-auto text-xs font-semibold glass-card rounded-full px-3 py-1.5 text-accent">Ouvert à tous</span>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Section des catégories -->
+<!-- ===== Catégories ===== -->
 {% include 'core/includes/categories.html' %}
 
-<!-- Section Vie Estudiantine -->
+<!-- ===== Vie Estudiantine ===== -->
 {% include 'core/includes/student_life.html' %}
 
-<!-- Section JI-MIAGE -->
+<!-- ===== JI-MIAGE ===== -->
 {% include 'core/includes/ji_miage.html' %}
 
-<!-- Section Annonces Rapides -->
-{% include 'core/includes/announcements.html' %}
+<!-- ===== TikTok ===== -->
+{% include 'core/includes/tiktok.html' %}
 
-<!-- Section Annonces Vidéo -->
+<!-- ===== Annonces Vidéo ===== -->
 {% include 'core/includes/video_announcements.html' %}
 
-<!-- Section Cartographie -->
+<!-- ===== Cartographie ===== -->
 {% include 'core/includes/maps.html' %}
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Typed.js initialization
-    document.addEventListener('DOMContentLoaded', function() {
-        var typed = new Typed("#typed-text", {
-            strings: ["Éducation", "Tech", "Simplicité", "Accessibilité"],
-            typeSpeed: 60,
-            backSpeed: 45,
+    document.addEventListener('DOMContentLoaded', function () {
+        new Typed("#typed-text", {
+            strings: ["Apprends.", "Révise.", "Progresse."],
+            typeSpeed: 55,
+            backSpeed: 40,
             loop: true,
             showCursor: true,
             cursorChar: '|',
         });
     });
-
-    // Reste de vos scripts JavaScript ici
 </script>
 {% endblock %}

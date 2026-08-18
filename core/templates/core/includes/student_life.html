@@ -1,61 +1,132 @@
 {% load static %}
-<!-- Featured Recipes -->
-<section class="py-12 px-6" id="recipes">
+<!-- ===== Vie Estudiantine ===== -->
+<section class="py-16 md:py-24 px-4 md:px-6" id="vie">
     <div class="max-w-6xl mx-auto">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-display font-bold">Vie Estudiantine</h2>
-            <a href="https://www.instagram.com/jimiage2025" class="text-primary hover:underline" target="_blank">Voir Plus</a>
+        <div class="text-center mb-12">
+            <p class="section-eyebrow">La communauté</p>
+            <h2 class="section-title text-3xl md:text-4xl mt-2 mb-3">Vie Estudiantine</h2>
+            <div class="underline-gradient w-16 mx-auto"></div>
+            <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-sm md:text-base">
+                Entre challenges, culture, sport et solidarité : la MIAGE vit fort. Découvre les moments forts de notre année.
+            </p>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Event 1 -->
-            <div class="glass-card rounded-2xl overflow-hidden">
-                <div class="relative h-64">
-                    <img src="{% static 'core/img/6.jpg' %}" alt="MIAGE Projet Challenge" class="w-full h-full object-cover">
-                    <div class="absolute top-4 right-4 bg-glass rounded-full w-10 h-10 flex items-center justify-center cursor-pointer" onclick="toggleHeart(this)" data-key="event-1">
-                        <i class="far fa-heart text-primary transition-transform transform"></i>
-                    </div>
-                    <div class="absolute bottom-4 left-4 bg-primary text-light text-xs font-bold px-3 py-1 rounded-full">
-                        4.9 <i class="fas fa-star ml-1"></i>
-                    </div>
+
+        <!-- Événements (photos) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6 mb-14">
+            <div class="glass-card rounded-3xl overflow-hidden group">
+                <div class="relative h-56 md:h-64 overflow-hidden">
+                    <img src="{% static 'core/vietudiante/miage-project.jpg' %}" alt="MIAGE Project Challenge"
+                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <span class="absolute top-4 left-4 bg-black/50 backdrop-blur text-accent text-xs font-bold px-3 py-1.5 rounded-full">
+                        <i class="fas fa-rocket mr-1.5"></i>Challenge
+                    </span>
                 </div>
                 <div class="p-6">
-                    <h3 class="font-display font-bold text-xl mb-2">Le MIAGE Projet Challenge</h3>
-                    <p class="text-gray-400 text-sm mb-4">Le Miage Project Challenge 2025 est une opportunité pour les étudiants (L1, L2, M1, M2…) de former une équipe mixte et de présenter un projet innovant sur un thème libre. Ce projet va s’axer sur le développement d’une application mobile, web ou bureau en vue de résoudre la problématique de votre projet..</p>
+                    <h3 class="font-display font-bold text-xl mb-2">Le MIAGE Project Challenge</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Forme une équipe mixte (L1 → M2) et présente un projet innovant — application mobile, web ou bureau — sur un thème libre.
+                    </p>
                 </div>
             </div>
 
-            <!-- Event 2 -->
-            <div class="glass-card rounded-2xl overflow-hidden">
-                    <div class="relative h-64">
-                    <img src="{% static 'core/img/4.jpg' %}" alt="MIAGE Fashion Week" class="w-full h-full object-cover">
-                    <div class="absolute top-4 right-4 bg-glass rounded-full w-10 h-10 flex items-center justify-center cursor-pointer" onclick="toggleHeart(this)" data-key="event-2">
-                        <i class="far fa-heart text-primary"></i>
-                    </div>
-                    <div class="absolute bottom-4 left-4 bg-primary text-light text-xs font-bold px-3 py-1 rounded-full">
-                        4.7 <i class="fas fa-star ml-1"></i>
-                    </div>
+            <div class="glass-card rounded-3xl overflow-hidden group">
+                <div class="relative h-56 md:h-64 overflow-hidden">
+                    <img src="{% static 'core/vietudiante/fashionweek.jpg' %}" alt="The MIAGE Fashion Week"
+                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <span class="absolute top-4 left-4 bg-black/50 backdrop-blur text-primary text-xs font-bold px-3 py-1.5 rounded-full">
+                        <i class="fas fa-wand-magic-sparkles mr-1.5"></i>Culture
+                    </span>
                 </div>
                 <div class="p-6">
                     <h3 class="font-display font-bold text-xl mb-2">The MIAGE Fashion Week</h3>
-                    <p class="text-gray-400 text-sm mb-4">La mode est un langage qui crée un lien entre le passé, le présent et le futur. Soyez prêt à écrire votre propre histoire avec notre FASHION WEEK.</p>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        La mode est un langage qui relie le passé, le présent et le futur. Prêt à écrire ta propre histoire ?
+                    </p>
                 </div>
             </div>
 
-            <!-- Event 3 -->
-            <div class="glass-card rounded-2xl overflow-hidden">
-                    <div class="relative h-64">
-                    <img src="{% static 'core/img/5.jpg' %}" alt="#NOVEMBREBLEU" class="w-full h-full object-cover">
-                    <div class="absolute top-4 right-4 bg-glass rounded-full w-10 h-10 flex items-center justify-center cursor-pointer" onclick="toggleHeart(this)" data-key="event-3">
-                        <i class="far fa-heart text-primary"></i>
-                    </div>
-                    <div class="absolute bottom-4 left-4 bg-primary text-light text-xs font-bold px-3 py-1 rounded-full">
-                        4.8 <i class="fas fa-star ml-1"></i>
-                    </div>
+            <div class="glass-card rounded-3xl overflow-hidden group">
+                <div class="relative h-56 md:h-64 overflow-hidden">
+                    <img src="{% static 'core/vietudiante/journee-sportive.jpg' %}" alt="Journée Sportive"
+                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <span class="absolute top-4 left-4 bg-black/50 backdrop-blur text-secondary text-xs font-bold px-3 py-1.5 rounded-full">
+                        <i class="fas fa-medal mr-1.5"></i>Sport
+                    </span>
                 </div>
                 <div class="p-6">
-                    <h3 class="font-display font-bold text-xl mb-2">#NOVEMBREBLEU</h3>
-                    <p class="text-gray-400 text-sm mb-4">MIAGE se mobilise avec force et détermination dans ce combat contre le cancer de la prostate. Et ce n’est pas tout... Restez à l’écoute, car ce mois de novembre vous réserve des surprises exceptionnelles qui feront vibrer notre communauté MIAGE ! 🤫✨</p>
+                    <h3 class="font-display font-bold text-xl mb-2">La Journée Sportive</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Basket, foot, jeux de société… que tu sois athlète ou stratège, le fun et la compétition sont au rendez-vous.
+                    </p>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl overflow-hidden group">
+                <div class="relative h-56 md:h-64 overflow-hidden">
+                    <img src="{% static 'core/vietudiante/parrainage.jpg' %}" alt="Parrainage"
+                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <span class="absolute top-4 left-4 bg-black/50 backdrop-blur text-accent text-xs font-bold px-3 py-1.5 rounded-full">
+                        <i class="fas fa-handshake mr-1.5"></i>Solidarité
+                    </span>
+                </div>
+                <div class="p-6">
+                    <h3 class="font-display font-bold text-xl mb-2">Le Parrainage</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Les anciens accompagnent les nouveaux : intégration réussie, entraide et transmission au sein de la famille MIAGE.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nos vidéos -->
+        <div class="mb-8 flex items-end justify-between gap-4">
+            <div>
+                <p class="section-eyebrow">En images</p>
+                <h3 class="section-title text-2xl md:text-3xl mt-1">Nos dernières vidéos</h3>
+            </div>
+            <a href="https://www.instagram.com/jimiage2025" target="_blank" rel="noopener"
+               class="text-primary text-sm font-semibold hover:underline whitespace-nowrap">
+                Voir plus <i class="fas fa-arrow-right ml-1"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+            <div class="glass-card rounded-3xl overflow-hidden">
+                <video controls preload="none" playsinline
+                       poster="{% static 'core/vietudiante/miage-project.jpg' %}"
+                       class="w-full aspect-video object-cover bg-black">
+                    <source src="{% static 'core/vietudiante/video-1.mp4' %}" type="video/mp4">
+                    Ton navigateur ne supporte pas la lecture vidéo.
+                </video>
+                <div class="p-5">
+                    <h4 class="font-display font-bold">La MIAGE en action</h4>
+                    <p class="text-xs text-gray-400 mt-1">Vie estudiantine · 2026</p>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl overflow-hidden">
+                <video controls preload="none" playsinline
+                       poster="{% static 'core/vietudiante/fashionweek.jpg' %}"
+                       class="w-full aspect-video object-cover bg-black">
+                    <source src="{% static 'core/vietudiante/video-2.mp4' %}" type="video/mp4">
+                    Ton navigateur ne supporte pas la lecture vidéo.
+                </video>
+                <div class="p-5">
+                    <h4 class="font-display font-bold">Souvenirs de la MIAGE</h4>
+                    <p class="text-xs text-gray-400 mt-1">Vie estudiantine · 2026</p>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl overflow-hidden">
+                <video controls preload="none" playsinline
+                       poster="{% static 'core/vietudiante/journee-sportive.jpg' %}"
+                       class="w-full aspect-video object-cover bg-black">
+                    <source src="{% static 'core/vietudiante/video-3.mp4' %}" type="video/mp4">
+                    Ton navigateur ne supporte pas la lecture vidéo.
+                </video>
+                <div class="p-5">
+                    <h4 class="font-display font-bold">Ensemble, on est plus forts</h4>
+                    <p class="text-xs text-gray-400 mt-1">Vie estudiantine · 2026</p>
                 </div>
             </div>
         </div>

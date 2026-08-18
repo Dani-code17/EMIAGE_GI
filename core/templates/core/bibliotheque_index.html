@@ -2,7 +2,7 @@
 {% block title %}Bibliothèque - E-MIAGE-GI{% endblock %}
 
 {% block content %}
-<section class="pt-28 pb-16 px-6">
+<section class="pt-28 md:pt-36 pb-16 px-4 md:px-6">
     <div class="max-w-6xl mx-auto">
         <!-- Fil d'Ariane -->
         <nav class="mb-8 text-sm text-gray-400 flex items-center flex-wrap gap-2" aria-label="Fil d'Ariane">
@@ -11,35 +11,37 @@
             <span class="text-gray-200 font-semibold">Bibliothèque</span>
         </nav>
 
-        <div class="text-center mb-10">
-            <h1 class="text-3xl font-display font-bold mb-2">Médiathèques</h1>
-            <p class="text-gray-400">
+        <div class="text-center mb-12">
+            <p class="section-eyebrow">Tous les cours au même endroit</p>
+            <h1 class="section-title text-3xl md:text-5xl mt-2 mb-4">Médiathèques</h1>
+            <div class="underline-gradient w-16 mx-auto mb-6"></div>
+            <p class="text-gray-400 max-w-2xl mx-auto text-sm md:text-base">
                 {{ total_documents }} document{{ total_documents|pluralize }} réparti{{ total_documents|pluralize:"s" }} sur {{ levels|length }} niveaux.
-                Choisissez votre niveau pour accéder aux cours, TD/TP, anciens sujets et maquettes.
+                Choisis ton niveau pour accéder aux cours, TD/TP, anciens sujets et maquettes.
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
             {% for level in levels %}
-                <a href="{{ level.url }}" class="glass-card p-6 rounded-xl group">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-14 h-14 bg-gradient-to-br {% cycle 'from-primary to-secondary' 'from-secondary to-accent' 'from-accent to-primary' 'from-primary to-accent' 'from-secondary to-primary' %} rounded-full flex items-center justify-center group-hover:scale-110 transition">
-                            <i class="fas {{ level.icon }} text-xl text-light"></i>
+                <a href="{{ level.url }}" class="glass-card p-6 md:p-7 rounded-3xl group">
+                    <div class="flex items-start justify-between mb-5">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br {% cycle 'from-primary to-secondary' 'from-secondary to-accent' 'from-accent to-primary' 'from-primary to-accent' 'from-secondary to-primary' %} flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition">
+                            <i class="fas {{ level.icon }} text-xl text-white"></i>
                         </div>
-                        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-dark border border-gray-700 text-gray-300">
+                        <span class="text-xs font-bold px-3 py-1.5 rounded-full glass-card text-gray-300">
                             {{ level.count }} doc{{ level.count|pluralize }}
                         </span>
                     </div>
-                    <h2 class="text-xl font-display font-bold mb-1 group-hover:text-primary transition">{{ level.label }}</h2>
-                    <p class="text-sm text-gray-400 mb-4">
+                    <h2 class="text-xl font-display font-bold mb-2 group-hover:text-primary transition">{{ level.label }}</h2>
+                    <p class="text-sm text-gray-400 mb-5">
                         {% if level.count > 0 %}
                             Cours, TD/TP, anciens sujets et maquettes disponibles.
                         {% else %}
                             Bibliothèque en cours de préparation.
                         {% endif %}
                     </p>
-                    <span class="text-primary font-semibold text-sm inline-flex items-center gap-1">
-                        Explorer <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i>
+                    <span class="text-primary font-semibold text-sm inline-flex items-center gap-1.5">
+                        Explorer <i class="fas fa-arrow-right group-hover:translate-x-1.5 transition"></i>
                     </span>
                 </a>
             {% endfor %}

@@ -22,3 +22,7 @@ Cours L3/
 
 # Fichiers pédagogiques : servis depuis le dépôt emiage-media (GitHub) / R2 en production
 media/
+
+# Sources brutes (copiées dans core/static/core/)
+vietudiante/
+jimiage/

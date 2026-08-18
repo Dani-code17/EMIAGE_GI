@@ -1,52 +1,64 @@
 {% load static %}
-<!-- Creative Spotlight -->
-<section class="py-12 px-6 bg-glass" id="creatives">
+<!-- ===== La JI-MIAGE ===== -->
+<section class="py-16 md:py-24 px-4 md:px-6" id="jimiage">
     <div class="max-w-6xl mx-auto">
-        <h2 class="text-3xl font-display font-bold mb-12 text-center">La JI-MIAGE</h2>
-        
-        <div class="glass-card rounded-2xl overflow-hidden md:flex">
-            <div class="md:w-1/3 relative">
-                <img src="{% static 'core/images/8.jpg' %}" alt="Creative Chef" class="w-full h-full object-cover">
+        <div class="text-center mb-12">
+            <p class="section-eyebrow">L'événement</p>
+            <h2 class="section-title text-3xl md:text-4xl mt-2 mb-3">La JI-MIAGE</h2>
+            <div class="underline-gradient w-16 mx-auto"></div>
+            <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-sm md:text-base">
+                La Journée d'Intégration : panel, conférences, débats, MIAGE Project et bien d'autres surprises.
+            </p>
+        </div>
+
+        <div class="glass-card rounded-3xl overflow-hidden lg:flex">
+            <!-- Galerie photo -->
+            <div class="lg:w-1/2 p-4 md:p-5">
+                <div class="grid grid-cols-3 gap-2.5 md:gap-3 h-full">
+                    <img src="{% static 'core/jimiage/ji-1.jpg' %}" alt="JI-MIAGE 1" class="col-span-2 row-span-2 w-full h-full min-h-[220px] md:min-h-[300px] object-cover rounded-2xl">
+                    <img src="{% static 'core/jimiage/ji-2.jpg' %}" alt="JI-MIAGE 2" class="w-full h-28 md:h-40 object-cover rounded-2xl">
+                    <img src="{% static 'core/jimiage/ji-3.jpg' %}" alt="JI-MIAGE 3" class="w-full h-28 md:h-40 object-cover rounded-2xl">
+                    <img src="{% static 'core/jimiage/ji-4.jpg' %}" alt="JI-MIAGE 4" class="w-full h-24 md:h-32 object-cover rounded-2xl">
+                    <img src="{% static 'core/jimiage/ji-5.jpg' %}" alt="JI-MIAGE 5" class="w-full h-24 md:h-32 object-cover rounded-2xl">
+                    <img src="{% static 'core/jimiage/ji-6.jpg' %}" alt="JI-MIAGE 6" class="w-full h-24 md:h-32 object-cover rounded-2xl">
+                    <img src="{% static 'core/jimiage/ji-7.jpg' %}" alt="JI-MIAGE 7" class="w-full h-24 md:h-32 object-cover rounded-2xl">
+                    <img src="{% static 'core/jimiage/ji-8.jpg' %}" alt="JI-MIAGE 8" class="w-full h-24 md:h-32 object-cover rounded-2xl">
+                    <img src="{% static 'core/jimiage/ji-9.jpg' %}" alt="JI-MIAGE 9" class="w-full h-24 md:h-32 object-cover rounded-2xl">
+                </div>
             </div>
-            <div class="md:w-2/3 p-8">
-                <div class="flex justify-between items-start mb-6">
-                    <div>
-                        <h3 class="font-display font-bold text-2xl">La Journée d'Intégration</h3>
-                        <p class="text-secondary font-medium">L'intégration : la meilleure addition à ta vie étudiante !</p>
-                    </div>
-                    <button class="bg-primary text-light font-bold py-2 px-6 rounded-full hover:bg-opacity-90 transition">
-                        <a href="https://photos.app.goo.gl/xijgvPBvXaEPwvG46" target="_blank" rel="noopener noreferrer">Voir Catalogue</a>
-                    </button>
-                </div>
-                
-                <p class="text-gray-300 mb-6">
-                    🚀 Panel, Conférence, Débat, Miage Project et encore d'autres surprises ! Nous avons le plaisir de vous annoncer officiellement la date et le lieu de la JOURNÉE D'INTÉGRATION 2025.
+
+            <!-- Contenu -->
+            <div class="lg:w-1/2 p-6 md:p-10 flex flex-col justify-center">
+                <h3 class="font-display font-bold text-2xl md:text-3xl mb-3">L'intégration : la meilleure addition à ta vie étudiante !</h3>
+                <p class="text-gray-400 leading-relaxed mb-7">
+                    🚀 Panel, conférence, débat, MIAGE Project et encore d'autres surprises !
+                    Nous avons le plaisir de vous annoncer officiellement la date et le lieu de la Journée d'Intégration.
                 </p>
-                
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-dark rounded-lg p-3 text-center">
-                        <p class="text-primary font-bold text-xl">125+</p>
-                        <p class="text-xs text-gray-400">Etudiants</p>
+
+                <div class="grid grid-cols-3 gap-3 md:gap-4 mb-8">
+                    <div class="glass-card rounded-2xl p-4 text-center">
+                        <p class="font-display font-bold text-2xl text-gradient">125+</p>
+                        <p class="text-xs text-gray-400 mt-1">Étudiants</p>
                     </div>
-                    <div class="bg-dark rounded-lg p-3 text-center">
-                        <p class="text-primary font-bold text-xl">500+</p>
-                        <p class="text-xs text-gray-400">Followers</p>
+                    <div class="glass-card rounded-2xl p-4 text-center">
+                        <p class="font-display font-bold text-2xl text-gradient">500+</p>
+                        <p class="text-xs text-gray-400 mt-1">Followers</p>
                     </div>
-                    <div class="bg-dark rounded-lg p-3 text-center">
-                        <p class="text-primary font-bold text-xl">10+</p>
-                        <p class="text-xs text-gray-400">Existence</p>
+                    <div class="glass-card rounded-2xl p-4 text-center">
+                        <p class="font-display font-bold text-2xl text-gradient">10+</p>
+                        <p class="text-xs text-gray-400 mt-1">Années d'existence</p>
                     </div>
                 </div>
-                
-                <div>
-                    <h4 class="font-display font-bold mb-3">Aperçu</h4>
-                    <div class="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
-                        <img src="{% static 'core/images/12.jpg' %}" alt="Work 1" class="w-20 h-20 rounded-lg object-cover">
-                        <img src="{% static 'core/images/10.jpg' %}" alt="Work 2" class="w-20 h-20 rounded-lg object-cover">
-                        <img src="{% static 'core/images/11.jpg' %}" alt="Work 3" class="w-20 h-20 rounded-lg object-cover">
-                        <img src="{% static 'core/images/13.jpg' %}" alt="Work 4" class="w-20 h-20 rounded-lg object-cover">
-                        <img src="{% static 'core/images/9.jpg' %}" alt="Work 5" class="w-20 h-20 rounded-lg object-cover">
-                    </div>
+
+                <div class="flex flex-wrap gap-3">
+                    <a href="https://photos.app.goo.gl/xijgvPBvXaEPwvG46" target="_blank" rel="noopener"
+                       class="btn-primary inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-full">
+                        <i class="fas fa-images"></i> Voir le catalogue
+                    </a>
+                    <a href="https://www.instagram.com/jimiage2025" target="_blank" rel="noopener"
+                       class="btn-ghost inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-full text-gray-200">
+                        <i class="fab fa-instagram"></i> @jimiage2025
+                    </a>
                 </div>
             </div>
         </div>
