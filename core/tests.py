@@ -171,3 +171,69 @@ class PageTests(TestCase):
             response.context['total_documents'],
             sum(l['count'] for l in levels),
         )
+
+
+class StudentFlowTests(TestCase):
+    """Parcours étudiant : inscription, connexion, espace, déconnexion."""
+
+    def test_inscription_cree_compte_et_connecte(self):
+        response = self.client.post(reverse('core:inscription'), {
+            'prenom': 'Daniel',
+            'nom': 'YEO',
+            'niveau': 'L2',
+        })
+        self.assertRedirects(response, reverse('core:espace'))
+        # Le compte existe avec un identifiant généré
+        from .models import Student
+        student = Student.objects.get(first_name='Daniel', last_name='YEO')
+        self.assertEqual(student.level, 'L2')
+        self.assertTrue(student.student_id.startswith('EMG-'))
+        # Session connectée
+        self.assertEqual(self.client.session['student_id'], student.id)
+
+    def test_inscription_champs_requis(self):
+        response = self.client.post(reverse('core:inscription'), {
+            'prenom': '',
+            'nom': 'YEO',
+            'niveau': 'L2',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'nom et ton prénom')
+        from .models import Student
+        self.assertEqual(Student.objects.count(), 0)
+
+    def test_connexion_retrouve_compte(self):
+        from .models import Student
+        student = Student.objects.create(first_name='Marie', last_name='Kouassi', level='L1')
+        response = self.client.post(reverse('core:connexion'), {
+            'prenom': 'marie',
+            'nom': 'KOUASSI',
+            'niveau': 'L1',
+        })
+        self.assertRedirects(response, reverse('core:espace'))
+        self.assertEqual(self.client.session['student_id'], student.id)
+
+    def test_connexion_inconnue(self):
+        response = self.client.post(reverse('core:connexion'), {
+            'prenom': 'Inconnu',
+            'nom': 'Personne',
+            'niveau': 'L1',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Aucun compte trouvé')
+
+    def test_espace_redirige_sans_connexion(self):
+        response = self.client.get(reverse('core:espace'))
+        self.assertRedirects(response, reverse('core:connexion'))
+
+    def test_deconnexion_vide_session(self):
+        from .models import Student
+        student = Student.objects.create(first_name='Aya', last_name='NGuessan', level='M1')
+        self.client.post(reverse('core:connexion'), {
+            'prenom': 'Aya',
+            'nom': 'NGuessan',
+            'niveau': 'M1',
+        })
+        self.client.get(reverse('core:deconnexion'))
+        response = self.client.get(reverse('core:espace'))
+        self.assertRedirects(response, reverse('core:connexion'))

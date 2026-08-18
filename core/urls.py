@@ -14,4 +14,8 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('bibliotheque/', views.bibliotheque_index, name='bibliotheque_index'),
     path('meta-test/', views.meta_test, name='meta_test'),
+    path('inscription/', views.inscription, name='inscription'),
+    path('connexion/', views.connexion, name='connexion'),
+    path('espace/', views.espace, name='espace'),
+    path('deconnexion/', views.deconnexion, name='deconnexion'),
 ]

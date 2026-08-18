@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Document, UE, ECUE
+from .models import Document, UE, ECUE, Student
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
@@ -24,3 +24,10 @@ class ECUEAdmin(admin.ModelAdmin):
     list_filter = ('ue__level', 'ue__semester', 'ue')
     search_fields = ('name', 'ue__name', 'ue__code')
     prepopulated_fields = { 'slug': ('name',) }
+
+
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('student_id', 'first_name', 'last_name', 'level', 'created_at')
+    list_filter = ('level',)
+    search_fields = ('first_name', 'last_name', 'student_id')

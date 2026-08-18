@@ -101,3 +101,34 @@ class ECUE(models.Model):
             base = f"{self.ue.level}-{self.ue.semester}-{self.ue.code}-{self.name}"
             self.slug = slugify(base)
         super().save(*args, **kwargs)
+
+
+class Student(models.Model):
+    """Étudiant inscrit sur la plateforme (nom, prénom, niveau)."""
+
+    LEVEL_CHOICES = Document.LEVEL_CHOICES
+
+    first_name = models.CharField(max_length=100, verbose_name='Prénom')
+    last_name = models.CharField(max_length=100, verbose_name='Nom')
+    level = models.CharField(max_length=2, choices=LEVEL_CHOICES, verbose_name='Niveau')
+    student_id = models.CharField(max_length=20, unique=True, blank=True, verbose_name='Identifiant étudiant')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date d'inscription")
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Étudiant'
+        verbose_name_plural = 'Étudiants'
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name} ({self.level})'
+
+    def save(self, *args, **kwargs):
+        if not self.student_id:
+            year = self.created_at.year if self.created_at else 2026
+            count = Student.objects.filter(created_at__year=year).count() + 1
+            self.student_id = f'EMG-{year}-{count:04d}'
+            # garantit l'unicité en cas de collision (rare)
+            while Student.objects.filter(student_id=self.student_id).exclude(pk=self.pk).exists():
+                count += 1
+                self.student_id = f'EMG-{year}-{count:04d}'
+        super().save(*args, **kwargs)

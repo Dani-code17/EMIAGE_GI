@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.http import HttpResponse
-from .models import Document, UE, ECUE
+from django.urls import reverse
+from .models import Document, UE, ECUE, Student
 from django.db.models import Q
 from collections import Counter
 import re
@@ -15,6 +16,7 @@ def _niveau_extra_context(niveau_label, level, documents):
     counts['MAQUETTES'] = Document.objects.filter(level=level, category='MAQUETTES').count()
     return {
         'niveau_label': niveau_label,
+        'niveau_url': reverse(f'core:niveau_{level.lower()}'),
         'category_counts': {c.lower(): n for c, n in counts.items()},
         'selection_count': documents.count(),
     }
@@ -485,6 +487,99 @@ def meta_test(request):
     """Return a minimal HTML page containing the google-site-verification meta tag for deployment verification."""
     html = '''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="google-site-verification" content="TS4KVTjig14AFA58XmJOZuasZ-HgvjrIqso9pt1cEeo" /><title>Meta Test</title></head><body>Meta test page</body></html>'''
     return HttpResponse(html)
+
+
+# ============================================================
+# Espace étudiants (inscription / connexion / espace)
+# ============================================================
+
+def _current_student(request):
+    """Renvoie l'étudiant connecté (session) ou None."""
+    student_id = request.session.get('student_id')
+    if not student_id:
+        return None
+    return Student.objects.filter(id=student_id).first()
+
+
+def inscription(request):
+    """Création de compte : nom, prénom, niveau uniquement."""
+    if _current_student(request):
+        return redirect('core:espace')
+
+    error = None
+    if request.method == 'POST':
+        first_name = request.POST.get('prenom', '').strip()
+        last_name = request.POST.get('nom', '').strip()
+        level = request.POST.get('niveau', '')
+        valid_levels = dict(Student.LEVEL_CHOICES)
+
+        if not first_name or not last_name:
+            error = 'Merci de renseigner ton nom et ton prénom.'
+        elif level not in valid_levels:
+            error = 'Merci de choisir un niveau valide.'
+        else:
+            student = Student.objects.create(
+                first_name=first_name,
+                last_name=last_name,
+                level=level,
+            )
+            request.session['student_id'] = student.id
+            return redirect('core:espace')
+
+    return render(request, 'core/inscription.html', {
+        'error': error,
+        'levels': dict(Student.LEVEL_CHOICES),
+    })
+
+
+def connexion(request):
+    """Connexion : retrouver son compte avec nom, prénom, niveau."""
+    if _current_student(request):
+        return redirect('core:espace')
+
+    error = None
+    if request.method == 'POST':
+        first_name = request.POST.get('prenom', '').strip()
+        last_name = request.POST.get('nom', '').strip()
+        level = request.POST.get('niveau', '')
+        student = Student.objects.filter(
+            first_name__iexact=first_name,
+            last_name__iexact=last_name,
+            level=level,
+        ).first()
+        if student:
+            request.session['student_id'] = student.id
+            return redirect('core:espace')
+        error = 'Aucun compte trouvé avec ces informations. Vérifie ton nom, prénom et niveau, ou inscris-toi.'
+
+    return render(request, 'core/connexion.html', {
+        'error': error,
+        'levels': dict(Student.LEVEL_CHOICES),
+    })
+
+
+def espace(request):
+    """Espace étudiant : bienvenue, identifiant, accès rapide à son niveau."""
+    student = _current_student(request)
+    if not student:
+        return redirect('core:connexion')
+
+    level_counts = Counter(
+        Document.objects.filter(level=student.level).values_list('category', flat=True)
+    )
+    ues = UE.objects.filter(level=student.level).exclude(code='UE MAQUETTES').order_by('semester', 'code')
+    return render(request, 'core/espace.html', {
+        'student': student,
+        'level_counts': {c.lower(): n for c, n in level_counts.items()},
+        'ues': ues,
+        'niveau_url': reverse(f'core:niveau_{student.level.lower()}'),
+    })
+
+
+def deconnexion(request):
+    """Déconnexion : vide la session."""
+    request.session.flush()
+    return redirect('core:home')
 
 
 def sitemap_xml(request):

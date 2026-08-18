@@ -35,11 +35,35 @@
         </div>
 
         <!-- CTA desktop -->
-        <a href="{% url 'core:bibliotheque_index' %}" class="hidden md:inline-flex btn-primary items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full">
-            <i class="fas fa-book-open"></i> Explorer les cours
-        </a>
+        <div class="hidden md:flex items-center gap-3">
+            {% if request.session.student_id %}
+                <a href="{% url 'core:espace' %}" class="btn-ghost inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full text-gray-200">
+                    <i class="fas fa-user-graduate"></i> Mon espace
+                </a>
+            {% else %}
+                <a href="{% url 'core:connexion' %}" class="btn-ghost inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full text-gray-200">
+                    <i class="fas fa-right-to-bracket"></i> Connexion
+                </a>
+            {% endif %}
+            <a href="{% url 'core:bibliotheque_index' %}" class="btn-primary inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full">
+                <i class="fas fa-book-open"></i> Explorer les cours
+            </a>
+        </div>
     </div>
 </nav>
+
+<!-- Icône espace étudiant (mobile, dans la barre du haut) -->
+<div class="md:hidden fixed top-4 right-4 z-[101]">
+    {% if request.session.student_id %}
+        <a href="{% url 'core:espace' %}" class="w-10 h-10 rounded-full btn-primary flex items-center justify-center" aria-label="Mon espace">
+            <i class="fas fa-user-graduate text-sm"></i>
+        </a>
+    {% else %}
+        <a href="{% url 'core:connexion' %}" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-gray-200" aria-label="Connexion">
+            <i class="fas fa-user text-sm"></i>
+        </a>
+    {% endif %}
+</div>
 
 <!-- ===== Bottom Sheet Niveaux (mobile) ===== -->
 <div id="niveaux-sheet" class="md:hidden fixed inset-0 z-[110] hidden">
