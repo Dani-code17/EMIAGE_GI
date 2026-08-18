@@ -17,5 +17,12 @@ urlpatterns = [
     path('inscription/', views.inscription, name='inscription'),
     path('connexion/', views.connexion, name='connexion'),
     path('espace/', views.espace, name='espace'),
+    path('espace/heartbeat/', views.heartbeat, name='heartbeat'),
     path('deconnexion/', views.deconnexion, name='deconnexion'),
+    path('quiz/', views.quiz_choose, name='quiz'),
+    path('quiz/play/', views.quiz_play, name='quiz_play'),
+    path('quiz/result/', views.quiz_result, name='quiz_result'),
+    path('admin-espace/login/', views.admin_login, name='admin_login'),
+    path('admin-espace/', views.admin_dashboard, name='admin_dashboard'),
+    path('admin-espace/deconnexion/', views.admin_logout, name='admin_logout'),
 ]

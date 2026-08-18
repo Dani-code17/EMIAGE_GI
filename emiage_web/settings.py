@@ -71,7 +71,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.StudentActivityMiddleware',
 ]
+
+# Identifiants de l'espace admin personnalisé (à changer en production via env)
+ADMIN_LOGIN = os.environ.get('ADMIN_LOGIN', 'Daniki')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'Daniel87606819')
 
 ROOT_URLCONF = 'emiage_web.urls'
 

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.urls import reverse
-from .models import Document, UE, ECUE, Student
+from .models import Document, UE, ECUE, Student, StudentStat, Prize, QuizQuestion, QuizAnswer
 from django.db.models import Q
 from collections import Counter
 import re
@@ -502,7 +502,7 @@ def _current_student(request):
 
 
 def inscription(request):
-    """Création de compte : nom, prénom, niveau uniquement."""
+    """Création de compte : nom, prénom, niveau, identifiant et mot de passe."""
     if _current_student(request):
         return redirect('core:espace')
 
@@ -511,18 +511,27 @@ def inscription(request):
         first_name = request.POST.get('prenom', '').strip()
         last_name = request.POST.get('nom', '').strip()
         level = request.POST.get('niveau', '')
+        student_id = request.POST.get('identifiant', '').strip()
+        password = request.POST.get('mdp', '')
+        password2 = request.POST.get('mdp2', '')
         valid_levels = dict(Student.LEVEL_CHOICES)
 
         if not first_name or not last_name:
             error = 'Merci de renseigner ton nom et ton prénom.'
         elif level not in valid_levels:
             error = 'Merci de choisir un niveau valide.'
+        elif len(student_id) < 3:
+            error = 'Choisis un identifiant d\'au moins 3 caractères (ex: ton matricule).'
+        elif Student.objects.filter(student_id__iexact=student_id).exists():
+            error = 'Cet identifiant est déjà utilisé. Choisis-en un autre.'
+        elif len(password) < 6:
+            error = 'Le mot de passe doit contenir au moins 6 caractères.'
+        elif password != password2:
+            error = 'Les deux mots de passe ne correspondent pas.'
         else:
-            student = Student.objects.create(
-                first_name=first_name,
-                last_name=last_name,
-                level=level,
-            )
+            student = Student(first_name=first_name, last_name=last_name, level=level, student_id=student_id)
+            student.set_password(password)
+            student.save()
             request.session['student_id'] = student.id
             return redirect('core:espace')
 
@@ -533,53 +542,258 @@ def inscription(request):
 
 
 def connexion(request):
-    """Connexion : retrouver son compte avec nom, prénom, niveau."""
+    """Connexion : identifiant (ou nom + prénom) + mot de passe."""
     if _current_student(request):
         return redirect('core:espace')
 
     error = None
     if request.method == 'POST':
-        first_name = request.POST.get('prenom', '').strip()
-        last_name = request.POST.get('nom', '').strip()
-        level = request.POST.get('niveau', '')
-        student = Student.objects.filter(
-            first_name__iexact=first_name,
-            last_name__iexact=last_name,
-            level=level,
-        ).first()
-        if student:
+        identifier = request.POST.get('identifiant', '').strip()
+        password = request.POST.get('mdp', '')
+
+        # L'identifiant peut être le matricule OU « prénom nom »
+        parts = identifier.split()
+        student = Student.objects.filter(student_id__iexact=identifier).first()
+        if not student and len(parts) >= 2:
+            student = Student.objects.filter(
+                first_name__iexact=parts[0],
+                last_name__iexact=' '.join(parts[1:]),
+            ).first()
+
+        if student and student.check_password(password):
             request.session['student_id'] = student.id
             return redirect('core:espace')
-        error = 'Aucun compte trouvé avec ces informations. Vérifie ton nom, prénom et niveau, ou inscris-toi.'
+        error = 'Identifiant ou mot de passe incorrect.'
 
     return render(request, 'core/connexion.html', {
         'error': error,
-        'levels': dict(Student.LEVEL_CHOICES),
     })
 
 
+def _ranking(month):
+    """Classement du mois : score = visites × 10 + minutes × 2."""
+    stats = list(StudentStat.objects.filter(month=month).select_related('student'))
+    stats.sort(key=lambda s: s.score, reverse=True)
+    return stats
+
+
 def espace(request):
-    """Espace étudiant : bienvenue, identifiant, accès rapide à son niveau."""
+    """Espace étudiant : bienvenue, classement mensuel, accès rapide à son niveau."""
     student = _current_student(request)
     if not student:
         return redirect('core:connexion')
+
+    from django.utils import timezone
+    month = timezone.now().strftime('%Y-%m')
 
     level_counts = Counter(
         Document.objects.filter(level=student.level).values_list('category', flat=True)
     )
     ues = UE.objects.filter(level=student.level).exclude(code='UE MAQUETTES').order_by('semester', 'code')
+
+    # Stats perso du mois
+    my_stat = StudentStat.objects.filter(student=student, month=month).first()
+    # Classement du mois
+    ranking = _ranking(month)
+    my_rank = None
+    for i, stat in enumerate(ranking, start=1):
+        if stat.student_id == student.id:
+            my_rank = i
+            break
+    # Prix du mois
+    prizes = Prize.objects.filter(month=month).select_related('student').order_by('-id')
+
     return render(request, 'core/espace.html', {
         'student': student,
+        'my_stat': my_stat,
+        'my_rank': my_rank,
+        'ranking': ranking[:10],
+        'prizes': prizes,
+        'month': month,
         'level_counts': {c.lower(): n for c, n in level_counts.items()},
         'ues': ues,
         'niveau_url': reverse(f'core:niveau_{student.level.lower()}'),
     })
 
 
+def heartbeat(request):
+    """Point de contrôle activité : met à jour activity_last via le middleware."""
+    return HttpResponse(status=204)
+
+
 def deconnexion(request):
     """Déconnexion : vide la session."""
     request.session.flush()
     return redirect('core:home')
+
+
+# ============================================================
+# Quiz (exercices)
+# ============================================================
+
+def quiz_choose(request):
+    """Choix : niveau → UE → difficulté → nombre de questions."""
+    student = _current_student(request)
+    if not student:
+        return redirect('core:connexion')
+
+    error = None
+    ues = UE.objects.exclude(code='UE MAQUETTES').order_by('level', 'semester', 'code')
+    if request.method == 'POST':
+        ue_id = request.POST.get('ue')
+        difficulty = request.POST.get('difficulte', '')
+        number = int(request.POST.get('nombre', 5) or 5)
+        ue = UE.objects.filter(id=ue_id).first()
+        if not ue:
+            error = 'Merci de choisir une UE.'
+        else:
+            qs = QuizQuestion.objects.filter(ue=ue)
+            if difficulty in ('facile', 'normal', 'difficile'):
+                qs = qs.filter(difficulty=difficulty)
+            qs = list(qs.order_by('?')[:number])
+            if not qs:
+                error = 'Aucune question disponible pour cette UE pour le moment. Reviens plus tard !'
+            else:
+                request.session['quiz_questions'] = [q.id for q in qs]
+                request.session['quiz_ue'] = ue.name
+                return redirect('core:quiz_play')
+
+    return render(request, 'core/quiz_choose.html', {
+        'student': student,
+        'ues': ues,
+        'error': error,
+    })
+
+
+def quiz_play(request):
+    """Affiche le quiz généré."""
+    student = _current_student(request)
+    if not student:
+        return redirect('core:connexion')
+
+    qids = request.session.get('quiz_questions')
+    if not qids:
+        return redirect('core:quiz')
+    questions = QuizQuestion.objects.filter(id__in=qids).prefetch_related('answers')
+    # préserve l'ordre choisi
+    by_id = {q.id: q for q in questions}
+    ordered = [by_id[i] for i in qids if i in by_id]
+
+    return render(request, 'core/quiz_play.html', {
+        'student': student,
+        'questions': ordered,
+        'ue_name': request.session.get('quiz_ue', ''),
+        'total': len(ordered),
+    })
+
+
+def quiz_result(request):
+    """Corrige le quiz : note sur 20 + correction expliquée."""
+    student = _current_student(request)
+    if not student:
+        return redirect('core:connexion')
+
+    qids = request.session.get('quiz_questions')
+    if not qids:
+        return redirect('core:quiz')
+
+    questions = QuizQuestion.objects.filter(id__in=qids).prefetch_related('answers')
+    by_id = {q.id: q for q in questions}
+    ordered = [by_id[i] for i in qids if i in by_id]
+
+    correct = 0
+    corrections = []
+    for q in ordered:
+        chosen_id = int(request.POST.get(f'q{q.id}', 0) or 0)
+        good = q.answers.filter(is_correct=True).first()
+        chosen = q.answers.filter(id=chosen_id).first()
+        is_ok = bool(chosen and chosen.is_correct)
+        if is_ok:
+            correct += 1
+        corrections.append({
+            'question': q,
+            'chosen': chosen.text if chosen else '—',
+            'good': good.text if good else '—',
+            'is_ok': is_ok,
+        })
+
+    total = len(ordered)
+    note = round((correct / total) * 20, 1) if total else 0
+
+    return render(request, 'core/quiz_result.html', {
+        'student': student,
+        'corrections': corrections,
+        'correct': correct,
+        'total': total,
+        'note': note,
+        'ue_name': request.session.get('quiz_ue', ''),
+    })
+
+
+# ============================================================
+# Espace admin personnalisé (Daniki)
+# ============================================================
+
+def _is_admin(request):
+    return request.session.get('admin_logged') is True
+
+
+def admin_login(request):
+    """Connexion admin : identifiant + mot de passe (settings)."""
+    from django.conf import settings
+    if _is_admin(request):
+        return redirect('core:admin_dashboard')
+
+    error = None
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
+        if (username == settings.ADMIN_LOGIN and password == settings.ADMIN_PASSWORD):
+            request.session['admin_logged'] = True
+            return redirect('core:admin_dashboard')
+        error = 'Identifiant ou mot de passe admin incorrect.'
+
+    return render(request, 'core/admin_login.html', {'error': error})
+
+
+def admin_dashboard(request):
+    """Tableau de bord admin : stats, classement, prix, questions."""
+    from django.utils import timezone
+    if not _is_admin(request):
+        return redirect('core:admin_login')
+
+    month = timezone.now().strftime('%Y-%m')
+
+    if request.method == 'POST' and request.POST.get('action') == 'prize':
+        student_id = request.POST.get('student_id')
+        label = request.POST.get('label', '').strip()
+        amount = request.POST.get('amount', '').strip()
+        student = Student.objects.filter(id=student_id).first()
+        if student and label:
+            Prize.objects.create(student=student, month=month, label=label, amount=amount)
+
+    ranking = _ranking(month)
+    total_students = Student.objects.count()
+    month_stats = StudentStat.objects.filter(month=month)
+    total_visits = sum(s.visits for s in month_stats)
+    total_minutes = sum(s.minutes for s in month_stats)
+    prizes = Prize.objects.filter(month=month).select_related('student').order_by('-id')
+    recent_students = Student.objects.order_by('-created_at')[:10]
+
+    return render(request, 'core/admin_dashboard.html', {
+        'month': month,
+        'ranking': ranking,
+        'total_students': total_students,
+        'total_visits': total_visits,
+        'total_minutes': total_minutes,
+        'prizes': prizes,
+        'recent_students': recent_students,
+    })
+
+
+def admin_logout(request):
+    request.session['admin_logged'] = False
+    return redirect('core:admin_login')
 
 
 def sitemap_xml(request):

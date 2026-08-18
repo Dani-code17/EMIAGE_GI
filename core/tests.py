@@ -176,64 +176,160 @@ class PageTests(TestCase):
 class StudentFlowTests(TestCase):
     """Parcours étudiant : inscription, connexion, espace, déconnexion."""
 
+    def _create(self, prenom='Daniel', nom='YEO', niveau='L2', identifiant='24-1234', mdp='secret12'):
+        from .models import Student
+        s = Student(first_name=prenom, last_name=nom, level=niveau, student_id=identifiant)
+        s.set_password(mdp)
+        s.save()
+        return s
+
     def test_inscription_cree_compte_et_connecte(self):
         response = self.client.post(reverse('core:inscription'), {
-            'prenom': 'Daniel',
-            'nom': 'YEO',
-            'niveau': 'L2',
+            'prenom': 'Daniel', 'nom': 'YEO', 'niveau': 'L2',
+            'identifiant': '24-5678', 'mdp': 'secret12', 'mdp2': 'secret12',
         })
         self.assertRedirects(response, reverse('core:espace'))
-        # Le compte existe avec un identifiant généré
         from .models import Student
-        student = Student.objects.get(first_name='Daniel', last_name='YEO')
+        student = Student.objects.get(student_id='24-5678')
         self.assertEqual(student.level, 'L2')
-        self.assertTrue(student.student_id.startswith('EMG-'))
+        self.assertTrue(student.check_password('secret12'))
+        self.assertFalse(student.check_password('mauvais'))
         # Session connectée
         self.assertEqual(self.client.session['student_id'], student.id)
 
     def test_inscription_champs_requis(self):
         response = self.client.post(reverse('core:inscription'), {
-            'prenom': '',
-            'nom': 'YEO',
-            'niveau': 'L2',
+            'prenom': '', 'nom': 'YEO', 'niveau': 'L2', 'identifiant': 'x', 'mdp': 'secret12', 'mdp2': 'secret12',
         })
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'nom et ton prénom')
         from .models import Student
         self.assertEqual(Student.objects.count(), 0)
 
-    def test_connexion_retrouve_compte(self):
+    def test_inscription_mdp_courts_ou_differents(self):
         from .models import Student
-        student = Student.objects.create(first_name='Marie', last_name='Kouassi', level='L1')
+        # mot de passe trop court
+        self.client.post(reverse('core:inscription'), {
+            'prenom': 'A', 'nom': 'B', 'niveau': 'L1', 'identifiant': 'ab', 'mdp': '123', 'mdp2': '123',
+        })
+        self.assertEqual(Student.objects.count(), 0)
+        # mots de passe différents
+        self.client.post(reverse('core:inscription'), {
+            'prenom': 'A', 'nom': 'B', 'niveau': 'L1', 'identifiant': 'ab', 'mdp': 'secret12', 'mdp2': 'autre12',
+        })
+        self.assertEqual(Student.objects.count(), 0)
+
+    def test_connexion_par_identifiant_et_mdp(self):
+        student = self._create()
         response = self.client.post(reverse('core:connexion'), {
-            'prenom': 'marie',
-            'nom': 'KOUASSI',
-            'niveau': 'L1',
+            'identifiant': '24-1234', 'mdp': 'secret12',
         })
         self.assertRedirects(response, reverse('core:espace'))
         self.assertEqual(self.client.session['student_id'], student.id)
 
-    def test_connexion_inconnue(self):
+    def test_connexion_par_prenom_nom_et_mdp(self):
+        student = self._create()
         response = self.client.post(reverse('core:connexion'), {
-            'prenom': 'Inconnu',
-            'nom': 'Personne',
-            'niveau': 'L1',
+            'identifiant': 'Daniel YEO', 'mdp': 'secret12',
+        })
+        self.assertRedirects(response, reverse('core:espace'))
+        self.assertEqual(self.client.session['student_id'], student.id)
+
+    def test_connexion_mauvais_mdp(self):
+        self._create()
+        response = self.client.post(reverse('core:connexion'), {
+            'identifiant': '24-1234', 'mdp': 'mauvais',
         })
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Aucun compte trouvé')
+        self.assertContains(response, 'Identifiant ou mot de passe incorrect')
 
     def test_espace_redirige_sans_connexion(self):
         response = self.client.get(reverse('core:espace'))
         self.assertRedirects(response, reverse('core:connexion'))
 
     def test_deconnexion_vide_session(self):
-        from .models import Student
-        student = Student.objects.create(first_name='Aya', last_name='NGuessan', level='M1')
-        self.client.post(reverse('core:connexion'), {
-            'prenom': 'Aya',
-            'nom': 'NGuessan',
-            'niveau': 'M1',
-        })
+        self._create(prenom='Aya', nom='NGuessan', niveau='M1', identifiant='m1-99')
+        self.client.post(reverse('core:connexion'), {'identifiant': 'm1-99', 'mdp': 'secret12'})
         self.client.get(reverse('core:deconnexion'))
         response = self.client.get(reverse('core:espace'))
         self.assertRedirects(response, reverse('core:connexion'))
+
+    def test_activite_enregistree(self):
+        """Le middleware compte les visites et le temps."""
+        from django.utils import timezone
+        from .models import StudentStat
+        self._create()
+        self.client.post(reverse('core:connexion'), {'identifiant': '24-1234', 'mdp': 'secret12'})
+        student_id = self.client.session['student_id']
+        self.client.get(reverse('core:espace'))
+        month = timezone.now().strftime('%Y-%m')
+        stat = StudentStat.objects.filter(student_id=student_id, month=month).first()
+        # La visite du jour est enregistrée (mois courant)
+        self.assertIsNotNone(stat)
+        self.assertGreaterEqual(stat.visits, 1)
+
+
+class AdminEspaceTests(TestCase):
+    def test_admin_login_ok(self):
+        response = self.client.post(reverse('core:admin_login'), {
+            'username': 'Daniki', 'password': 'Daniel87606819',
+        })
+        self.assertRedirects(response, reverse('core:admin_dashboard'))
+        self.assertEqual(self.client.session.get('admin_logged'), True)
+
+    def test_admin_login_ko(self):
+        response = self.client.post(reverse('core:admin_login'), {
+            'username': 'Daniki', 'password': 'mauvais',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Identifiant ou mot de passe admin incorrect')
+
+    def test_dashboard_requiert_connexion(self):
+        response = self.client.get(reverse('core:admin_dashboard'))
+        self.assertRedirects(response, reverse('core:admin_login'))
+
+
+class QuizFlowTests(TestCase):
+    def setUp(self):
+        from .models import Student
+        s = Student(first_name='Quiz', last_name='Test', level='L2', student_id='quiz-1')
+        s.set_password('secret12')
+        s.save()
+        self.client.post(reverse('core:connexion'), {'identifiant': 'quiz-1', 'mdp': 'secret12'})
+
+    def test_quiz_sans_questions_renvoie_erreur(self):
+        # Une UE sans questions
+        ue = UE.objects.create(code='UE VIDE', name='UE VIDE', level='L2', semester='S3')
+        response = self.client.post(reverse('core:quiz'), {'ue': ue.id, 'difficulte': '', 'nombre': 5})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Aucune question disponible')
+
+    def test_quiz_complet(self):
+        from .models import UE, QuizQuestion, QuizAnswer
+        # Les UE L2 ne sont pas seedées par les migrations : on crée la nôtre
+        ue = UE.objects.create(code='Mathématiques 4', name='Mathématiques 4', level='L2', semester='S3')
+        # Crée des questions dans la BD de test
+        q1 = QuizQuestion.objects.create(ue=ue, question='2+2 = ?', difficulty='facile', explanation='Arithmétique')
+        QuizAnswer.objects.create(question=q1, text='4', is_correct=True)
+        QuizAnswer.objects.create(question=q1, text='5', is_correct=False)
+        q2 = QuizQuestion.objects.create(ue=ue, question='3+3 = ?', difficulty='facile', explanation='Arithmétique')
+        QuizAnswer.objects.create(question=q2, text='6', is_correct=True)
+        QuizAnswer.objects.create(question=q2, text='7', is_correct=False)
+        questions = [q1, q2]
+
+        # génère le quiz
+        response = self.client.post(reverse('core:quiz'), {'ue': ue.id, 'difficulte': '', 'nombre': 5})
+        self.assertRedirects(response, reverse('core:quiz_play'))
+        qids = self.client.session['quiz_questions']
+        self.assertEqual(len(qids), 2)
+
+        # répond : toutes les bonnes réponses
+        post = {}
+        for q in questions:
+            good = q.answers.filter(is_correct=True).first()
+            post[f'q{q.id}'] = good.id
+        response = self.client.post(reverse('core:quiz_result'), post)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '/20')
+        self.assertEqual(response.context['note'], 20.0)
+        self.assertEqual(response.context['correct'], 2)

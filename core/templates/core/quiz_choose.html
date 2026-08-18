@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %}
+{% block title %}Quiz - E-MIAGE-GI{% endblock %}
+
+{% block content %}
+<section class="pt-28 md:pt-36 pb-16 px-4 md:px-6">
+    <div class="max-w-2xl mx-auto">
+        <div class="text-center mb-8">
+            <span class="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-secondary items-center justify-center text-white text-2xl mb-4">
+                <i class="fas fa-puzzle-piece"></i>
+            </span>
+            <h1 class="section-title text-3xl md:text-4xl">Quiz d'entraînement</h1>
+            <div class="underline-gradient w-16 mx-auto mt-3 mb-5"></div>
+            <p class="text-gray-400 text-sm md:text-base">Choisis ton niveau, ton UE et la difficulté — un quiz est généré, et à la fin tu as ta note avec la correction expliquée.</p>
+        </div>
+
+        {% if error %}
+            <div class="mb-5 rounded-2xl border border-red-500/30 bg-red-500/10 text-red-300 text-sm px-4 py-3 flex items-center gap-3">
+                <i class="fas fa-circle-exclamation"></i> {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="post" class="glass-card rounded-3xl p-7 space-y-5">
+            {% csrf_token %}
+            <div>
+                <label for="niveau" class="block text-sm font-semibold mb-2">Niveau</label>
+                <select id="niveau" class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="" class="bg-navy" disabled selected>Choisis ton niveau...</option>
+                    {% for code, label in student.LEVEL_CHOICES %}
+                        <option value="{{ code }}" class="bg-navy" {% if code == student.level %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="ue" class="block text-sm font-semibold mb-2">Unité d'enseignement</label>
+                <select id="ue" name="ue" required class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="" class="bg-navy" disabled selected>Choisis une UE...</option>
+                    {% for ue in ues %}
+                        <option value="{{ ue.id }}" class="bg-navy" data-level="{{ ue.level }}">{{ ue.get_level_display }} · {{ ue.code }} — {{ ue.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="difficulte" class="block text-sm font-semibold mb-2">Difficulté</label>
+                    <select id="difficulte" name="difficulte" class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="" class="bg-navy">Toutes</option>
+                        <option value="facile" class="bg-navy">Facile</option>
+                        <option value="normal" class="bg-navy" selected>Normal</option>
+                        <option value="difficile" class="bg-navy">Difficile</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="nombre" class="block text-sm font-semibold mb-2">Nombre de questions</label>
+                    <select id="nombre" name="nombre" class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="5" class="bg-navy" selected>5 questions</option>
+                        <option value="10" class="bg-navy">10 questions</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn-primary w-full font-semibold py-3.5 rounded-full">
+                <i class="fas fa-play mr-2"></i> Générer le quiz
+            </button>
+        </form>
+    </div>
+</section>
+
+<script>
+    // Filtre les UE selon le niveau choisi
+    document.addEventListener('DOMContentLoaded', function () {
+        const niveau = document.getElementById('niveau');
+        const ue = document.getElementById('ue');
+        function filterUes() {
+            const level = niveau.value;
+            Array.from(ue.options).forEach(function (opt) {
+                if (!opt.value) return;
+                opt.hidden = opt.dataset.level !== level;
+            });
+            ue.value = '';
+        }
+        niveau.addEventListener('change', filterUes);
+    });
+</script>
+{% endblock %}
