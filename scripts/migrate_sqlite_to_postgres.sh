@@ -47,13 +47,20 @@ case "$MODE" in
     echo "[2b/4] Purge des données seedées par les migrations (UE/ECUE/EOE)..."
     # Les migrations 0004/0007 créent des UE/ECUE et des documents EOE qui
     # entreraient en conflit avec le dump. On vide les tables core via SQL brut
-    # pour ne PAS déclencher Document.delete() (qui supprimerait les fichiers).
+    # (ordre FK) pour ne PAS déclencher Document.delete() (qui supprimerait
+    # les fichiers) et pour ne pas laisser de références orphelines.
     python manage.py shell -c "
 from django.db import connection
 with connection.cursor() as c:
+    c.execute('DELETE FROM core_quizanswer')
+    c.execute('DELETE FROM core_quizquestion')
+    c.execute('DELETE FROM core_quizattempt')
+    c.execute('DELETE FROM core_studentstat')
+    c.execute('DELETE FROM core_prize')
     c.execute('DELETE FROM core_document')
     c.execute('DELETE FROM core_ecue')
     c.execute('DELETE FROM core_ue')
+    c.execute('DELETE FROM core_student')
 print('Tables core purgées')
 "
 
