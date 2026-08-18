@@ -26,3 +26,6 @@ media/
 # Sources brutes (copiées dans core/static/core/)
 /vietudiante/
 /jimiage/
+
+# Artefacts de debug
+logs_tmp.json
