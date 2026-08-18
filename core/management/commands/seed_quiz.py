@@ -5,6 +5,8 @@ Usage : python manage.py seed_quiz [--force]
 """
 from django.core.management.base import BaseCommand
 from core.models import UE, ECUE, QuizQuestion, QuizAnswer
+from ._quiz_extra import EXTRA_QUESTIONS
+from ._quiz_extra5 import EXTRA_QUESTIONS_5
 
 
 def q(ue, ecue, question, good, others, difficulty, explanation=''):
@@ -638,26 +640,45 @@ class Command(BaseCommand):
         created = 0
         skipped = 0
 
-        for (level, semester, ue_code), ecues in BANK.items():
+        # Fusionne la banque principale et les questions complémentaires
+        all_keys = set(BANK.keys()) | set(EXTRA_QUESTIONS.keys()) | set(EXTRA_QUESTIONS_5.keys())
+        for key in sorted(all_keys):
+            level, semester, ue_code = key
             ue = UE.objects.filter(code=ue_code, level=level, semester=semester).first()
             if not ue:
                 self.stdout.write(f'[SKIP] UE introuvable : {ue_code} {level} {semester}')
                 continue
-            for ecue_name, questions in ecues.items():
+
+            ecues_data = {}
+            ecues_data.update(BANK.get(key, {}))
+            for ecue_name, questions in EXTRA_QUESTIONS.get(key, {}).items():
+                ecues_data.setdefault(ecue_name, []).extend(questions)
+            for ecue_name, questions in EXTRA_QUESTIONS_5.get(key, {}).items():
+                ecues_data.setdefault(ecue_name, []).extend(questions)
+
+            for ecue_name, questions in ecues_data.items():
                 ecue = ECUE.objects.filter(ue=ue, name=ecue_name).first()
                 if not ecue:
                     self.stdout.write(f'[SKIP] ECUE introuvable : {ue_code} / {ecue_name}')
                     continue
-                if not force and ecue.questions.exists():
-                    skipped += 1
-                    continue
                 if force:
                     ecue.questions.all().delete()
+                # Idempotence par question (texte) pour pouvoir compléter une ECUE
+                existing = set(
+                    ecue.questions.values_list('question', flat=True)
+                )
+                added = 0
                 for args_q in questions:
+                    if args_q[0] in existing:
+                        skipped += 1
+                        continue
                     q(ue, ecue, *args_q)
                     created += 1
-                self.stdout.write(f'[OK] {len(questions)} questions — {ue_code} / {ecue_name}')
+                    added += 1
+                    existing.add(args_q[0])
+                if added:
+                    self.stdout.write(f'[OK] +{added} questions — {ue_code} / {ecue_name}')
 
         self.stdout.write(self.style.SUCCESS(
-            f'[SUMMARY] {created} questions créées, {skipped} ECUEs déjà seedées (ignorées)'
+            f'[SUMMARY] {created} questions créées, {skipped} déjà présentes (ignorées)'
         ))
