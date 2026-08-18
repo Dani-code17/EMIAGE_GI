@@ -23,6 +23,7 @@ from core import views as core_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('sitemap.xml', core_views.sitemap_xml, name='sitemap_xml'),
+    path('robots.txt', core_views.robots_txt, name='robots_txt'),
     path('', include('core.urls')),  # Inclure les URLs de l'application core
 ]
 

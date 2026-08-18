@@ -842,3 +842,14 @@ def sitemap_xml(request):
     except Exception:
         # Return 404 if the file can't be read for any reason
         return HttpResponse(status=404)
+
+
+def robots_txt(request):
+    """Sert le fichier robots.txt pour les moteurs de recherche."""
+    from django.conf import settings
+    content = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml\n"
+    )
+    return HttpResponse(content, content_type='text/plain')

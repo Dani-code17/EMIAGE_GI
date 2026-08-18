@@ -31,6 +31,26 @@ class StudentAdmin(admin.ModelAdmin):
     list_display = ('student_id', 'first_name', 'last_name', 'level', 'created_at')
     list_filter = ('level',)
     search_fields = ('first_name', 'last_name', 'student_id')
+    # Champ mot de passe en écriture seule : haché automatiquement à l'enregistrement
+    readonly_fields = ('password_display',)
+    fields = ('first_name', 'last_name', 'level', 'student_id', 'password', 'password_display')
+
+    @admin.display(description='Mot de passe (état)')
+    def password_display(self, obj):
+        if obj.password:
+            from django.contrib.auth.hashers import identify_hasher
+            try:
+                identify_hasher(obj.password)
+                return '✓ Haché'
+            except ValueError:
+                return '⚠️ En clair (sera haché au prochain enregistrement)'
+        return '—'
+
+    def save_model(self, request, obj, form, change):
+        raw = form.cleaned_data.get('password')
+        if raw:
+            obj.set_password(raw)
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(StudentStat)

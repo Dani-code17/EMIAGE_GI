@@ -6,7 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0B0B1E">
     <meta name="google-site-verification" content="TS4KVTjig14AFA58XmJOZuasZ-HgvjrIqso9pt1cEeo" />
+    <meta name="description" content="{% block meta_description %}E-MIAGE-GI : la plateforme des étudiants MIAGE de l'UFHB. Cours, TD/TP, anciens sujets, maquettes, quiz et classement mensuel.{% endblock %}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
     <title>{% block title %}E-MIAGE-GI | La Plateforme en ligne des Miagistes{% endblock %}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="E-MIAGE-GI">
+    <meta property="og:title" content="{% block og_title %}E-MIAGE-GI | La Plateforme en ligne des Miagistes{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Cours, TD/TP, anciens sujets, maquettes, quiz et classement pour la communauté MIAGE UFHB.{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'core/images/1.jpg' %}{% endblock %}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block tw_title %}E-MIAGE-GI | La Plateforme en ligne des Miagistes{% endblock %}">
+    <meta name="twitter:description" content="Cours, TD/TP, anciens sujets, maquettes, quiz et classement pour la communauté MIAGE UFHB.">
+
+    <!-- Données structurées (SEO) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "E-MIAGE-GI",
+      "url": "{{ request.scheme }}://{{ request.get_host }}",
+      "inLanguage": "fr",
+      "publisher": {
+        "@type": "Organization",
+        "name": "MetydaTech",
+        "email": "metydatech@gmail.com"
+      }
+    }
+    </script>
 
     <!-- CSS -->
     <script src="https://cdn.tailwindcss.com"></script>

@@ -130,8 +130,25 @@ class Student(models.Model):
         self.password = make_password(raw_password)
 
     def check_password(self, raw_password):
-        """Vérifie le mot de passe haché."""
-        from django.contrib.auth.hashers import check_password
+        """Vérifie le mot de passe haché.
+
+        Gère aussi les comptes créés via l'admin avec un mot de passe en clair :
+        si la valeur stockée n'est pas un hash valide, on compare en clair et on
+        re-hache immédiatement (migration en douceur).
+        """
+        from django.contrib.auth.hashers import check_password, identify_hasher
+        try:
+            identify_hasher(self.password)
+            is_hashed = True
+        except ValueError:
+            is_hashed = False
+
+        if not is_hashed:
+            if self.password == raw_password:
+                self.set_password(raw_password)
+                self.save(update_fields=['password'])
+                return True
+            return False
         return check_password(raw_password, self.password)
 
 

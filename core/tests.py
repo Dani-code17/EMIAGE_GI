@@ -243,6 +243,24 @@ class StudentFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Identifiant ou mot de passe incorrect')
 
+    def test_mdp_en_clair_ancien_admin_rehache(self):
+        """Un compte créé via l'admin avec un mdp en clair doit pouvoir se
+        connecter, et son mot de passe est re-haché automatiquement."""
+        from .models import Student
+        from django.contrib.auth.hashers import identify_hasher
+        # Simule un compte créé via l'admin (mot de passe stocké en clair)
+        s = Student(first_name='Ancien', last_name='Compte', level='L1', student_id='ancien-1', password='clair123')
+        s.save()
+        # connexion avec le mot de passe en clair
+        response = self.client.post(reverse('core:connexion'), {
+            'identifiant': 'ancien-1', 'mdp': 'clair123',
+        })
+        self.assertRedirects(response, reverse('core:espace'))
+        # le mot de passe est maintenant haché
+        s.refresh_from_db()
+        identify_hasher(s.password)  # ne doit pas lever d'exception
+        self.assertTrue(s.check_password('clair123'))
+
     def test_espace_redirige_sans_connexion(self):
         response = self.client.get(reverse('core:espace'))
         self.assertRedirects(response, reverse('core:connexion'))

@@ -20,6 +20,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 MODE="${1:-}"
+FORCE="${2:-}"
 DUMP_FILE="backup/data.json"
 EXCLUDES=(contenttypes auth.permission admin.logentry sessions)
 
@@ -40,6 +41,28 @@ case "$MODE" in
     echo "[1/4] Vérification de DATABASE_URL..."
     test -n "${DATABASE_URL:-}" || { echo "ERREUR: DATABASE_URL non définie (cible PostgreSQL)."; exit 1; }
     test -f "$DUMP_FILE" || { echo "ERREUR: $DUMP_FILE introuvable. Lancez d'abord: $0 export"; exit 1; }
+
+    echo "[1b/4] Garde-fou : refus d'écraser des comptes étudiants existants..."
+    # Un import complet PURGE les tables core (dont core_student) puis recharge
+    # depuis le dump SQLite local. S'il existe déjà des étudiants sur la cible
+    # (inscrits depuis le site en ligne), on abandonne pour ne pas les effacer.
+    # Utiliser --force uniquement pour une restauration volontaire.
+    if [ "$FORCE" != "--force" ]; then
+      python manage.py shell -c "
+from django.db import connection
+with connection.cursor() as c:
+    c.execute('SELECT COUNT(*) FROM core_student')
+    n = c.fetchone()[0]
+    if n > 0:
+        raise SystemExit(
+            'ABANDON: ' + str(n) + ' étudiants existent déjà sur la base cible. '
+            'Un import complet les effacerait. Pour modifier les données, utilisez '
+            'des commandes ciblées (seed_quiz, seed_ue_ecue, admin...) directement '
+            'sur cette base, ou relancez avec --force si vous voulez vraiment écraser.'
+        )
+print('OK: base cible vide, import autorisé')
+"
+    fi
 
     echo "[2/4] Application des migrations sur PostgreSQL..."
     python manage.py migrate --noinput
