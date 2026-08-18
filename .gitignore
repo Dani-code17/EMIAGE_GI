@@ -19,3 +19,6 @@ staticfiles/
 # Dossiers sources d'import (contenu déjà copié dans media/documents)
 L2_MIAGE 23-24/
 Cours L3/
+
+# Fichiers pédagogiques : servis depuis le dépôt emiage-media (GitHub) / R2 en production
+media/
