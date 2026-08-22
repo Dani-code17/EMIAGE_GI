@@ -35,7 +35,7 @@
             </a>
         </div>
 
-        <div class="text-center mb-8">
+        <div class="text-center mb-8" data-animate>
             <p class="section-eyebrow">Bibliothèque · {{ niveau_label }}</p>
             <h2 class="section-title text-3xl md:text-4xl mt-2">
                 {% if semestre == 's1' %}Semestre 1
@@ -157,7 +157,7 @@
         </div>
 
         <!-- Contenu -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6" data-animate>
             {% if documents %}
                 {% for doc in documents %}
                     <div class="glass-card p-6 rounded-3xl flex flex-col">

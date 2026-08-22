@@ -11,7 +11,7 @@
             <span class="text-gray-200 font-semibold">Bibliothèque</span>
         </nav>
 
-        <div class="text-center mb-12">
+        <div class="text-center mb-12" data-animate>
             <p class="section-eyebrow">Tous les cours au même endroit</p>
             <h1 class="section-title text-3xl md:text-5xl mt-2 mb-4">Médiathèques</h1>
             <div class="underline-gradient w-16 mx-auto mb-6"></div>
@@ -21,7 +21,7 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6" data-animate>
             {% for level in levels %}
                 <a href="{{ level.url }}" class="glass-card p-6 md:p-7 rounded-3xl group">
                     <div class="flex items-start justify-between mb-5">

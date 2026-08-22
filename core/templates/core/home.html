@@ -5,14 +5,14 @@
 
 {% block content %}
 <!-- ===== Hero ===== -->
-<section class="pt-28 md:pt-40 pb-16 md:pb-24 px-4 md:px-6" id="home">
-    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div class="space-y-6 text-center lg:text-left">
-            <span class="inline-flex items-center gap-2 glass-card rounded-full px-4 py-1.5 text-xs font-medium text-gray-300 opacity-0 animate-fadeIn">
+<section class="pt-32 md:pt-44 pb-16 md:pb-24 px-4 md:px-6" id="home">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+        <div class="space-y-7 text-center lg:text-left">
+            <span class="inline-flex items-center gap-2 glass-card rounded-full px-4 py-1.5 text-xs font-medium text-gray-300" data-animate>
                 <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
                 La plateforme officielle des Miagistes
             </span>
-            <h1 class="text-4xl sm:text-5xl xl:text-6xl font-display font-extrabold leading-[1.05] tracking-tight opacity-0 animate-fadeIn delay-200">
+            <h1 class="text-4xl sm:text-5xl xl:text-[3.4rem] font-display font-extrabold leading-[1.05] tracking-tight" data-animate data-delay="80">
                 Bienvenue dans
                 <span class="block mt-2">E-MIAGE-GI
                     <span class="block text-gradient mt-1 h-[1.15em] overflow-hidden">
@@ -20,12 +20,11 @@
                     </span>
                 </span>
             </h1>
-            <p class="text-gray-400 text-base md:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0 opacity-0 animate-fadeIn delay-400">
-                Quand l'apprentissage rencontre la simplicité. Découvrez vos <span class="text-light font-medium">cours</span>,
-                <span class="text-light font-medium">TD</span>, <span class="text-light font-medium">TP</span> et anciens
-                <span class="text-light font-medium">sujets</span>, réunis dans un seul espace — accessibles où que tu sois.
+            <p class="text-gray-400 text-base md:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0" data-animate data-delay="160">
+                Quand l'apprentissage rencontre la simplicité. Cours, TD, TP, anciens sujets et quiz —
+                réunis dans un seul espace, accessibles où que tu sois.
             </p>
-            <div class="flex flex-wrap justify-center lg:justify-start gap-4 opacity-0 animate-fadeIn delay-600">
+            <div class="flex flex-wrap justify-center lg:justify-start gap-4" data-animate data-delay="240">
                 <a href="{% url 'core:bibliotheque_index' %}" class="btn-primary inline-flex items-center gap-2 font-semibold px-7 py-3.5 rounded-full">
                     <i class="fas fa-book-open"></i> Accéder à la bibliothèque
                 </a>
@@ -33,33 +32,33 @@
                     <i class="fas fa-play text-primary"></i> Nos activités
                 </a>
             </div>
-            <div class="flex items-center justify-center lg:justify-start gap-6 pt-2 opacity-0 animate-fadeIn delay-800">
-                <div>
-                    <p class="font-display font-extrabold text-xl text-gradient">849+</p>
+            <div class="flex items-center justify-center lg:justify-start gap-6 pt-2" data-animate data-delay="320">
+                <div class="text-center lg:text-left">
+                    <p class="font-display font-extrabold text-2xl text-gradient"><span data-count="849">0</span>+</p>
                     <p class="text-xs text-gray-500">Documents</p>
                 </div>
                 <div class="w-px h-8 bg-white/10"></div>
-                <div>
-                    <p class="font-display font-extrabold text-xl text-gradient">5</p>
+                <div class="text-center lg:text-left">
+                    <p class="font-display font-extrabold text-2xl text-gradient"><span data-count="5">0</span></p>
                     <p class="text-xs text-gray-500">Niveaux (L1 → M2)</p>
                 </div>
                 <div class="w-px h-8 bg-white/10"></div>
-                <div>
-                    <p class="font-display font-extrabold text-xl text-gradient">52</p>
+                <div class="text-center lg:text-left">
+                    <p class="font-display font-extrabold text-2xl text-gradient"><span data-count="52">0</span></p>
                     <p class="text-xs text-gray-500">Unités d'enseignement</p>
                 </div>
             </div>
         </div>
 
         <!-- Visuel -->
-        <div class="relative hidden lg:block opacity-0 animate-fadeIn delay-800">
-            <div class="absolute -top-8 -left-8 w-40 h-40 rounded-full bg-secondary/30 blur-3xl animate-pulse-slow"></div>
-            <div class="absolute -bottom-10 -right-6 w-44 h-44 rounded-full bg-primary/25 blur-3xl animate-pulse-slow"></div>
+        <div class="relative hidden lg:block" data-animate data-delay="260">
+            <div class="absolute -top-8 -left-8 w-40 h-40 rounded-full bg-primary/15 blur-3xl animate-pulse-slow"></div>
+            <div class="absolute -bottom-10 -right-6 w-44 h-44 rounded-full bg-secondary/15 blur-3xl animate-pulse-slow"></div>
             <div class="relative z-10 grid grid-cols-2 gap-4">
-                <img src="{% static 'core/images/1.jpg' %}" alt="Vie MIAGE" class="rounded-3xl object-cover w-full h-64 floating shadow-2xl shadow-black/40">
-                <img src="{% static 'core/images/6.jpg' %}" alt="MIAGE Project" class="rounded-3xl object-cover w-full h-64 mt-10 floating shadow-2xl shadow-black/40" style="animation-delay: 1.2s;">
+                <img src="{% static 'core/images/1.jpg' %}" alt="Vie MIAGE" class="rounded-3xl object-cover w-full h-64 floating shadow-2xl shadow-black/50">
+                <img src="{% static 'core/images/6.jpg' %}" alt="MIAGE Project" class="rounded-3xl object-cover w-full h-64 mt-10 floating shadow-2xl shadow-black/50" style="animation-delay: 1.2s;">
                 <div class="col-span-2 glass-card rounded-3xl p-5 flex items-center gap-4">
-                    <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent to-secondary flex items-center justify-center text-white shrink-0">
+                    <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shrink-0">
                         <i class="fas fa-graduation-cap text-lg"></i>
                     </span>
                     <div>
@@ -92,6 +91,7 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Typed
         new Typed("#typed-text", {
             strings: ["Apprends.", "Révise.", "Progresse."],
             typeSpeed: 55,
@@ -100,6 +100,44 @@
             showCursor: true,
             cursorChar: '|',
         });
+
+        // Anime.js : entrée du hero en cascade
+        if (typeof anime !== 'undefined') {
+            const heroItems = document.querySelectorAll('#home [data-animate]');
+            anime.timeline({ easing: 'easeOutExpo' })
+                .add({
+                    targets: heroItems,
+                    opacity: [0, 1],
+                    translateY: [30, 0],
+                    duration: 850,
+                    delay: anime.stagger(110, { start: 60 })
+                });
+        }
+
+        // Anime.js : compteurs
+        if (typeof anime !== 'undefined') {
+            const counters = document.querySelectorAll('[data-count]');
+            if (counters.length) {
+                const counterObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            const el = entry.target;
+                            const target = parseFloat(el.dataset.count);
+                            anime({
+                                targets: el,
+                                innerHTML: [0, target],
+                                round: 1,
+                                duration: 1400,
+                                easing: 'easeOutQuart',
+                                update: (anim) => { el.textContent = Math.round(anim.animations[0].currentValue); }
+                            });
+                            counterObserver.unobserve(el);
+                        }
+                    });
+                }, { threshold: 0.4 });
+                counters.forEach((el) => counterObserver.observe(el));
+            }
+        }
     });
 </script>
 {% endblock %}

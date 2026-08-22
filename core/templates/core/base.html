@@ -4,47 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0B0B1E">
+    <meta name="theme-color" content="#07070F">
     <meta name="google-site-verification" content="TS4KVTjig14AFA58XmJOZuasZ-HgvjrIqso9pt1cEeo" />
     <meta name="description" content="{% block meta_description %}E-MIAGE-GI : la plateforme des étudiants MIAGE de l'UFHB. Cours, TD/TP, anciens sujets, maquettes, quiz et classement mensuel.{% endblock %}">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
     <title>{% block title %}E-MIAGE-GI | La Plateforme en ligne des Miagistes{% endblock %}</title>
 
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="E-MIAGE-GI">
-    <meta property="og:title" content="{% block og_title %}E-MIAGE-GI | La Plateforme en ligne des Miagistes{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Cours, TD/TP, anciens sujets, maquettes, quiz et classement pour la communauté MIAGE UFHB.{% endblock %}">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:locale" content="fr_FR">
-    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'core/images/1.jpg' %}{% endblock %}">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block tw_title %}E-MIAGE-GI | La Plateforme en ligne des Miagistes{% endblock %}">
-    <meta name="twitter:description" content="Cours, TD/TP, anciens sujets, maquettes, quiz et classement pour la communauté MIAGE UFHB.">
-
-    <!-- Données structurées (SEO) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "E-MIAGE-GI",
-      "url": "{{ request.scheme }}://{{ request.get_host }}",
-      "inLanguage": "fr",
-      "publisher": {
-        "@type": "Organization",
-        "name": "MetydaTech",
-        "email": "metydatech@gmail.com"
-      }
-    }
-    </script>
-
     <!-- CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.10/typed.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
 
     <!-- Tailwind Configuration -->
     <script>
@@ -52,34 +23,35 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#FF6B6B',
-                        secondary: '#6C63FF',
-                        dark: '#0B0B1E',
-                        navy: '#14142B',
-                        light: '#F5F5F7',
-                        accent: '#4ADE80'
+                        primary: '#7C7CF5',
+                        secondary: '#5B8DEF',
+                        dark: '#07070F',
+                        navy: '#0E0E1C',
+                        light: '#F4F5FA',
+                        accent: '#34D399',
+                        muted: '#9CA3B8'
                     },
                     fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                        display: ['Montserrat', 'sans-serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Sora', 'Montserrat', 'sans-serif'],
                     },
                     animation: {
-                        'float': 'float 6s ease-in-out infinite',
+                        'float': 'float 7s ease-in-out infinite',
                         'fadeIn': 'fadeIn 1s ease-in forwards',
                         'fadeInUp': 'fadeInUp .9s cubic-bezier(.22,1,.36,1) forwards',
-                        'pulse-slow': 'pulse 5s ease-in-out infinite',
+                        'pulse-slow': 'pulse 6s ease-in-out infinite',
                     },
                     keyframes: {
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-16px)' }
+                            '50%': { transform: 'translateY(-14px)' }
                         },
                         fadeIn: {
                             '0%': { opacity: '0' },
                             '100%': { opacity: '1' }
                         },
                         fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(28px)' },
+                            '0%': { opacity: '0', transform: 'translateY(24px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' }
                         }
                     }
@@ -89,142 +61,131 @@
     </script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Poppins:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Sora:wght@500;600;700;800&display=swap');
 
         html { scroll-behavior: smooth; }
 
         body {
-            background-color: #0B0B1E;
-            color: #F5F5F7;
+            background-color: #07070F;
+            color: #F4F5FA;
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Fond : nébuleuse violette/corail subtile */
+        /* Fond : halo discret + grille subtile */
         .site-bg::before {
             content: '';
             position: fixed;
             inset: 0;
             z-index: -2;
             background:
-                radial-gradient(600px 400px at 85% -5%, rgba(108, 99, 255, .16), transparent 60%),
-                radial-gradient(700px 500px at -10% 20%, rgba(255, 107, 107, .12), transparent 60%),
-                radial-gradient(500px 400px at 60% 110%, rgba(74, 222, 128, .07), transparent 60%),
-                #0B0B1E;
+                radial-gradient(700px 420px at 82% -8%, rgba(124, 124, 245, .12), transparent 60%),
+                radial-gradient(600px 420px at -8% 24%, rgba(91, 141, 239, .08), transparent 60%),
+                #07070F;
         }
         .site-bg::after {
             content: '';
             position: fixed;
             inset: 0;
             z-index: -1;
-            background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
-            background-size: 26px 26px;
+            background-image: radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
+            background-size: 30px 30px;
             pointer-events: none;
         }
 
-        /* Cartes glass modernes */
+        /* Cartes : épurées, bordure fine, ombre douce */
         .glass-card {
-            background: rgba(255, 255, 255, 0.045);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.09);
-            transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease, border-color .35s ease;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: transform .3s cubic-bezier(.22,1,.36,1), border-color .3s ease, box-shadow .3s ease, background .3s ease;
         }
-        /* Levitation au survol : réservée aux cartes, PAS aux éléments de formulaire
-           (sinon les selects/inputs « tremblent » au clic) */
         .glass-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(108, 99, 255, .35);
-            box-shadow: 0 18px 40px -12px rgba(108, 99, 255, .35);
+            border-color: rgba(124, 124, 245, .3);
+            box-shadow: 0 16px 40px -16px rgba(0, 0, 0, .6);
+            transform: translateY(-4px);
         }
-        select.glass-card, input.glass-card, textarea.glass-card {
+        select.glass-card, input.glass-card, textarea.glass-card, label.glass-card {
             backdrop-filter: none;
             -webkit-backdrop-filter: none;
             transform: none !important;
             box-shadow: none !important;
             transition: border-color .2s ease, background-color .2s ease;
         }
-        select.glass-card:hover, input.glass-card:hover, textarea.glass-card:hover,
-        label.glass-card:hover {
+        select.glass-card:hover, input.glass-card:hover, textarea.glass-card:hover, label.glass-card:hover {
             transform: none !important;
             box-shadow: none !important;
+            border-color: rgba(124, 124, 245, .35);
         }
-        /* Options des quiz : pas de levitation, juste un surlignage au survol */
-        label.glass-card {
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            transform: none !important;
-        }
-        label.glass-card:hover {
-            transform: none !important;
+        select.glass-card:focus, input.glass-card:focus, textarea.glass-card:focus {
+            border-color: rgba(124, 124, 245, .55);
+            box-shadow: 0 0 0 3px rgba(124, 124, 245, .15);
         }
 
-        /* Texte dégradé */
+        /* Texte dégradé discret */
         .text-gradient {
-            background: linear-gradient(92deg, #FF6B6B, #6C63FF 60%, #4ADE80);
+            background: linear-gradient(92deg, #7C7CF5, #5B8DEF);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
-        /* Boutons */
+        /* Boutons sobres */
         .btn-primary {
-            background: linear-gradient(92deg, #FF6B6B, #6C63FF);
+            background: linear-gradient(92deg, #7C7CF5, #5B8DEF);
             color: #fff;
-            box-shadow: 0 8px 24px -8px rgba(108, 99, 255, .55);
+            box-shadow: 0 8px 22px -8px rgba(124, 124, 245, .5);
             transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
         }
         .btn-primary:hover {
             transform: translateY(-2px);
-            filter: brightness(1.08);
-            box-shadow: 0 14px 30px -8px rgba(108, 99, 255, .65);
+            filter: brightness(1.06);
+            box-shadow: 0 12px 28px -8px rgba(124, 124, 245, .6);
         }
         .btn-ghost {
-            border: 1px solid rgba(255, 255, 255, .25);
+            border: 1px solid rgba(255, 255, 255, .18);
             transition: all .25s ease;
         }
         .btn-ghost:hover {
-            border-color: #FF6B6B;
-            color: #FF6B6B;
+            border-color: rgba(124, 124, 245, .5);
+            color: #7C7CF5;
             transform: translateY(-2px);
         }
 
         /* Titres de section */
         .section-eyebrow {
-            letter-spacing: .22em;
+            letter-spacing: .24em;
             text-transform: uppercase;
-            font-size: .72rem;
+            font-size: .7rem;
             font-weight: 600;
-            color: #6C63FF;
+            color: #7C7CF5;
         }
         .section-title {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Sora', 'Montserrat', sans-serif;
             font-weight: 700;
             letter-spacing: -.02em;
         }
         .underline-gradient {
-            background: linear-gradient(92deg, #FF6B6B, #6C63FF);
-            height: 4px;
+            background: linear-gradient(92deg, #7C7CF5, #5B8DEF);
+            height: 3px;
             border-radius: 999px;
         }
 
         .delay-200 { animation-delay: .2s; }
         .delay-400 { animation-delay: .4s; }
         .delay-600 { animation-delay: .6s; }
-        .delay-800 { animation-delay: .8s; }
 
-        .typed-cursor { color: #FF6B6B !important; opacity: 1; animation: blink .7s infinite; }
+        .typed-cursor { color: #7C7CF5 !important; opacity: 1; animation: blink .7s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
 
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { scrollbar-width: none; }
 
-        /* Zone de sécurité pour la barre de navigation mobile */
         .safe-bottom { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)); }
-
-        /* Fichiers en attente de chargement (vignettes) */
         .aspect-video { aspect-ratio: 16 / 9; }
+
+        /* Éléments animés par anime.js : invisibles jusqu'à la révélation */
+        [data-animate] { opacity: 0; will-change: opacity, transform; }
     </style>
     {% block extra_css %}{% endblock %}
     {% block extra_head %}{% endblock %}
@@ -241,7 +202,7 @@
     <!-- Footer -->
     {% include 'core/includes/footer.html' %}
 
-    <!-- Bouton remonter (au-dessus de la barre mobile) -->
+    <!-- Bouton remonter -->
     <div id="scroll-top-btn"
          class="fixed bottom-24 md:bottom-6 right-4 md:right-6 z-40 w-11 h-11 rounded-full btn-primary flex items-center justify-center cursor-pointer opacity-0 invisible transition-all duration-300"
          aria-label="Remonter en haut">
@@ -250,6 +211,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Bouton remonter
             const btn = document.getElementById('scroll-top-btn');
             window.addEventListener('scroll', () => {
                 const show = window.pageYOffset > 300;
@@ -259,6 +221,30 @@
                 btn.classList.toggle('visible', show);
             }, { passive: true });
             btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+            // ===== Anime.js : révélation au scroll (global) =====
+            if (typeof anime !== 'undefined') {
+                const items = document.querySelectorAll('[data-animate]');
+                if (items.length) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                const el = entry.target;
+                                anime({
+                                    targets: el,
+                                    opacity: [0, 1],
+                                    translateY: [26, 0],
+                                    duration: 750,
+                                    easing: 'easeOutCubic',
+                                    delay: parseInt(el.dataset.delay || 0, 10)
+                                });
+                                observer.unobserve(el);
+                            }
+                        });
+                    }, { threshold: 0.1 });
+                    items.forEach((el) => observer.observe(el));
+                }
+            }
         });
     </script>
     {% block extra_js %}{% endblock %}

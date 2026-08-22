@@ -1,7 +1,7 @@
 {% load static %}
 <section class="py-16 md:py-20 px-4 md:px-6">
     <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-12">
+        <div class="text-center mb-12" data-animate>
             <p class="section-eyebrow">La bibliothèque</p>
             <h2 class="section-title text-3xl md:text-4xl mt-2 mb-3">Explore par type de contenu</h2>
             <div class="underline-gradient w-16 mx-auto"></div>
@@ -9,7 +9,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             <!-- Maquettes -->
-            <button class="glass-card rounded-3xl p-6 md:p-7 text-center group" onclick="loadData('maquettes')">
+            <button class="glass-card rounded-3xl p-6 md:p-7 text-center group" onclick="loadData('maquettes')" data-animate data-delay="0">
                 <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mx-auto mb-5 group-hover:scale-110 group-hover:rotate-6 transition">
                     <i class="fas fa-drafting-compass text-2xl text-white"></i>
                 </div>
@@ -18,7 +18,7 @@
             </button>
 
             <!-- Cours -->
-            <button class="glass-card rounded-3xl p-6 md:p-7 text-center group" onclick="loadData('cours')">
+            <button class="glass-card rounded-3xl p-6 md:p-7 text-center group" onclick="loadData('cours')" data-animate data-delay="80">
                 <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-secondary to-accent flex items-center justify-center mx-auto mb-5 group-hover:scale-110 group-hover:rotate-6 transition">
                     <i class="fas fa-book-open text-2xl text-white"></i>
                 </div>
@@ -27,7 +27,7 @@
             </button>
 
             <!-- TD & TP -->
-            <button class="glass-card rounded-3xl p-6 md:p-7 text-center group" onclick="loadData('td_tp')">
+            <button class="glass-card rounded-3xl p-6 md:p-7 text-center group" onclick="loadData('td_tp')" data-animate data-delay="160">
                 <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-accent to-primary flex items-center justify-center mx-auto mb-5 group-hover:scale-110 group-hover:rotate-6 transition">
                     <i class="fas fa-tools text-2xl text-white"></i>
                 </div>
@@ -36,7 +36,7 @@
             </button>
 
             <!-- Anciens Sujets -->
-            <button class="glass-card rounded-3xl p-6 md:p-7 text-center group" onclick="loadData('anciens_sujets')">
+            <button class="glass-card rounded-3xl p-6 md:p-7 text-center group" onclick="loadData('anciens_sujets')" data-animate data-delay="240">
                 <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-5 group-hover:scale-110 group-hover:rotate-6 transition">
                     <i class="fas fa-archive text-2xl text-white"></i>
                 </div>
