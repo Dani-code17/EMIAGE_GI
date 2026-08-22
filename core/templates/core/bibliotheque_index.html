@@ -5,17 +5,17 @@
 <section class="pt-28 md:pt-36 pb-16 px-4 md:px-6">
     <div class="max-w-6xl mx-auto">
         <!-- Fil d'Ariane -->
-        <nav class="mb-8 text-sm text-gray-400 flex items-center flex-wrap gap-2" aria-label="Fil d'Ariane">
+        <nav class="mb-8 text-sm text-muted flex items-center flex-wrap gap-2" aria-label="Fil d'Ariane">
             <a href="{% url 'core:home' %}" class="hover:text-primary transition"><i class="fas fa-home mr-1"></i>Accueil</a>
-            <i class="fas fa-chevron-right text-xs text-gray-600"></i>
-            <span class="text-gray-200 font-semibold">Bibliothèque</span>
+            <i class="fas fa-chevron-right text-xs text-muted"></i>
+            <span class="text-body font-semibold">Bibliothèque</span>
         </nav>
 
         <div class="text-center mb-12" data-animate>
             <p class="section-eyebrow">Tous les cours au même endroit</p>
             <h1 class="section-title text-3xl md:text-5xl mt-2 mb-4">Médiathèques</h1>
             <div class="underline-gradient w-16 mx-auto mb-6"></div>
-            <p class="text-gray-400 max-w-2xl mx-auto text-sm md:text-base">
+            <p class="text-muted max-w-2xl mx-auto text-sm md:text-base">
                 {{ total_documents }} document{{ total_documents|pluralize }} réparti{{ total_documents|pluralize:"s" }} sur {{ levels|length }} niveaux.
                 Choisis ton niveau pour accéder aux cours, TD/TP, anciens sujets et maquettes.
             </p>
@@ -28,12 +28,12 @@
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br {% cycle 'from-cyan to-teal' 'from-teal to-lime' 'from-lime to-cyan' 'from-cyan to-lime' 'from-teal to-cyan' %} flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition">
                             <i class="fas {{ level.icon }} text-xl text-white"></i>
                         </div>
-                        <span class="text-xs font-bold px-3 py-1.5 rounded-full glass-card text-gray-300">
+                        <span class="text-xs font-bold px-3 py-1.5 rounded-full glass-card text-body">
                             {{ level.count }} doc{{ level.count|pluralize }}
                         </span>
                     </div>
                     <h2 class="text-xl font-display font-bold mb-2 group-hover:text-primary transition">{{ level.label }}</h2>
-                    <p class="text-sm text-gray-400 mb-5">
+                    <p class="text-sm text-muted mb-5">
                         {% if level.count > 0 %}
                             Cours, TD/TP, anciens sujets et maquettes disponibles.
                         {% else %}

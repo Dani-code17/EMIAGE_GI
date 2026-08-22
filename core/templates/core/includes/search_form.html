@@ -3,7 +3,7 @@
     <input type="hidden" name="semestre" value="{{ request.GET.semestre|default:'s1' }}">
     <input type="hidden" name="category" value="{{ request.GET.category|default_if_none:'' }}">
     <div class="flex items-center space-x-2">
-        <input name="q" value="{{ request.GET.q|default_if_none:'' }}" type="search" placeholder="Recherche (mots séparés par des espaces)" class="w-full bg-dark/60 border border-gray-700 rounded-md py-2 px-3 text-light placeholder-gray-400">
+        <input name="q" value="{{ request.GET.q|default_if_none:'' }}" type="search" placeholder="Recherche (mots séparés par des espaces)" class="w-full bg-overlay border border-soft rounded-md py-2 px-3 text-body placeholder:text-muted">
         <button type="submit" class="bg-primary text-dark font-bold py-2 px-4 rounded">Rechercher</button>
     </div>
 </form>

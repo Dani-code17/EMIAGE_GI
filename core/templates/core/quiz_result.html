@@ -15,7 +15,7 @@
             </span>
             <p class="section-eyebrow">Quiz · {{ ue_name }}</p>
             <h1 class="section-title text-3xl md:text-4xl mt-1">Ta note : <span class="text-gradient">{{ note }}/20</span></h1>
-            <p class="text-gray-400 mt-2 text-sm">{{ correct }} bonne{{ correct|pluralize }} réponse{{ correct|pluralize }} sur {{ total }}</p>
+            <p class="text-muted mt-2 text-sm">{{ correct }} bonne{{ correct|pluralize }} réponse{{ correct|pluralize }} sur {{ total }}</p>
         </div>
 
         <!-- Correction détaillée -->
@@ -38,9 +38,9 @@
                         {% endif %}
                         <p class="text-accent"><span class="font-semibold">Bonne réponse :</span> {{ c.good }}</p>
                         {% if c.question.explanation %}
-                            <div class="bg-white/5 rounded-2xl px-4 py-3 mt-2">
-                                <p class="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-1"><i class="fas fa-lightbulb mr-1 text-yellow-400"></i> Explication</p>
-                                <p class="text-gray-300 leading-relaxed">{{ c.question.explanation }}</p>
+                            <div class="bg-soft rounded-2xl px-4 py-3 mt-2">
+                                <p class="text-muted text-xs font-semibold uppercase tracking-wider mb-1"><i class="fas fa-lightbulb mr-1 text-yellow-400"></i> Explication</p>
+                                <p class="text-body leading-relaxed">{{ c.question.explanation }}</p>
                             </div>
                         {% endif %}
                     </div>
@@ -52,7 +52,7 @@
             <a href="{% url 'core:quiz' %}" class="btn-primary flex-1 inline-flex items-center justify-center gap-2 font-semibold py-3.5 rounded-full">
                 <i class="fas fa-rotate-right"></i> Refaire un quiz
             </a>
-            <a href="{% url 'core:espace' %}" class="btn-ghost inline-flex items-center justify-center gap-2 font-semibold px-6 py-3 rounded-full text-gray-300">
+            <a href="{% url 'core:espace' %}" class="btn-ghost inline-flex items-center justify-center gap-2 font-semibold px-6 py-3 rounded-full text-body">
                 <i class="fas fa-house"></i> Mon espace
             </a>
         </div>

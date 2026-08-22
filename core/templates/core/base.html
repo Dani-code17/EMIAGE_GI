@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0A0A14">
+    <link rel="icon" href="{% static 'core/logo/favicon.png' %}">
     <meta name="google-site-verification" content="TS4KVTjig14AFA58XmJOZuasZ-HgvjrIqso9pt1cEeo" />
     <meta name="description" content="{% block meta_description %}E-MIAGE-GI : la plateforme des étudiants MIAGE de l'UFHB. Cours, TD/TP, anciens sujets, maquettes, quiz et classement mensuel.{% endblock %}">
     <meta name="robots" content="index, follow">
@@ -68,43 +69,62 @@
 
         html { scroll-behavior: smooth; }
 
+        /* ===== Variables de thème =====
+           Par défaut : mode sombre. Un mode clair est défini sous [data-theme=light]. */
+        :root {
+            --bg: #0A0A14;
+            --bg-solid: #0A0A14;
+            --text: #F4F5FA;
+            --text-muted: #9ca3b8;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.07);
+            --navbar-bg: rgba(10, 10, 20, 0.7);
+            --logo-grad: linear-gradient(92deg, rgba(19,107,140,.28), rgba(24,134,138,.18), rgba(94,163,82,.12));
+            --grid-dot: rgba(255,255,255,.04);
+        }
+        html[data-theme="light"] {
+            --bg: #f6f7fb;
+            --bg-solid: #f6f7fb;
+            --text: #141922;
+            --text-muted: #5b6472;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --card-border: rgba(20, 30, 40, 0.08);
+            --navbar-bg: rgba(255, 255, 255, 0.75);
+            --logo-grad: linear-gradient(92deg, rgba(19,107,140,.12), rgba(24,134,138,.10), rgba(94,163,82,.10));
+            --grid-dot: rgba(20, 30, 40, .05);
+        }
+
         body {
-            background-color: #0A0A14;
-            color: #F4F5FA;
+            background-color: var(--bg-solid);
+            color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            transition: background-color .3s ease, color .3s ease;
         }
 
-        /* Fond : dégradé vertical inspiré du logo "25 Ans MIAGE"
-           (bleu cyan foncé -> bleu-vert -> vert clair), fondu sur fond sombre */
+        /* Fond : dégradé vertical inspiré du logo "25 Ans MIAGE" */
         .site-bg::before {
             content: '';
             position: fixed;
             inset: 0;
             z-index: -2;
-            background:
-                linear-gradient(to bottom,
-                    rgba(19, 107, 140, .28) 0%,
-                    rgba(24, 134, 138, .18) 35%,
-                    rgba(94, 163, 82, .12) 70%,
-                    rgba(10, 10, 20, 0) 100%),
-                #0A0A14;
+            background: var(--logo-grad), var(--bg-solid);
         }
         .site-bg::after {
             content: '';
             position: fixed;
             inset: 0;
             z-index: -1;
-            background-image: radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
+            background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
             background-size: 30px 30px;
             pointer-events: none;
         }
 
-        /* Cartes : épurées, bordure fine, ombre douce */
+        /* Cartes : épurées, s'adaptent au thème */
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.07);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             transition: transform .3s cubic-bezier(.22,1,.36,1), border-color .3s ease, box-shadow .3s ease, background .3s ease;
         }
         .glass-card:hover {
@@ -158,6 +178,20 @@
             color: #7BB343;
             transform: translateY(-2px);
         }
+
+        /* ===== Utilitaires de thème (s'adaptent au [data-theme]) ===== */
+        .text-body { color: var(--text); }
+        .text-muted { color: var(--text-muted); }
+        .bg-overlay { background: var(--navbar-bg); }
+        .bg-soft { background: rgba(255,255,255,.05); }
+        html[data-theme="light"] .bg-soft { background: rgba(20,30,40,.05); }
+        .border-soft { border-color: var(--card-border); }
+        .divide-soft > :not([hidden]) ~ :not([hidden]) { border-color: var(--card-border); }
+
+        .glass-card [data-oncard], [data-oncard="1"] { color: var(--text); }
+        /* sélects/inputs : fond adapté */
+        select.glass-card option, input.glass-card::placeholder, textarea::placeholder { color: var(--text-muted); }
+        select.glass-card option { background: var(--bg-solid); }
 
         /* Titres de section */
         .section-eyebrow {
@@ -255,5 +289,42 @@
         });
     </script>
     {% block extra_js %}{% endblock %}
+
+    <!-- ===== Mode clair / sombre ===== -->
+    <script>
+        (function () {
+            // Applique précocement le thème (évite un flash)
+            try {
+                var saved = localStorage.getItem('emiage-theme'); // 'dark' | 'light'
+                var system = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+                var theme = saved || system; // défaut = préférence du téléphone
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
+
+            function apply(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                try { localStorage.setItem('emiage-theme', theme); } catch (e) {}
+                // met à jour l'icône du bouton si présent
+                var moon = document.querySelector('[data-theme-toggle-moon]');
+                var sun = document.querySelector('[data-theme-toggle-sun]');
+                if (moon || sun) {
+                    var isLight = theme === 'light';
+                    if (moon) { moon.style.display = isLight ? 'none' : 'inline'; }
+                    if (sun) { sun.style.display = isLight ? 'inline' : 'none'; }
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var btn = document.querySelector('[data-theme-toggle]');
+                if (btn) {
+                    btn.addEventListener('click', function () {
+                        var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+                        apply(cur === 'light' ? 'dark' : 'light');
+                    });
+                }
+                apply(document.documentElement.getAttribute('data-theme') || 'dark');
+            });
+        })();
+    </script>
 </body>
 </html>

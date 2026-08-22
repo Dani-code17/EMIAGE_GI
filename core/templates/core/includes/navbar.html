@@ -1,47 +1,54 @@
 {% load static %}
 <!-- ===== Navbar Desktop ===== -->
-<nav class="fixed top-0 left-0 right-0 z-[100] border-b border-white/5 bg-dark/70 backdrop-blur-xl">
+<nav class="fixed top-0 left-0 right-0 z-[100] border-b border-soft bg-overlay backdrop-blur-xl">
     <div class="max-w-6xl mx-auto px-4 md:px-6 h-16 md:h-[72px] flex items-center justify-between">
         <!-- Logo -->
         <a href="{% url 'core:home' %}" class="flex items-center gap-2.5">
-            <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan to-teal flex items-center justify-center font-display font-extrabold text-white text-sm shadow-lg shadow-secondary/30">E</span>
-            <span class="font-display font-bold text-lg md:text-xl tracking-tight">E-<span class="text-gradient">MIAGE-GI</span></span>
+            <img src="{% static 'core/logo/logo-nav.png' %}" alt="Logo 25 Ans MIAGE"
+                 class="h-9 w-9 md:h-10 md:w-10 object-contain drop-shadow-md">
+            <span class="font-display font-bold text-lg md:text-xl tracking-tight text-body">E-<span class="text-gradient">MIAGE-GI</span></span>
         </a>
 
         <!-- Liens desktop -->
         <div class="hidden md:flex items-center gap-7 text-sm font-medium">
-            <a href="{% url 'core:home' %}" class="text-gray-300 hover:text-primary transition">Accueil</a>
-            <a href="{% url 'core:bibliotheque_index' %}" class="text-gray-300 hover:text-primary transition">Bibliothèque</a>
+            <a href="{% url 'core:home' %}" class="text-body hover:text-primary transition">Accueil</a>
+            <a href="{% url 'core:bibliotheque_index' %}" class="text-body hover:text-primary transition">Bibliothèque</a>
 
             <!-- Dropdown Niveaux -->
             <div class="relative" id="niveaux-dropdown">
                 <button id="niveaux-btn" type="button" aria-expanded="false"
-                        class="text-gray-300 hover:text-primary transition flex items-center gap-1.5">
+                        class="text-body hover:text-primary transition flex items-center gap-1.5">
                     Niveaux <i class="fas fa-chevron-down text-[10px] transition-transform" id="niveaux-chevron"></i>
                 </button>
                 <div id="niveaux-menu"
-                     class="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-52 rounded-2xl glass-card shadow-2xl shadow-black/40 p-2 hidden">
-                    <a href="{% url 'core:niveau_l1' %}" class="block px-4 py-2.5 rounded-xl text-gray-300 hover:text-primary hover:bg-white/5 transition">Licence 1</a>
-                    <a href="{% url 'core:niveau_l2' %}" class="block px-4 py-2.5 rounded-xl text-gray-300 hover:text-primary hover:bg-white/5 transition">Licence 2</a>
-                    <a href="{% url 'core:niveau_l3' %}" class="block px-4 py-2.5 rounded-xl text-gray-300 hover:text-primary hover:bg-white/5 transition">Licence 3</a>
-                    <a href="{% url 'core:niveau_m1' %}" class="block px-4 py-2.5 rounded-xl text-gray-300 hover:text-primary hover:bg-white/5 transition">Master 1</a>
-                    <a href="{% url 'core:niveau_m2' %}" class="block px-4 py-2.5 rounded-xl text-gray-300 hover:text-primary hover:bg-white/5 transition">Master 2</a>
+                     class="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-52 rounded-2xl glass-card shadow-2xl shadow-black/30 p-2 hidden">
+                    <a href="{% url 'core:niveau_l1' %}" class="block px-4 py-2.5 rounded-xl text-body hover:text-primary hover:bg-soft transition">Licence 1</a>
+                    <a href="{% url 'core:niveau_l2' %}" class="block px-4 py-2.5 rounded-xl text-body hover:text-primary hover:bg-soft transition">Licence 2</a>
+                    <a href="{% url 'core:niveau_l3' %}" class="block px-4 py-2.5 rounded-xl text-body hover:text-primary hover:bg-soft transition">Licence 3</a>
+                    <a href="{% url 'core:niveau_m1' %}" class="block px-4 py-2.5 rounded-xl text-body hover:text-primary hover:bg-soft transition">Master 1</a>
+                    <a href="{% url 'core:niveau_m2' %}" class="block px-4 py-2.5 rounded-xl text-body hover:text-primary hover:bg-soft transition">Master 2</a>
                 </div>
             </div>
 
-            <a href="{% url 'core:home' %}#jimiage" class="text-gray-300 hover:text-primary transition">La JI-MIAGE</a>
-            <a href="{% url 'core:home' %}#tiktok" class="text-gray-300 hover:text-primary transition">TikTok</a>
-            <a href="{% url 'core:home' %}#contact" class="text-gray-300 hover:text-primary transition">Contact</a>
+            <a href="{% url 'core:home' %}#jimiage" class="text-body hover:text-primary transition">La JI-MIAGE</a>
+            <a href="{% url 'core:home' %}#tiktok" class="text-body hover:text-primary transition">TikTok</a>
+            <a href="{% url 'core:home' %}#contact" class="text-body hover:text-primary transition">Contact</a>
         </div>
 
         <!-- CTA desktop -->
         <div class="hidden md:flex items-center gap-3">
+            <button type="button" data-theme-toggle
+                    class="btn-ghost w-10 h-10 rounded-full flex items-center justify-center text-body"
+                    aria-label="Basculer le mode clair/sombre">
+                <i class="fas fa-sun text-sm" data-theme-toggle-sun style="display:none"></i>
+                <i class="fas fa-moon text-sm" data-theme-toggle-moon></i>
+            </button>
             {% if request.session.student_id %}
-                <a href="{% url 'core:espace' %}" class="btn-ghost inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full text-gray-200">
+                <a href="{% url 'core:espace' %}" class="btn-ghost inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full text-body">
                     <i class="fas fa-user-graduate"></i> Mon espace
                 </a>
             {% else %}
-                <a href="{% url 'core:connexion' %}" class="btn-ghost inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full text-gray-200">
+                <a href="{% url 'core:connexion' %}" class="btn-ghost inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full text-body">
                     <i class="fas fa-right-to-bracket"></i> Connexion
                 </a>
             {% endif %}
@@ -59,7 +66,7 @@
             <i class="fas fa-user-graduate text-sm"></i>
         </a>
     {% else %}
-        <a href="{% url 'core:connexion' %}" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-gray-200" aria-label="Connexion">
+        <a href="{% url 'core:connexion' %}" class="w-10 h-10 rounded-full glass-card flex items-center justify-center text-body" aria-label="Connexion">
             <i class="fas fa-user text-sm"></i>
         </a>
     {% endif %}
@@ -68,57 +75,57 @@
 <!-- ===== Bottom Sheet Niveaux (mobile) ===== -->
 <div id="niveaux-sheet" class="md:hidden fixed inset-0 z-[110] hidden">
     <div id="niveaux-sheet-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-    <div class="absolute bottom-0 left-0 right-0 rounded-t-3xl bg-navy border-t border-white/10 p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] animate-fadeInUp">
-        <div class="w-12 h-1.5 rounded-full bg-white/15 mx-auto mb-6"></div>
+    <div class="absolute bottom-0 left-0 right-0 rounded-t-3xl bg-overlay border-t border-soft p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))] animate-fadeInUp">
+        <div class="w-12 h-1.5 rounded-full bg-soft mx-auto mb-6"></div>
         <h3 class="font-display font-bold text-lg mb-4 flex items-center gap-2">
             <i class="fas fa-graduation-cap text-teal"></i> Choisis ton niveau
         </h3>
         <div class="grid grid-cols-2 gap-3">
             <a href="{% url 'core:niveau_l1' %}" class="glass-card rounded-2xl p-4 text-center hover:text-primary transition">
                 <p class="font-display font-bold">Licence 1</p>
-                <p class="text-xs text-gray-400 mt-1">S1 · S2</p>
+                <p class="text-xs text-muted mt-1">S1 · S2</p>
             </a>
             <a href="{% url 'core:niveau_l2' %}" class="glass-card rounded-2xl p-4 text-center hover:text-primary transition">
                 <p class="font-display font-bold">Licence 2</p>
-                <p class="text-xs text-gray-400 mt-1">S3 · S4</p>
+                <p class="text-xs text-muted mt-1">S3 · S4</p>
             </a>
             <a href="{% url 'core:niveau_l3' %}" class="glass-card rounded-2xl p-4 text-center hover:text-primary transition">
                 <p class="font-display font-bold">Licence 3</p>
-                <p class="text-xs text-gray-400 mt-1">S5 · S6</p>
+                <p class="text-xs text-muted mt-1">S5 · S6</p>
             </a>
             <a href="{% url 'core:niveau_m1' %}" class="glass-card rounded-2xl p-4 text-center hover:text-primary transition">
                 <p class="font-display font-bold">Master 1</p>
-                <p class="text-xs text-gray-400 mt-1">S7 · S8</p>
+                <p class="text-xs text-muted mt-1">S7 · S8</p>
             </a>
             <a href="{% url 'core:niveau_m2' %}" class="glass-card rounded-2xl p-4 text-center hover:text-primary transition col-span-2">
                 <p class="font-display font-bold">Master 2</p>
-                <p class="text-xs text-gray-400 mt-1">S9 · S10</p>
+                <p class="text-xs text-muted mt-1">S9 · S10</p>
             </a>
         </div>
     </div>
 </div>
 
 <!-- ===== Barre de navigation mobile (façon app) ===== -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 z-[105] bg-navy/85 backdrop-blur-xl border-t border-white/10"
+<nav class="md:hidden fixed bottom-0 left-0 right-0 z-[105] bg-overlay backdrop-blur-xl border-t border-soft"
      style="padding-bottom: env(safe-area-inset-bottom, 0px);">
     <div class="grid grid-cols-5 h-[68px]">
-        <a href="{% url 'core:home' %}" class="flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-primary transition">
+        <a href="{% url 'core:home' %}" class="flex flex-col items-center justify-center gap-1 text-muted hover:text-primary transition">
             <i class="fas fa-house text-lg"></i>
             <span class="text-[10px] font-medium">Accueil</span>
         </a>
-        <button type="button" data-open-sheet class="flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-primary transition">
+        <button type="button" data-open-sheet class="flex flex-col items-center justify-center gap-1 text-muted hover:text-primary transition">
             <i class="fas fa-graduation-cap text-lg"></i>
             <span class="text-[10px] font-medium">Niveaux</span>
         </button>
-        <a href="{% url 'core:home' %}#vie" class="flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-primary transition">
+        <a href="{% url 'core:home' %}#vie" class="flex flex-col items-center justify-center gap-1 text-muted hover:text-primary transition">
             <i class="fas fa-users text-lg"></i>
             <span class="text-[10px] font-medium">Activités</span>
         </a>
-        <a href="{% url 'core:home' %}#tiktok" class="flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-primary transition">
+        <a href="{% url 'core:home' %}#tiktok" class="flex flex-col items-center justify-center gap-1 text-muted hover:text-primary transition">
             <i class="fab fa-tiktok text-lg"></i>
             <span class="text-[10px] font-medium">TikTok</span>
         </a>
-        <a href="{% url 'core:home' %}#contact" class="flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-primary transition">
+        <a href="{% url 'core:home' %}#contact" class="flex flex-col items-center justify-center gap-1 text-muted hover:text-primary transition">
             <i class="fas fa-envelope text-lg"></i>
             <span class="text-[10px] font-medium">Contact</span>
         </a>

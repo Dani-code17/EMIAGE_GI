@@ -9,7 +9,7 @@
                 <i class="fas fa-user-plus"></i>
             </span>
             <h1 class="section-title text-3xl md:text-4xl">Créer mon compte</h1>
-            <p class="text-gray-400 mt-2 text-sm">Rejoins l'espace étudiant de la MIAGE — en 30 secondes.</p>
+            <p class="text-muted mt-2 text-sm">Rejoins l'espace étudiant de la MIAGE — en 30 secondes.</p>
         </div>
 
         {% if error %}
@@ -24,47 +24,47 @@
                 <div>
                     <label for="prenom" class="block text-sm font-semibold mb-2">Prénom</label>
                     <input type="text" id="prenom" name="prenom" required maxlength="100" placeholder="Ex : Daniel"
-                           class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-500">
+                           class="w-full glass-card text-body py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-500">
                 </div>
                 <div>
                     <label for="nom" class="block text-sm font-semibold mb-2">Nom</label>
                     <input type="text" id="nom" name="nom" required maxlength="100" placeholder="Ex : YEO"
-                           class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-500">
+                           class="w-full glass-card text-body py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-500">
                 </div>
             </div>
             <div>
                 <label for="niveau" class="block text-sm font-semibold mb-2">Ton niveau</label>
-                <select id="niveau" name="niveau" required class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
-                    <option value="" class="bg-navy" disabled selected>Choisis ton niveau...</option>
+                <select id="niveau" name="niveau" required class="w-full glass-card text-body py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="" class="bg-overlay" disabled selected>Choisis ton niveau...</option>
                     {% for code, label in levels.items %}
-                        <option value="{{ code }}" class="bg-navy">{{ label }}</option>
+                        <option value="{{ code }}" class="bg-overlay">{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div>
                 <label for="identifiant" class="block text-sm font-semibold mb-2">
-                    Identifiant <span class="text-gray-500 font-normal">(ex : ton IP étudiant)</span>
+                    Identifiant <span class="text-muted font-normal">(ex : ton IP étudiant)</span>
                 </label>
                 <input type="text" id="identifiant" name="identifiant" required minlength="3" maxlength="50" placeholder="Ex : 24-1234 ou mon-IP"
-                       class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-500">
-                <p class="text-xs text-gray-500 mt-1.5"><i class="fas fa-info-circle mr-1"></i>Choisis un identifiant que tu retiendras — tu t'en serviras pour te connecter.</p>
+                       class="w-full glass-card text-body py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-500">
+                <p class="text-xs text-muted mt-1.5"><i class="fas fa-info-circle mr-1"></i>Choisis un identifiant que tu retiendras — tu t'en serviras pour te connecter.</p>
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label for="mdp" class="block text-sm font-semibold mb-2">Mot de passe</label>
                     <input type="password" id="mdp" name="mdp" required minlength="6" placeholder="6 caractères min."
-                           class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-500">
+                           class="w-full glass-card text-body py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-500">
                 </div>
                 <div>
                     <label for="mdp2" class="block text-sm font-semibold mb-2">Confirme le mot de passe</label>
                     <input type="password" id="mdp2" name="mdp2" required minlength="6" placeholder="Encore une fois"
-                           class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-500">
+                           class="w-full glass-card text-body py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-500">
                 </div>
             </div>
             <button type="submit" class="btn-primary w-full font-semibold py-3.5 rounded-full">
                 <i class="fas fa-paper-plane mr-2"></i> S'inscrire
             </button>
-            <p class="text-center text-sm text-gray-400 pt-1">
+            <p class="text-center text-sm text-muted pt-1">
                 Déjà inscrit ? <a href="{% url 'core:connexion' %}" class="text-primary hover:underline font-semibold">Se connecter</a>
             </p>
         </form>

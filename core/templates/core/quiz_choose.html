@@ -10,7 +10,7 @@
             </span>
             <h1 class="section-title text-3xl md:text-4xl">Quiz d'entraînement</h1>
             <div class="underline-gradient w-16 mx-auto mt-3 mb-5"></div>
-            <p class="text-gray-400 text-sm md:text-base">Choisis ton niveau, ton UE et la difficulté — un quiz est généré, et à la fin tu as ta note avec la correction expliquée.</p>
+            <p class="text-muted text-sm md:text-base">Choisis ton niveau, ton UE et la difficulté — un quiz est généré, et à la fin tu as ta note avec la correction expliquée.</p>
         </div>
 
         {% if error %}
@@ -26,48 +26,48 @@
                     <i class="fas fa-graduation-cap"></i>
                 </span>
                 <div>
-                    <p class="text-xs text-gray-400 uppercase tracking-wider">Ton niveau</p>
+                    <p class="text-xs text-muted uppercase tracking-wider">Ton niveau</p>
                     <p class="font-display font-bold">{{ student.get_level_display }}</p>
                 </div>
                 <span class="ml-auto text-xs font-semibold text-accent"><i class="fas fa-lock mr-1"></i>Quiz de ton niveau uniquement</span>
             </div>
             <div>
                 <label for="ue" class="block text-sm font-semibold mb-2">Unité d'enseignement</label>
-                <select id="ue" name="ue" required class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
-                    <option value="" class="bg-navy" disabled selected>Choisis une UE...</option>
+                <select id="ue" name="ue" required class="w-full glass-card text-body py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="" class="bg-overlay" disabled selected>Choisis une UE...</option>
                     {% for ue in ues %}
-                        <option value="{{ ue.id }}" class="bg-navy">{{ ue.code }} — {{ ue.name }}</option>
+                        <option value="{{ ue.id }}" class="bg-overlay">{{ ue.code }} — {{ ue.name }}</option>
                     {% endfor %}
                 </select>
                 {% if not ues %}
-                    <p class="text-xs text-gray-500 mt-1.5"><i class="fas fa-info-circle mr-1"></i>Aucune UE disponible pour ton niveau pour le moment.</p>
+                    <p class="text-xs text-muted mt-1.5"><i class="fas fa-info-circle mr-1"></i>Aucune UE disponible pour ton niveau pour le moment.</p>
                 {% endif %}
             </div>
             <div>
-                <label for="ecue" class="block text-sm font-semibold mb-2">ECUE <span class="text-gray-500 font-normal">(facultatif)</span></label>
-                <select id="ecue" name="ecue" class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
-                    <option value="" class="bg-navy" selected>Toutes les ECUEs de l'UE</option>
+                <label for="ecue" class="block text-sm font-semibold mb-2">ECUE <span class="text-muted font-normal">(facultatif)</span></label>
+                <select id="ecue" name="ecue" class="w-full glass-card text-body py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="" class="bg-overlay" selected>Toutes les ECUEs de l'UE</option>
                     {% for e in ecues %}
-                        <option value="{{ e.id }}" class="bg-navy" data-ue="{{ e.ue_id }}">{{ e.name }}</option>
+                        <option value="{{ e.id }}" class="bg-overlay" data-ue="{{ e.ue_id }}">{{ e.name }}</option>
                     {% endfor %}
                 </select>
-                <p class="text-xs text-gray-500 mt-1.5"><i class="fas fa-info-circle mr-1"></i>Choisis une ECUE pour cibler le quiz, ou laisse « Toutes les ECUEs ».</p>
+                <p class="text-xs text-muted mt-1.5"><i class="fas fa-info-circle mr-1"></i>Choisis une ECUE pour cibler le quiz, ou laisse « Toutes les ECUEs ».</p>
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label for="difficulte" class="block text-sm font-semibold mb-2">Difficulté</label>
-                    <select id="difficulte" name="difficulte" class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
-                        <option value="" class="bg-navy">Toutes</option>
-                        <option value="facile" class="bg-navy">Facile</option>
-                        <option value="normal" class="bg-navy" selected>Normal</option>
-                        <option value="difficile" class="bg-navy">Difficile</option>
+                    <select id="difficulte" name="difficulte" class="w-full glass-card text-body py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="" class="bg-overlay">Toutes</option>
+                        <option value="facile" class="bg-overlay">Facile</option>
+                        <option value="normal" class="bg-overlay" selected>Normal</option>
+                        <option value="difficile" class="bg-overlay">Difficile</option>
                     </select>
                 </div>
                 <div>
                     <label for="nombre" class="block text-sm font-semibold mb-2">Nombre de questions</label>
-                    <select id="nombre" name="nombre" class="w-full glass-card text-gray-200 py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
-                        <option value="5" class="bg-navy" selected>5 questions</option>
-                        <option value="10" class="bg-navy">10 questions</option>
+                    <select id="nombre" name="nombre" class="w-full glass-card text-body py-3 px-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="5" class="bg-overlay" selected>5 questions</option>
+                        <option value="10" class="bg-overlay">10 questions</option>
                     </select>
                 </div>
             </div>

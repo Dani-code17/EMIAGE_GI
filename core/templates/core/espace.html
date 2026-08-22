@@ -14,18 +14,18 @@
                 <div class="flex-1">
                     <p class="section-eyebrow mb-1">Mon espace</p>
                     <h1 class="section-title text-2xl md:text-4xl">Salut, {{ student.first_name }} ! 👋</h1>
-                    <p class="text-gray-400 mt-2 text-sm md:text-base">
+                    <p class="text-muted mt-2 text-sm md:text-base">
                         Niveau <span class="text-teal font-semibold">{{ student.get_level_display }}</span>
                         · Identifiant <span class="text-primary font-semibold">{{ student.student_id }}</span>
                     </p>
                     {% if my_rank %}
-                        <p class="text-sm text-gray-300 mt-1">
+                        <p class="text-sm text-body mt-1">
                             <i class="fas fa-trophy text-yellow-400 mr-1"></i>
                             Ta position ce mois-ci : <span class="font-bold text-yellow-400">#{{ my_rank }}</span>
-                            <span class="text-gray-500">· {{ my_stat.visits }} visite{{ my_stat.visits|pluralize }} · {{ my_stat.minutes }} min</span>
+                            <span class="text-muted">· {{ my_stat.visits }} visite{{ my_stat.visits|pluralize }} · {{ my_stat.minutes }} min</span>
                         </p>
                     {% else %}
-                        <p class="text-sm text-gray-400 mt-1">
+                        <p class="text-sm text-muted mt-1">
                             <i class="fas fa-info-circle text-teal mr-1"></i>Navigue sur le site pour apparaître dans le classement mensuel !
                         </p>
                     {% endif %}
@@ -34,7 +34,7 @@
                     <a href="{% url 'core:quiz' %}" class="btn-primary inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-full">
                         <i class="fas fa-puzzle-piece"></i> Faire un quiz
                     </a>
-                    <a href="{% url 'core:deconnexion' %}" class="btn-ghost inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full text-gray-300 hover:text-primary">
+                    <a href="{% url 'core:deconnexion' %}" class="btn-ghost inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full text-body hover:text-primary">
                         <i class="fas fa-sign-out-alt"></i> Se déconnecter
                     </a>
                 </div>
@@ -62,7 +62,7 @@
                             </span>
                             <div>
                                 <p class="font-display font-bold">Semestre 1</p>
-                                <p class="text-xs text-gray-400">Cours, TD/TP, examens</p>
+                                <p class="text-xs text-muted">Cours, TD/TP, examens</p>
                             </div>
                         </a>
                         <a href="{{ niveau_url }}?semestre=s2" class="glass-card rounded-2xl p-5 flex items-center gap-4 hover:border-secondary/40 transition">
@@ -71,7 +71,7 @@
                             </span>
                             <div>
                                 <p class="font-display font-bold">Semestre 2</p>
-                                <p class="text-xs text-gray-400">Cours, TD/TP, examens</p>
+                                <p class="text-xs text-muted">Cours, TD/TP, examens</p>
                             </div>
                         </a>
                     </div>
@@ -83,7 +83,7 @@
                                 <a href="{{ niveau_url }}?semestre=s{% if ue.semester|slice:'1' == '1' %}1{% else %}2{% endif %}&ue={{ ue.slug }}"
                                    class="glass-card rounded-2xl px-5 py-4 flex items-center justify-between hover:border-primary/40 transition">
                                     <span class="text-sm font-semibold">{{ ue.code }}</span>
-                                    <span class="text-xs text-gray-400">{{ ue.name }}</span>
+                                    <span class="text-xs text-muted">{{ ue.name }}</span>
                                 </a>
                             {% endfor %}
                         </div>
@@ -102,29 +102,29 @@
                         </a>
                     </div>
 
-                    <div class="glass-card rounded-3xl divide-y divide-white/5">
+                    <div class="glass-card rounded-3xl divide-y divide-soft">
                         {% for stat in ranking %}
-                            <div class="flex items-center gap-4 px-5 py-4 {% if stat.student_id == student.id %}bg-white/5{% endif %}">
+                            <div class="flex items-center gap-4 px-5 py-4 {% if stat.student_id == student.id %}bg-soft{% endif %}">
                                 <span class="w-8 h-8 rounded-full flex items-center justify-center font-display font-bold text-sm shrink-0
-                                    {% if forloop.counter == 1 %}bg-yellow-400/20 text-yellow-400{% elif forloop.counter == 2 %}bg-gray-300/20 text-gray-300{% elif forloop.counter == 3 %}bg-amber-600/20 text-amber-500{% else %}bg-white/5 text-gray-400{% endif %}">
+                                    {% if forloop.counter == 1 %}bg-yellow-400/20 text-yellow-400{% elif forloop.counter == 2 %}bg-gray-300/20 text-body{% elif forloop.counter == 3 %}bg-amber-600/20 text-amber-500{% else %}bg-soft text-muted{% endif %}">
                                     {{ forloop.counter }}
                                 </span>
                                 <div class="flex-1 min-w-0">
                                     <p class="font-semibold truncate">{{ stat.student.first_name }} {{ stat.student.last_name }}
-                                        <span class="text-xs text-gray-500">· {{ stat.student.get_level_display }}</span>
+                                        <span class="text-xs text-muted">· {{ stat.student.get_level_display }}</span>
                                     </p>
-                                    <p class="text-xs text-gray-500">{{ stat.visits }} visite{{ stat.visits|pluralize }} · {{ stat.minutes }} min</p>
+                                    <p class="text-xs text-muted">{{ stat.visits }} visite{{ stat.visits|pluralize }} · {{ stat.minutes }} min</p>
                                 </div>
                                 <span class="font-display font-bold text-teal">{{ stat.score }} pts</span>
                             </div>
                         {% empty %}
-                            <p class="px-5 py-8 text-center text-gray-500 text-sm">
+                            <p class="px-5 py-8 text-center text-muted text-sm">
                                 Aucune activité ce mois-ci pour le moment. Sois le premier !
                             </p>
                         {% endfor %}
                     </div>
                     {% if my_rank and my_rank > 10 %}
-                        <p class="text-sm text-gray-400 mt-3 text-center">… ta position : <span class="font-bold text-yellow-400">#{{ my_rank }}</span></p>
+                        <p class="text-sm text-muted mt-3 text-center">… ta position : <span class="font-bold text-yellow-400">#{{ my_rank }}</span></p>
                     {% endif %}
                 </div>
             </div>
@@ -159,17 +159,17 @@
                         <div class="glass-card rounded-3xl p-5 mb-3 flex items-center justify-around text-center">
                             <div>
                                 <p class="font-display font-bold text-xl text-gradient">{{ attempts_count }}</p>
-                                <p class="text-[10px] text-gray-400 uppercase tracking-wider">Quiz faits</p>
+                                <p class="text-[10px] text-muted uppercase tracking-wider">Quiz faits</p>
                             </div>
-                            <div class="w-px h-10 bg-white/10"></div>
+                            <div class="w-px h-10 bg-soft"></div>
                             <div>
                                 <p class="font-display font-bold text-xl text-gradient">{{ best.note|floatformat:1 }}/20</p>
-                                <p class="text-[10px] text-gray-400 uppercase tracking-wider">Meilleure note</p>
+                                <p class="text-[10px] text-muted uppercase tracking-wider">Meilleure note</p>
                             </div>
-                            <div class="w-px h-10 bg-white/10"></div>
+                            <div class="w-px h-10 bg-soft"></div>
                             <div>
                                 <p class="font-display font-bold text-xl text-gradient">{{ avg|floatformat:1 }}/20</p>
-                                <p class="text-[10px] text-gray-400 uppercase tracking-wider">Moyenne</p>
+                                <p class="text-[10px] text-muted uppercase tracking-wider">Moyenne</p>
                             </div>
                         </div>
                         <div class="space-y-2.5">
@@ -181,7 +181,7 @@
                                     </span>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-sm font-semibold truncate">{{ a.ue.name|default:"Quiz" }}</p>
-                                        <p class="text-xs text-gray-500">{{ a.correct }}/{{ a.total }} bonnes réponses · {{ a.created_at|date:"d/m" }}</p>
+                                        <p class="text-xs text-muted">{{ a.correct }}/{{ a.total }} bonnes réponses · {{ a.created_at|date:"d/m" }}</p>
                                     </div>
                                     {% if a.difficulty %}
                                         <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {% if a.difficulty == 'facile' %}bg-accent/15 text-accent{% elif a.difficulty == 'difficile' %}bg-red-500/15 text-red-400{% else %}bg-secondary/15 text-teal{% endif %}">
@@ -205,7 +205,7 @@
                                     </span>
                                     <div>
                                         <p class="font-semibold text-sm">{{ prize.student.first_name }} {{ prize.student.last_name }}</p>
-                                        <p class="text-xs text-gray-400">{{ prize.label }}{% if prize.amount %} — {{ prize.amount }}{% endif %}</p>
+                                        <p class="text-xs text-muted">{{ prize.label }}{% if prize.amount %} — {{ prize.amount }}{% endif %}</p>
                                     </div>
                                 </div>
                             {% endfor %}
