@@ -25,7 +25,7 @@
             {% for level in levels %}
                 <a href="{{ level.url }}" class="glass-card p-6 md:p-7 rounded-3xl group">
                     <div class="flex items-start justify-between mb-5">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br {% cycle 'from-primary to-secondary' 'from-secondary to-accent' 'from-accent to-primary' 'from-primary to-accent' 'from-secondary to-primary' %} flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br {% cycle 'from-cyan to-teal' 'from-teal to-lime' 'from-lime to-cyan' 'from-cyan to-lime' 'from-teal to-cyan' %} flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition">
                             <i class="fas {{ level.icon }} text-xl text-white"></i>
                         </div>
                         <span class="text-xs font-bold px-3 py-1.5 rounded-full glass-card text-gray-300">

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#07070F">
+    <meta name="theme-color" content="#0A0A14">
     <meta name="google-site-verification" content="TS4KVTjig14AFA58XmJOZuasZ-HgvjrIqso9pt1cEeo" />
     <meta name="description" content="{% block meta_description %}E-MIAGE-GI : la plateforme des étudiants MIAGE de l'UFHB. Cours, TD/TP, anciens sujets, maquettes, quiz et classement mensuel.{% endblock %}">
     <meta name="robots" content="index, follow">
@@ -23,13 +23,16 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#7C7CF5',
-                        secondary: '#5B8DEF',
-                        dark: '#07070F',
-                        navy: '#0E0E1C',
+                        primary: '#2E3067',      /* indigo marine */
+                        secondary: '#356177',    /* bleu transition */
+                        accent: '#7BB343',       /* vert pomme */
+                        dark: '#0A0A14',
+                        navy: '#131322',
                         light: '#F4F5FA',
-                        accent: '#34D399',
-                        muted: '#9CA3B8'
+                        muted: '#9CA3B8',
+                        cyan: '#136B8C',         /* bleu cyan foncé */
+                        teal: '#18868A',         /* bleu-vert */
+                        lime: '#5EA352'          /* vert clair */
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -66,23 +69,27 @@
         html { scroll-behavior: smooth; }
 
         body {
-            background-color: #07070F;
+            background-color: #0A0A14;
             color: #F4F5FA;
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Fond : halo discret + grille subtile */
+        /* Fond : dégradé vertical inspiré du logo "25 Ans MIAGE"
+           (bleu cyan foncé -> bleu-vert -> vert clair), fondu sur fond sombre */
         .site-bg::before {
             content: '';
             position: fixed;
             inset: 0;
             z-index: -2;
             background:
-                radial-gradient(700px 420px at 82% -8%, rgba(124, 124, 245, .12), transparent 60%),
-                radial-gradient(600px 420px at -8% 24%, rgba(91, 141, 239, .08), transparent 60%),
-                #07070F;
+                linear-gradient(to bottom,
+                    rgba(19, 107, 140, .28) 0%,
+                    rgba(24, 134, 138, .18) 35%,
+                    rgba(94, 163, 82, .12) 70%,
+                    rgba(10, 10, 20, 0) 100%),
+                #0A0A14;
         }
         .site-bg::after {
             content: '';
@@ -101,7 +108,7 @@
             transition: transform .3s cubic-bezier(.22,1,.36,1), border-color .3s ease, box-shadow .3s ease, background .3s ease;
         }
         .glass-card:hover {
-            border-color: rgba(124, 124, 245, .3);
+            border-color: rgba(92, 163, 82, .4);
             box-shadow: 0 16px 40px -16px rgba(0, 0, 0, .6);
             transform: translateY(-4px);
         }
@@ -115,16 +122,16 @@
         select.glass-card:hover, input.glass-card:hover, textarea.glass-card:hover, label.glass-card:hover {
             transform: none !important;
             box-shadow: none !important;
-            border-color: rgba(124, 124, 245, .35);
+            border-color: rgba(92, 163, 82, .45);
         }
         select.glass-card:focus, input.glass-card:focus, textarea.glass-card:focus {
-            border-color: rgba(124, 124, 245, .55);
-            box-shadow: 0 0 0 3px rgba(124, 124, 245, .15);
+            border-color: rgba(94, 163, 82, .6);
+            box-shadow: 0 0 0 3px rgba(94, 163, 82, .18);
         }
 
-        /* Texte dégradé discret */
+        /* Texte dégradé : indigo marine -> bleu transition -> vert */
         .text-gradient {
-            background: linear-gradient(92deg, #7C7CF5, #5B8DEF);
+            background: linear-gradient(92deg, #2E3067 0%, #356177 45%, #7BB343 100%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -132,23 +139,23 @@
 
         /* Boutons sobres */
         .btn-primary {
-            background: linear-gradient(92deg, #7C7CF5, #5B8DEF);
+            background: linear-gradient(92deg, #2E3067, #356177 55%, #18868A);
             color: #fff;
-            box-shadow: 0 8px 22px -8px rgba(124, 124, 245, .5);
+            box-shadow: 0 8px 22px -8px rgba(19, 107, 140, .5);
             transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
         }
         .btn-primary:hover {
             transform: translateY(-2px);
-            filter: brightness(1.06);
-            box-shadow: 0 12px 28px -8px rgba(124, 124, 245, .6);
+            filter: brightness(1.08);
+            box-shadow: 0 12px 28px -8px rgba(24, 134, 138, .6);
         }
         .btn-ghost {
             border: 1px solid rgba(255, 255, 255, .18);
             transition: all .25s ease;
         }
         .btn-ghost:hover {
-            border-color: rgba(124, 124, 245, .5);
-            color: #7C7CF5;
+            border-color: rgba(123, 179, 67, .55);
+            color: #7BB343;
             transform: translateY(-2px);
         }
 
@@ -158,7 +165,7 @@
             text-transform: uppercase;
             font-size: .7rem;
             font-weight: 600;
-            color: #7C7CF5;
+            color: #7BB343;
         }
         .section-title {
             font-family: 'Sora', 'Montserrat', sans-serif;
@@ -166,7 +173,7 @@
             letter-spacing: -.02em;
         }
         .underline-gradient {
-            background: linear-gradient(92deg, #7C7CF5, #5B8DEF);
+            background: linear-gradient(92deg, #2E3067, #18868A 50%, #7BB343);
             height: 3px;
             border-radius: 999px;
         }
@@ -175,7 +182,7 @@
         .delay-400 { animation-delay: .4s; }
         .delay-600 { animation-delay: .6s; }
 
-        .typed-cursor { color: #7C7CF5 !important; opacity: 1; animation: blink .7s infinite; }
+        .typed-cursor { color: #7BB343 !important; opacity: 1; animation: blink .7s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
 
         .scrollbar-hide::-webkit-scrollbar { display: none; }

@@ -51,22 +51,22 @@
              (compact sur mobile : seuls les numéros restent visibles ; chaque étape déjà franchie est cliquable) -->
         <div class="flex items-center justify-center gap-2 sm:gap-4 mb-8 sm:mb-10 text-xs sm:text-sm" aria-hidden="true">
             <a href="?semestre={{ semestre }}" class="flex items-center gap-1 sm:gap-2">
-                <span class="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold {% if semestre %}bg-gradient-to-br from-primary to-secondary text-white{% else %}glass-card text-gray-500{% endif %}">1</span>
+                <span class="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold {% if semestre %}bg-gradient-to-br from-cyan to-teal text-white{% else %}glass-card text-gray-500{% endif %}">1</span>
                 <span class="hidden sm:inline {% if semestre %}text-gray-200{% else %}text-gray-500{% endif %}">Semestre</span>
             </a>
             <i class="fas fa-chevron-right text-gray-600 text-xs"></i>
             <a href="{% if semestre %}?semestre={{ semestre }}{% else %}#{% endif %}" class="flex items-center gap-1 sm:gap-2 {% if not semestre %}pointer-events-none{% endif %}">
-                <span class="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold {% if selected_ue %}bg-gradient-to-br from-primary to-secondary text-white{% else %}glass-card text-gray-500{% endif %}">2</span>
+                <span class="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold {% if selected_ue %}bg-gradient-to-br from-cyan to-teal text-white{% else %}glass-card text-gray-500{% endif %}">2</span>
                 <span class="hidden sm:inline {% if selected_ue %}text-gray-200{% else %}text-gray-500{% endif %}">UE</span>
             </a>
             <i class="fas fa-chevron-right text-gray-600 text-xs"></i>
             <a href="{% if selected_ue %}?semestre={{ semestre }}&ue={{ selected_ue.slug }}{% else %}#{% endif %}" class="flex items-center gap-1 sm:gap-2 {% if not selected_ue %}pointer-events-none{% endif %}">
-                <span class="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold {% if selected_ecue %}bg-gradient-to-br from-primary to-secondary text-white{% else %}glass-card text-gray-500{% endif %}">3</span>
+                <span class="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold {% if selected_ecue %}bg-gradient-to-br from-cyan to-teal text-white{% else %}glass-card text-gray-500{% endif %}">3</span>
                 <span class="hidden sm:inline {% if selected_ecue %}text-gray-200{% else %}text-gray-500{% endif %}">ECUE</span>
             </a>
             <i class="fas fa-chevron-right text-gray-600 text-xs"></i>
             <a href="{% if selected_ecue %}?semestre={{ semestre }}&ue={{ selected_ue.slug }}&ecue={{ selected_ecue.slug }}{% else %}#{% endif %}" class="flex items-center gap-1 sm:gap-2 {% if not selected_ecue %}pointer-events-none{% endif %}">
-                <span class="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold {% if category %}bg-gradient-to-br from-primary to-secondary text-white{% else %}glass-card text-gray-500{% endif %}">4</span>
+                <span class="w-7 h-7 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold {% if category %}bg-gradient-to-br from-cyan to-teal text-white{% else %}glass-card text-gray-500{% endif %}">4</span>
                 <span class="hidden sm:inline {% if category %}text-gray-200{% else %}text-gray-500{% endif %}">Type de document</span>
             </a>
         </div>
@@ -141,9 +141,9 @@
         <div class="mb-10 text-center text-sm">
             {% if selected_ecue %}
                 <p class="text-gray-300">
-                    <i class="fas fa-filter text-secondary mr-1"></i>
+                    <i class="fas fa-filter text-teal mr-1"></i>
                     Affichage : <span class="text-primary font-semibold">{{ selected_ecue.ue.name }}</span>
-                    — <span class="text-secondary font-semibold">{{ selected_ecue.name }}</span>
+                    — <span class="text-teal font-semibold">{{ selected_ecue.name }}</span>
                     <span class="text-gray-500">· {{ selection_count }} document{{ selection_count|pluralize }}</span>
                     <a href="?semestre={{ semestre }}" class="ml-3 text-gray-400 hover:text-primary transition underline underline-offset-2">Réinitialiser</a>
                 </p>
@@ -166,7 +166,7 @@
                                 {% if doc.category == 'COURS' %}
                                     <i class="fas fa-book-open text-2xl text-primary"></i>
                                 {% elif doc.category == 'TD_TP' %}
-                                    <i class="fas fa-tools text-2xl text-secondary"></i>
+                                    <i class="fas fa-tools text-2xl text-teal"></i>
                                 {% elif doc.category == 'MAQUETTES' %}
                                     <i class="fas fa-drafting-compass text-2xl text-accent"></i>
                                 {% elif doc.category == 'EXAMS' %}
@@ -185,7 +185,7 @@
                         {% endif %}
                         <div class="mt-auto pt-3 flex items-center justify-between">
                             <span class="text-xs text-gray-500"><i class="far fa-calendar-alt mr-1"></i>{{ doc.upload_date|date:"d/m/Y" }}</span>
-                            <a href="{{ doc.file.url }}" class="text-primary hover:text-secondary transition font-semibold px-2 py-1.5 -m-1" target="_blank" rel="noopener">
+                            <a href="{{ doc.file.url }}" class="text-primary hover:text-teal transition font-semibold px-2 py-1.5 -m-1" target="_blank" rel="noopener">
                                 Télécharger <i class="fas fa-download ml-1"></i>
                             </a>
                         </div>

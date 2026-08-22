@@ -8,7 +8,7 @@
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
                 <p class="section-eyebrow">Administration</p>
-                <h1 class="section-title text-3xl md:text-4xl mt-1">Tableau de bord <span class="text-secondary">{{ month }}</span></h1>
+                <h1 class="section-title text-3xl md:text-4xl mt-1">Tableau de bord <span class="text-teal">{{ month }}</span></h1>
             </div>
             <div class="flex gap-3">
                 <a href="/admin/" target="_blank" class="btn-ghost inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full text-gray-300">
@@ -57,7 +57,7 @@
                                 </p>
                                 <p class="text-xs text-gray-500">{{ stat.visits }} visites · {{ stat.minutes }} min</p>
                             </div>
-                            <span class="font-display font-bold text-secondary">{{ stat.score }} pts</span>
+                            <span class="font-display font-bold text-teal">{{ stat.score }} pts</span>
                             <form method="post" class="flex items-center gap-1.5">
                                 {% csrf_token %}
                                 <input type="hidden" name="action" value="prize">
@@ -84,7 +84,7 @@
                     <div class="glass-card rounded-3xl divide-y divide-white/5">
                         {% for prize in prizes %}
                             <div class="flex items-center gap-3 px-5 py-3.5">
-                                <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-accent to-primary flex items-center justify-center text-white shrink-0">
+                                <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-lime to-cyan flex items-center justify-center text-white shrink-0">
                                     <i class="fas fa-gift"></i>
                                 </span>
                                 <div class="flex-1 min-w-0">
@@ -104,7 +104,7 @@
                     <div class="glass-card rounded-3xl divide-y divide-white/5">
                         {% for s in recent_students %}
                             <div class="flex items-center gap-3 px-5 py-3">
-                                <span class="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-xs font-bold shrink-0">
+                                <span class="w-9 h-9 rounded-full bg-gradient-to-br from-cyan to-teal flex items-center justify-center text-white text-xs font-bold shrink-0">
                                     {{ s.first_name|slice:":1" }}{{ s.last_name|slice:":1" }}
                                 </span>
                                 <div class="flex-1 min-w-0">

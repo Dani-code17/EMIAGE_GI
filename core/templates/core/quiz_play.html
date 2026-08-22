@@ -18,9 +18,9 @@
                 <div class="glass-card rounded-3xl p-6">
                     <div class="flex items-start justify-between gap-3 mb-4">
                         <p class="font-semibold leading-relaxed">
-                            <span class="text-secondary font-display font-bold mr-2">{{ forloop.counter }}.</span>{{ q.question }}
+                            <span class="text-teal font-display font-bold mr-2">{{ forloop.counter }}.</span>{{ q.question }}
                         </p>
-                        <span class="text-xs font-bold px-2.5 py-1 rounded-full shrink-0 {% if q.difficulty == 'facile' %}bg-accent/15 text-accent{% elif q.difficulty == 'difficile' %}bg-red-500/15 text-red-400{% else %}bg-secondary/15 text-secondary{% endif %}">
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-full shrink-0 {% if q.difficulty == 'facile' %}bg-accent/15 text-accent{% elif q.difficulty == 'difficile' %}bg-red-500/15 text-red-400{% else %}bg-secondary/15 text-teal{% endif %}">
                             {{ q.get_difficulty_display }}
                         </span>
                     </div>

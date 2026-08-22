@@ -6,16 +6,16 @@
     <div class="max-w-6xl mx-auto">
         <!-- Carte de bienvenue -->
         <div class="glass-card rounded-3xl p-7 md:p-10 mb-10 relative overflow-hidden">
-            <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-secondary/20 blur-3xl pointer-events-none"></div>
+            <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-teal/20 blur-3xl pointer-events-none"></div>
             <div class="relative flex flex-col md:flex-row md:items-center gap-6">
-                <span class="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-3xl font-display font-bold shrink-0">
+                <span class="w-20 h-20 rounded-3xl bg-gradient-to-br from-cyan to-teal flex items-center justify-center text-white text-3xl font-display font-bold shrink-0">
                     {{ student.first_name|slice:":1" }}{{ student.last_name|slice:":1" }}
                 </span>
                 <div class="flex-1">
                     <p class="section-eyebrow mb-1">Mon espace</p>
                     <h1 class="section-title text-2xl md:text-4xl">Salut, {{ student.first_name }} ! 👋</h1>
                     <p class="text-gray-400 mt-2 text-sm md:text-base">
-                        Niveau <span class="text-secondary font-semibold">{{ student.get_level_display }}</span>
+                        Niveau <span class="text-teal font-semibold">{{ student.get_level_display }}</span>
                         · Identifiant <span class="text-primary font-semibold">{{ student.student_id }}</span>
                     </p>
                     {% if my_rank %}
@@ -26,7 +26,7 @@
                         </p>
                     {% else %}
                         <p class="text-sm text-gray-400 mt-1">
-                            <i class="fas fa-info-circle text-secondary mr-1"></i>Navigue sur le site pour apparaître dans le classement mensuel !
+                            <i class="fas fa-info-circle text-teal mr-1"></i>Navigue sur le site pour apparaître dans le classement mensuel !
                         </p>
                     {% endif %}
                 </div>
@@ -57,7 +57,7 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                         <a href="{{ niveau_url }}?semestre=s1" class="glass-card rounded-2xl p-5 flex items-center gap-4 hover:border-secondary/40 transition">
-                            <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-white shrink-0">
+                            <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal to-cyan flex items-center justify-center text-white shrink-0">
                                 <i class="fas fa-book-open"></i>
                             </span>
                             <div>
@@ -66,7 +66,7 @@
                             </div>
                         </a>
                         <a href="{{ niveau_url }}?semestre=s2" class="glass-card rounded-2xl p-5 flex items-center gap-4 hover:border-secondary/40 transition">
-                            <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white shrink-0">
+                            <span class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan to-lime flex items-center justify-center text-white shrink-0">
                                 <i class="fas fa-book-open"></i>
                             </span>
                             <div>
@@ -95,7 +95,7 @@
                     <div class="flex items-end justify-between mb-5">
                         <div>
                             <p class="section-eyebrow">Compétition</p>
-                            <h2 class="section-title text-xl md:text-2xl mt-1">Classement du mois <span class="text-secondary">{{ month }}</span></h2>
+                            <h2 class="section-title text-xl md:text-2xl mt-1">Classement du mois <span class="text-teal">{{ month }}</span></h2>
                         </div>
                         <a href="{% url 'core:quiz' %}" class="text-primary text-sm font-semibold hover:underline">
                             Gagner des points ? <i class="fas fa-arrow-right ml-1"></i>
@@ -115,7 +115,7 @@
                                     </p>
                                     <p class="text-xs text-gray-500">{{ stat.visits }} visite{{ stat.visits|pluralize }} · {{ stat.minutes }} min</p>
                                 </div>
-                                <span class="font-display font-bold text-secondary">{{ stat.score }} pts</span>
+                                <span class="font-display font-bold text-teal">{{ stat.score }} pts</span>
                             </div>
                         {% empty %}
                             <p class="px-5 py-8 text-center text-gray-500 text-sm">
@@ -139,7 +139,7 @@
                             <span class="font-display font-bold text-lg">{{ level_counts.cours|default:0 }}</span>
                         </div>
                         <div class="glass-card rounded-2xl p-5 flex items-center justify-between">
-                            <span class="flex items-center gap-3 text-sm"><i class="fas fa-tools text-secondary"></i> TD & TP</span>
+                            <span class="flex items-center gap-3 text-sm"><i class="fas fa-tools text-teal"></i> TD & TP</span>
                             <span class="font-display font-bold text-lg">{{ level_counts.td_tp|default:0 }}</span>
                         </div>
                         <div class="glass-card rounded-2xl p-5 flex items-center justify-between">
@@ -184,7 +184,7 @@
                                         <p class="text-xs text-gray-500">{{ a.correct }}/{{ a.total }} bonnes réponses · {{ a.created_at|date:"d/m" }}</p>
                                     </div>
                                     {% if a.difficulty %}
-                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {% if a.difficulty == 'facile' %}bg-accent/15 text-accent{% elif a.difficulty == 'difficile' %}bg-red-500/15 text-red-400{% else %}bg-secondary/15 text-secondary{% endif %}">
+                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {% if a.difficulty == 'facile' %}bg-accent/15 text-accent{% elif a.difficulty == 'difficile' %}bg-red-500/15 text-red-400{% else %}bg-secondary/15 text-teal{% endif %}">
                                             {{ a.difficulty }}
                                         </span>
                                     {% endif %}
@@ -200,7 +200,7 @@
                         <div class="space-y-3">
                             {% for prize in prizes %}
                                 <div class="glass-card rounded-2xl p-5 flex items-center gap-4">
-                                    <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-accent to-primary flex items-center justify-center text-white shrink-0">
+                                    <span class="w-10 h-10 rounded-2xl bg-gradient-to-br from-lime to-cyan flex items-center justify-center text-white shrink-0">
                                         <i class="fas fa-gift"></i>
                                     </span>
                                     <div>
