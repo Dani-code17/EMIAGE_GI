@@ -916,3 +916,14 @@ def service_worker(request):
     except OSError:
         return HttpResponse(status=404)
     return HttpResponse(data, content_type='text/javascript; charset=utf-8')
+
+
+def manifest_json(request):
+    """Sert le manifest PWA avec le bon MIME application/manifest+json."""
+    from django.conf import settings
+    path = settings.BASE_DIR / 'core' / 'static' / 'core' / 'manifest.webmanifest'
+    try:
+        data = path.read_bytes()
+    except OSError:
+        return HttpResponse(status=404)
+    return HttpResponse(data, content_type='application/manifest+json; charset=utf-8')
