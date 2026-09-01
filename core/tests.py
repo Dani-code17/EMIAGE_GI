@@ -272,6 +272,25 @@ class StudentFlowTests(TestCase):
         response = self.client.get(reverse('core:espace'))
         self.assertRedirects(response, reverse('core:connexion'))
 
+    def test_securite_espace_protege_sans_session(self):
+        """Un visiteur non connecté ne voit pas 'Mon espace' et ne peut pas accéder à /espace/."""
+        # Page d'accueil : pas de lien 'Mon espace', présence de Connexion
+        html = self.client.get(reverse('core:home')).content.decode('utf-8')
+        self.assertNotIn('> Mon espace', html)
+        self.assertIn('Connexion', html)
+        # /espace/ redirige vers la connexion
+        response = self.client.get(reverse('core:espace'))
+        self.assertRedirects(response, reverse('core:connexion'))
+
+    def test_securite_espace_protege_avec_session_forgee(self):
+        """Une session avec un étudiant_id inconnu est purgée -> pas d'accès."""
+        self.client.session['student_id'] = 999999
+        self.client.session.save()
+        response = self.client.get(reverse('core:espace'))
+        self.assertRedirects(response, reverse('core:connexion'))
+        # la session a été purgée
+        self.assertIsNone(self.client.session.get('student_id'))
+
     def test_activite_enregistree(self):
         """Le middleware compte les visites et le temps."""
         from django.utils import timezone

@@ -78,6 +78,15 @@ MIDDLEWARE = [
 ADMIN_LOGIN = os.environ.get('ADMIN_LOGIN', 'Daniki')
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'Daniel87606819')
 
+# ===== Sécurité des sessions =====
+# Expansion : la session expire après 14 jours d'inactivité.
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 14          # 14 jours
+SESSION_SAVE_EVERY_REQUEST = True               # renouvelle la date à chaque requête
+SESSION_COOKIE_HTTPONLY = True                  # pas d'accès JS au cookie
+SESSION_COOKIE_SAMESITE = 'Lax'
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True                # uniquement en HTTPS (prod)
+
 ROOT_URLCONF = 'emiage_web.urls'
 
 TEMPLATES = [

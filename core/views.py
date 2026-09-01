@@ -496,11 +496,24 @@ def meta_test(request):
 # ============================================================
 
 def _current_student(request):
-    """Renvoie l'étudiant connecté (session) ou None."""
+    """Renvoie l'étudiant connecté (session) ou None.
+
+    La session est gérée côté serveur et signée par Django : son contenu ne peut
+    pas être falsifié par le client. On purge un identifiant résiduel qui ne
+    correspond plus à un compte existant.
+    """
     student_id = request.session.get('student_id')
     if not student_id:
         return None
-    return Student.objects.filter(id=student_id).first()
+    student = Student.objects.filter(id=student_id).first()
+    if student is None:
+        # Compte supprimé ou identifiant orphelin : on nettoie la session
+        try:
+            del request.session['student_id']
+        except KeyError:
+            pass
+        return None
+    return student
 
 
 def inscription(request):
