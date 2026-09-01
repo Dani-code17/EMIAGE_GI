@@ -1,42 +1,42 @@
 {% load static %}
 <!-- ===== Navbar Desktop ===== -->
 <nav class="fixed top-0 left-0 right-0 z-[100] border-b border-soft bg-overlay backdrop-blur-xl">
-    <div class="max-w-6xl mx-auto px-4 md:px-6 h-16 md:h-[72px] flex items-center justify-between">
-        <!-- Logo -->
-        <a href="{% url 'core:home' %}" class="flex items-center gap-2.5">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 md:h-[72px] flex items-center justify-between gap-4">
+        <!-- Logo (plaqué à gauche, sans marge inutile) -->
+        <a href="{% url 'core:home' %}" class="flex items-center gap-2.5 pl-0 md:pl-1 shrink-0">
             <img src="{% static 'core/logo/logo-nav.png' %}" alt="Logo 25 Ans MIAGE"
                  class="h-9 w-9 md:h-10 md:w-10 object-contain drop-shadow-md">
-            <span class="font-display font-bold text-lg md:text-xl tracking-tight text-body">E-<span class="text-gradient">MIAGE-GI</span></span>
+            <span class="hidden sm:inline font-display font-bold text-lg md:text-xl tracking-tight text-body">E-<span class="text-gradient">MIAGE-GI</span></span>
         </a>
 
         <!-- Liens desktop -->
-        <div class="hidden md:flex items-center gap-7 text-sm font-medium">
-            <a href="{% url 'core:home' %}" class="text-body hover:text-primary transition">Accueil</a>
-            <a href="{% url 'core:bibliotheque_index' %}" class="text-body hover:text-primary transition">Bibliothèque</a>
+        <div class="hidden md:flex items-center gap-5 lg:gap-7 text-sm font-medium">
+            <a href="{% url 'core:home' %}" class="text-body hover:text-primary transition whitespace-nowrap">Accueil</a>
+            <a href="{% url 'core:bibliotheque_index' %}" class="text-body hover:text-primary transition whitespace-nowrap">Bibliothèque</a>
 
-            <!-- Dropdown Niveaux -->
+            <!-- Dropdown Niveaux (ancré à gauche pour éviter la fuite hors écran) -->
             <div class="relative" id="niveaux-dropdown">
                 <button id="niveaux-btn" type="button" aria-expanded="false"
-                        class="text-body hover:text-primary transition flex items-center gap-1.5">
+                        class="text-body hover:text-primary transition flex items-center gap-1.5 whitespace-nowrap">
                     Niveaux <i class="fas fa-chevron-down text-[10px] transition-transform" id="niveaux-chevron"></i>
                 </button>
                 <div id="niveaux-menu"
-                     class="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-52 rounded-2xl glass-card shadow-2xl shadow-black/30 p-2 hidden">
-                    <a href="{% url 'core:niveau_l1' %}" class="block px-4 py-2.5 rounded-xl text-body hover:text-primary hover:bg-soft transition">Licence 1</a>
-                    <a href="{% url 'core:niveau_l2' %}" class="block px-4 py-2.5 rounded-xl text-body hover:text-primary hover:bg-soft transition">Licence 2</a>
-                    <a href="{% url 'core:niveau_l3' %}" class="block px-4 py-2.5 rounded-xl text-body hover:text-primary hover:bg-soft transition">Licence 3</a>
-                    <a href="{% url 'core:niveau_m1' %}" class="block px-4 py-2.5 rounded-xl text-body hover:text-primary hover:bg-soft transition">Master 1</a>
-                    <a href="{% url 'core:niveau_m2' %}" class="block px-4 py-2.5 rounded-xl text-body hover:text-primary hover:bg-soft transition">Master 2</a>
+                     class="absolute left-0 top-full mt-2 w-48 rounded-2xl glass-card shadow-2xl shadow-black/30 p-1.5 hidden">
+                    <a href="{% url 'core:niveau_l1' %}" class="block px-4 py-2.5 rounded-xl text-sm text-body hover:text-primary hover:bg-soft transition">Licence 1</a>
+                    <a href="{% url 'core:niveau_l2' %}" class="block px-4 py-2.5 rounded-xl text-sm text-body hover:text-primary hover:bg-soft transition">Licence 2</a>
+                    <a href="{% url 'core:niveau_l3' %}" class="block px-4 py-2.5 rounded-xl text-sm text-body hover:text-primary hover:bg-soft transition">Licence 3</a>
+                    <a href="{% url 'core:niveau_m1' %}" class="block px-4 py-2.5 rounded-xl text-sm text-body hover:text-primary hover:bg-soft transition">Master 1</a>
+                    <a href="{% url 'core:niveau_m2' %}" class="block px-4 py-2.5 rounded-xl text-sm text-body hover:text-primary hover:bg-soft transition">Master 2</a>
                 </div>
             </div>
 
-            <a href="{% url 'core:home' %}#jimiage" class="text-body hover:text-primary transition">La JI-MIAGE</a>
-            <a href="{% url 'core:home' %}#tiktok" class="text-body hover:text-primary transition">TikTok</a>
-            <a href="{% url 'core:home' %}#contact" class="text-body hover:text-primary transition">Contact</a>
+            <a href="{% url 'core:home' %}#jimiage" class="hidden xl:inline text-body hover:text-primary transition whitespace-nowrap">La JI-MIAGE</a>
+            <a href="{% url 'core:home' %}#tiktok" class="hidden xl:inline text-body hover:text-primary transition whitespace-nowrap">TikTok</a>
+            <a href="{% url 'core:home' %}#contact" class="text-body hover:text-primary transition whitespace-nowrap">Contact</a>
         </div>
 
         <!-- CTA desktop -->
-        <div class="hidden md:flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-3 shrink-0">
             <button type="button" data-theme-toggle
                     class="btn-ghost w-10 h-10 rounded-full flex items-center justify-center text-body"
                     aria-label="Basculer le mode clair/sombre">
