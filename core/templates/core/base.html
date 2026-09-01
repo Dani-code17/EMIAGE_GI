@@ -304,24 +304,26 @@
             function apply(theme) {
                 document.documentElement.setAttribute('data-theme', theme);
                 try { localStorage.setItem('emiage-theme', theme); } catch (e) {}
-                // met à jour l'icône du bouton si présent
-                var moon = document.querySelector('[data-theme-toggle-moon]');
-                var sun = document.querySelector('[data-theme-toggle-sun]');
-                if (moon || sun) {
-                    var isLight = theme === 'light';
-                    if (moon) { moon.style.display = isLight ? 'none' : 'inline'; }
-                    if (sun) { sun.style.display = isLight ? 'inline' : 'none'; }
-                }
+                // met à jour l'icône de TOUS les boutons (desktop + mobile)
+                var isLight = theme === 'light';
+                Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle-moon]'), function (m) {
+                    m.style.display = isLight ? 'none' : 'inline';
+                });
+                Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle-sun]'), function (s) {
+                    s.style.display = isLight ? 'inline' : 'none';
+                });
             }
 
             document.addEventListener('DOMContentLoaded', function () {
-                var btn = document.querySelector('[data-theme-toggle]');
-                if (btn) {
+                // Écoute TOUS les boutons de bascule (desktop + mobile) :
+                // querySelector ne prendrait que le premier (le desktop caché sur mobile)
+                var btns = document.querySelectorAll('[data-theme-toggle]');
+                Array.prototype.forEach.call(btns, function (btn) {
                     btn.addEventListener('click', function () {
                         var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
                         apply(cur === 'light' ? 'dark' : 'light');
                     });
-                }
+                });
                 apply(document.documentElement.getAttribute('data-theme') || 'dark');
             });
         })();
