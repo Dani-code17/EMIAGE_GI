@@ -1,11 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from django.http import HttpResponse
+from django.http import HttpResponse, StreamingHttpResponse
 from django.urls import reverse
 from .models import Document, UE, ECUE, Student, StudentStat, Prize, QuizQuestion, QuizAnswer, QuizAttempt
 from django.db.models import Q
 from collections import Counter
+import os
 import re
+import urllib.request
 
 
 def _niveau_extra_context(niveau_label, level, documents):
@@ -844,6 +846,55 @@ def sitemap_xml(request):
         return HttpResponse(status=404)
 
 
+def telecharger_document(request, doc_id):
+    """Force le téléchargement d'un document avec Content-Disposition: attachment.
+
+    Utile pour iPhone/Safari qui, sinon, affiche les PDF en aperçu dans le
+    navigateur au lieu de les télécharger. Le fichier est streamé depuis sa
+    source (GitHub emiage-media, R2, ou le disque local en dev).
+    """
+    from django.conf import settings
+    doc = get_object_or_404(Document, id=doc_id)
+
+    # Titre de fichier propre pour le téléchargement
+    ext = doc.extension.lower() or 'bin'
+    filename = f'{doc.title}.{ext}'
+    ascii_name = filename.encode('ascii', 'replace').decode('ascii').replace('?', '_').replace(' ', '_')
+    try:
+        enc_name = urllib.request.quote(filename).replace(' ', '%20')
+    except Exception:
+        enc_name = ascii_name
+    disposition = f"attachment; filename=\"{ascii_name}\"; filename*=UTF-8''{enc_name}"
+
+    url = doc.file.url
+    try:
+        if url.startswith('/'):
+            # Dev local : stream depuis le disque
+            local = os.path.join(settings.MEDIA_ROOT, doc.file.name)
+            if not os.path.exists(local):
+                return HttpResponse('Fichier introuvable', status=404)
+            response = HttpResponse(
+                (chunk for chunk in iter(lambda: open(local, 'rb').read(65536), b'')),
+                content_type='application/octet-stream',
+            )
+            response['Content-Length'] = os.path.getsize(local)
+        else:
+            # Source distante (GitHub/R2) : streamer
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            upstream = urllib.request.urlopen(req, timeout=60)
+            content_type = upstream.headers.get('Content-Type', 'application/octet-stream')
+            response = HttpResponse(
+                (chunk for chunk in iter(lambda: upstream.read(65536), b'')),
+                content_type=content_type,
+            )
+        response['Content-Disposition'] = disposition
+        response['Cache-Control'] = 'no-cache'
+        response['X-Content-Type-Options'] = 'nosniff'
+        return response
+    except Exception as exc:  # noqa: BLE001
+        return HttpResponse(f'Erreur lors du téléchargement : {exc}', status=500)
+
+
 def robots_txt(request):
     """Sert le fichier robots.txt pour les moteurs de recherche."""
     from django.conf import settings
@@ -853,3 +904,15 @@ def robots_txt(request):
         f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml\n"
     )
     return HttpResponse(content, content_type='text/plain')
+
+
+def service_worker(request):
+    """Sert le service worker PWA avec le bon MIME (les navigateurs le refusent
+    s'il n'est pas servie en text/javascript)."""
+    from django.conf import settings
+    sw_path = settings.BASE_DIR / 'core' / 'static' / 'core' / 'sw.js'
+    try:
+        data = sw_path.read_bytes()
+    except OSError:
+        return HttpResponse(status=404)
+    return HttpResponse(data, content_type='text/javascript; charset=utf-8')

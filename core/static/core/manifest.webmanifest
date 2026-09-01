@@ -1,0 +1,33 @@
+{
+  "name": "E-MIAGE-GI",
+  "short_name": "E-MIAGE-GI",
+  "description": "La plateforme des étudiants MIAGE de l'UFHB : cours, TD/TP, anciens sujets, maquettes, quiz et classement mensuel.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0A0A14",
+  "theme_color": "#0A0A14",
+  "categories": ["education"],
+  "icons": [
+    {
+      "src": "/static/core/logo/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/core/logo/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/core/logo/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

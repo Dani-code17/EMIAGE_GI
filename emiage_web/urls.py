@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('sitemap.xml', core_views.sitemap_xml, name='sitemap_xml'),
     path('robots.txt', core_views.robots_txt, name='robots_txt'),
+    path('sw.js', core_views.service_worker, name='service_worker'),
     path('', include('core.urls')),  # Inclure les URLs de l'application core
 ]
 

@@ -185,7 +185,7 @@
                         {% endif %}
                         <div class="mt-auto pt-3 flex items-center justify-between">
                             <span class="text-xs text-muted"><i class="far fa-calendar-alt mr-1"></i>{{ doc.upload_date|date:"d/m/Y" }}</span>
-                            <a href="{{ doc.file.url }}" class="text-primary hover:text-teal transition font-semibold px-2 py-1.5 -m-1" target="_blank" rel="noopener">
+                            <a href="{% url 'core:telecharger_document' doc.id %}" class="text-primary hover:text-teal transition font-semibold px-2 py-1.5 -m-1" rel="noopener">
                                 Télécharger <i class="fas fa-download ml-1"></i>
                             </a>
                         </div>

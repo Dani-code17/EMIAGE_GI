@@ -12,6 +12,7 @@ urlpatterns = [
     path('bibliotheque/m2/', views.niveau_m2, name='niveau_m2'),
     path('coming-soon/', views.coming_soon, name='coming_soon'),
     path('about/', views.about, name='about'),
+    path('telecharger/<int:doc_id>/', views.telecharger_document, name='telecharger_document'),
     path('bibliotheque/', views.bibliotheque_index, name='bibliotheque_index'),
     path('meta-test/', views.meta_test, name='meta_test'),
     path('inscription/', views.inscription, name='inscription'),

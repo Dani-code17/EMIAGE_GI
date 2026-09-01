@@ -66,7 +66,7 @@
                 </div>
                 
                 <div class="mt-6">
-                    <a href="{{ document.file.url }}" 
+                    <a href="{% url 'core:telecharger_document' document.id %}"
                        class="inline-flex items-center justify-center bg-secondary text-light font-bold py-2 px-4 rounded-full hover:bg-opacity-90 transition">
                         <i class="fas fa-download mr-2"></i>
                         Télécharger
