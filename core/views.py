@@ -5,6 +5,7 @@ from django.urls import reverse
 from .models import Document, UE, ECUE, Student, StudentStat, Prize, QuizQuestion, QuizAnswer, QuizAttempt
 from django.db.models import Q
 from collections import Counter
+from datetime import datetime
 import os
 import re
 import urllib.request
@@ -517,7 +518,8 @@ def _current_student(request):
 
 
 def inscription(request):
-    """Création de compte : nom, prénom, niveau, identifiant et mot de passe."""
+    """Création de compte : nom, prénom, date de naissance, niveau et mot de passe.
+    L'IP est générée automatiquement (nom+prénom+date+suffixe) et affichée ensuite."""
     if _current_student(request):
         return redirect('core:espace')
 
@@ -526,28 +528,42 @@ def inscription(request):
         first_name = request.POST.get('prenom', '').strip()
         last_name = request.POST.get('nom', '').strip()
         level = request.POST.get('niveau', '')
-        student_id = request.POST.get('identifiant', '').strip()
+        birth_raw = request.POST.get('date_naissance', '').strip()
         password = request.POST.get('mdp', '')
         password2 = request.POST.get('mdp2', '')
         valid_levels = dict(Student.LEVEL_CHOICES)
 
-        if not first_name or not last_name:
+        birth_date = None
+        if birth_raw:
+            try:
+                birth_date = datetime.strptime(birth_raw, '%Y-%m-%d').date()
+            except ValueError:
+                error = 'Merci de saisir une date de naissance valide.'
+
+        if error is None and (not first_name or not last_name):
             error = 'Merci de renseigner ton nom et ton prénom.'
-        elif level not in valid_levels:
+        elif error is None and level not in valid_levels:
             error = 'Merci de choisir un niveau valide.'
-        elif len(student_id) < 3:
-            error = 'Choisis un identifiant permanent (IP) d\'au moins 3 caractères.'
-        elif Student.objects.filter(student_id__iexact=student_id).exists():
-            error = 'Cet identifiant est déjà utilisé. Choisis-en un autre.'
-        elif len(password) < 6:
+        elif error is None and birth_date is None:
+            error = 'Merci de saisir ta date de naissance.'
+        elif error is None and len(password) < 6:
             error = 'Le mot de passe doit contenir au moins 6 caractères.'
-        elif password != password2:
+        elif error is None and password != password2:
             error = 'Les deux mots de passe ne correspondent pas.'
         else:
-            student = Student(first_name=first_name, last_name=last_name, level=level, student_id=student_id)
+            student_id = Student.build_student_id(last_name, first_name, birth_date)
+            student = Student(
+                first_name=first_name,
+                last_name=last_name,
+                level=level,
+                birth_date=birth_date,
+                student_id=student_id,
+            )
             student.set_password(password)
             student.save()
             request.session['student_id'] = student.id
+            # Bandeau « voici ton IP » affiché une fois sur l'espace
+            request.session['nouvel_inscrit'] = student.id
             return redirect('core:espace')
 
     return render(request, 'core/inscription.html', {
@@ -605,6 +621,9 @@ def espace(request):
     from django.utils import timezone
     month = timezone.now().strftime('%Y-%m')
 
+    # Bandeau « voici ton IP » affiché une seule fois, juste après l'inscription
+    show_ip = request.session.pop('nouvel_inscrit', None) == student.id
+
     level_counts = Counter(
         Document.objects.filter(level=student.level).values_list('category', flat=True)
     )
@@ -638,6 +657,7 @@ def espace(request):
         'ranking': ranking[:10],
         'prizes': prizes,
         'month': month,
+        'show_ip': show_ip,
         'attempts': attempts,
         'attempts_count': attempts_count,
         'best': best,

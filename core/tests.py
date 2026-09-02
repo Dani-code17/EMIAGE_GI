@@ -184,39 +184,75 @@ class StudentFlowTests(TestCase):
         return s
 
     def test_inscription_cree_compte_et_connecte(self):
+        # YEO Daniel né le 26/08/2004 -> IP attendue YEOD2608040001
         response = self.client.post(reverse('core:inscription'), {
             'prenom': 'Daniel', 'nom': 'YEO', 'niveau': 'L2',
-            'identifiant': '24-5678', 'mdp': 'secret12', 'mdp2': 'secret12',
+            'date_naissance': '2004-08-26',
+            'mdp': 'secret12', 'mdp2': 'secret12',
         })
-        self.assertRedirects(response, reverse('core:espace'))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['Location'], reverse('core:espace'))
         from .models import Student
-        student = Student.objects.get(student_id='24-5678')
+        student = Student.objects.filter(first_name='Daniel', last_name='YEO').first()
+        self.assertIsNotNone(student)
+        # IP générée automatiquement au bon format
+        self.assertEqual(student.student_id, 'YEOD2608040001')
         self.assertEqual(student.level, 'L2')
         self.assertTrue(student.check_password('secret12'))
         self.assertFalse(student.check_password('mauvais'))
-        # Session connectée
+        # Session connectée + bandeau IP prévu (avant la redirection suivie)
         self.assertEqual(self.client.session['student_id'], student.id)
+        self.assertEqual(self.client.session['nouvel_inscrit'], student.id)
+
+    def test_inscription_ip_leve_collision(self):
+        """Deux mêmes nom+prénom+naissance -> suffixe incrémente (0002)."""
+        from .models import Student
+        ids = []
+        for _ in range(2):
+            self.client.post(reverse('core:inscription'), {
+                'prenom': 'Jean', 'nom': 'KOUASSI', 'niveau': 'L1',
+                'date_naissance': '2002-01-15', 'mdp': 'secret12', 'mdp2': 'secret12',
+            })
+            # se déconnecter pour pouvoir s'inscrire à nouveau (inscription
+            # redirige si déjà connecté)
+            self.client.get(reverse('core:deconnexion'))
+        for s in Student.objects.filter(first_name='Jean'):
+            ids.append(s.student_id)
+        self.assertIn('KOUJ1501020001', ids)
+        self.assertIn('KOUJ1501020002', ids)
 
     def test_inscription_champs_requis(self):
         response = self.client.post(reverse('core:inscription'), {
-            'prenom': '', 'nom': 'YEO', 'niveau': 'L2', 'identifiant': 'x', 'mdp': 'secret12', 'mdp2': 'secret12',
+            'prenom': '', 'nom': 'YEO', 'niveau': 'L2',
+            'date_naissance': '2004-08-26', 'mdp': 'secret12', 'mdp2': 'secret12',
         })
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'nom et ton prénom')
         from .models import Student
         self.assertEqual(Student.objects.count(), 0)
 
+    def test_inscription_date_manquante(self):
+        response = self.client.post(reverse('core:inscription'), {
+            'prenom': 'Daniel', 'nom': 'YEO', 'niveau': 'L2',
+            'mdp': 'secret12', 'mdp2': 'secret12',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'date de naissance')
+        from .models import Student
+        self.assertEqual(Student.objects.count(), 0)
+
     def test_inscription_mdp_courts_ou_differents(self):
         from .models import Student
+        def post(**extra):
+            data = {'prenom': 'A', 'nom': 'B', 'niveau': 'L1',
+                    'date_naissance': '2004-08-26', 'mdp': 'secret12', 'mdp2': 'secret12'}
+            data.update(extra)
+            return self.client.post(reverse('core:inscription'), data)
         # mot de passe trop court
-        self.client.post(reverse('core:inscription'), {
-            'prenom': 'A', 'nom': 'B', 'niveau': 'L1', 'identifiant': 'ab', 'mdp': '123', 'mdp2': '123',
-        })
+        post(mdp='123', mdp2='123')
         self.assertEqual(Student.objects.count(), 0)
         # mots de passe différents
-        self.client.post(reverse('core:inscription'), {
-            'prenom': 'A', 'nom': 'B', 'niveau': 'L1', 'identifiant': 'ab', 'mdp': 'secret12', 'mdp2': 'autre12',
-        })
+        post(mdp2='autre12')
         self.assertEqual(Student.objects.count(), 0)
 
     def test_connexion_par_identifiant_et_mdp(self):

@@ -111,7 +111,8 @@ class Student(models.Model):
     first_name = models.CharField(max_length=100, verbose_name='Prénom')
     last_name = models.CharField(max_length=100, verbose_name='Nom')
     level = models.CharField(max_length=2, choices=LEVEL_CHOICES, verbose_name='Niveau')
-    student_id = models.CharField(max_length=50, unique=True, verbose_name='Identifiant permanent (IP)')
+    birth_date = models.DateField(null=True, blank=True, verbose_name='Date de naissance')
+    student_id = models.CharField(max_length=60, unique=True, verbose_name='Identifiant permanent (IP)')
     # default='' uniquement pour la migration ; les comptes créés passent par set_password()
     password = models.CharField(max_length=128, default='', verbose_name='Mot de passe')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date d'inscription")
@@ -123,6 +124,36 @@ class Student(models.Model):
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} ({self.level})'
+
+    @classmethod
+    def _normalize_name(cls, name):
+        """Nom sans accents, en majuscules (ex: 'Éloi' -> 'ELOI')."""
+        import unicodedata
+        norm = unicodedata.normalize('NFKD', name or '')
+        norm = ''.join(c for c in norm if not unicodedata.combining(c))
+        return norm.upper()
+
+    @classmethod
+    def _date_jjmmAA(cls, birth_date):
+        """Date au format JJMMAA (ex: 20/02/2007 -> '200207')."""
+        return f'{birth_date:%d%m%y}'
+
+    @classmethod
+    def build_student_id(cls, last_name, first_name, birth_date):
+        """Construit l'IP unique : 3 lettres du nom + 1ère lettre du prénom
+        + date JJMMAA + suffixe 0001 (incrémenté si collision).
+
+        Ex : YEO Daniel né le 26/08/2004 -> 'YEOD2608040001'
+        """
+        base = (
+            cls._normalize_name(last_name)[:3]
+            + cls._normalize_name(first_name)[:1]
+            + cls._date_jjmmAA(birth_date)
+        )
+        suffix = 1
+        while cls.objects.filter(student_id=f'{base}{suffix:04d}').exists():
+            suffix += 1
+        return f'{base}{suffix:04d}'
 
     def set_password(self, raw_password):
         """Hache et enregistre le mot de passe."""
