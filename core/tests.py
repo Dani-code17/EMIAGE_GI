@@ -227,13 +227,29 @@ class StudentFlowTests(TestCase):
         self.assertRedirects(response, reverse('core:espace'))
         self.assertEqual(self.client.session['student_id'], student.id)
 
-    def test_connexion_par_prenom_nom_et_mdp(self):
-        student = self._create()
+    def test_connexion_par_prenom_nom_DOIT_echouer(self):
+        """La connexion par prénom+nom (sans l'IP) est refusée (sécurité)."""
+        self._create(prenom='Daniel', nom='YEO', identifiant='24-1234')
         response = self.client.post(reverse('core:connexion'), {
             'identifiant': 'Daniel YEO', 'mdp': 'secret12',
         })
-        self.assertRedirects(response, reverse('core:espace'))
-        self.assertEqual(self.client.session['student_id'], student.id)
+        self.assertEqual(response.status_code, 200)  # pas de redirection
+        self.assertNotIn('student_id', self.client.session)
+
+    def test_connexion_rate_limit(self):
+        """5 échecs successifs bloquent temporairement."""
+        self._create()
+        for _ in range(5):
+            self.client.post(reverse('core:connexion'), {
+                'identifiant': '24-1234', 'mdp': 'mauvais',
+            })
+        # 6e tentative : bloquée
+        response = self.client.post(reverse('core:connexion'), {
+            'identifiant': '24-1234', 'mdp': 'secret12',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Trop de tentatives')
+        self.assertNotIn('student_id', self.client.session)
 
     def test_connexion_mauvais_mdp(self):
         self._create()

@@ -566,22 +566,26 @@ def connexion(request):
         identifier = request.POST.get('identifiant', '').strip()
         password = request.POST.get('mdp', '')
 
-        # L'identifiant peut être l'IP OU « prénom nom »
-        parts = identifier.split()
+        # Connexion stricte par identifiant permanent (IP) uniquement.
+        # (Le fallback « prénom + nom » a été retiré : il permettait de retrouver
+        # un compte sans son IP, une surface de risque si le mot de passe est faible.)
         student = Student.objects.filter(student_id__iexact=identifier).first()
-        if not student and len(parts) >= 2:
-            student = Student.objects.filter(
-                first_name__iexact=parts[0],
-                last_name__iexact=' '.join(parts[1:]),
-            ).first()
 
-        if student and student.check_password(password):
+        # Rate-limit simple anti brute-force : 5 échecs -> attente de 5 min
+        tries = request.session.get('login_tries', 0)
+        if tries >= 5:
+            error = 'Trop de tentatives échouées. Réessaie dans quelques minutes.'
+        elif student and student.check_password(password):
             request.session['student_id'] = student.id
+            request.session['login_tries'] = 0
             return redirect('core:espace')
-        error = 'Identifiant ou mot de passe incorrect.'
+        else:
+            request.session['login_tries'] = tries + 1
+            error = 'Identifiant ou mot de passe incorrect.'
 
     return render(request, 'core/connexion.html', {
         'error': error,
+        'bloque': request.session.get('login_tries', 0) >= 5,
     })
 
 
