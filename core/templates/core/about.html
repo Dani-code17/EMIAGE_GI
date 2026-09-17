@@ -1,5 +1,7 @@
 {% extends 'core/base.html' %}
-{% block title %}Qui sommes-nous ? - E-MIAGE-GI{% endblock %}
+{% block title %}MIAGE UFHB — La filière MIAGE à Abidjan | E-MIAGE-GI{% endblock %}
+{% block meta_description %}La MIAGE (Méthodes Informatiques Appliquées à la Gestion des Entreprises) à l'UFHB Abidjan : présentation de la filière, débouchés, cours, TD/TP et examens. Plateforme E-MIAGE-GI par MetydaTech.{% endblock %}
+{% block og_title %}MIAGE UFHB — La filière MIAGE à Abidjan | E-MIAGE-GI{% endblock %}
 
 {% block content %}
 <section class="pt-28 md:pt-36 pb-16 px-4 md:px-6">
@@ -48,6 +50,95 @@
                 Version 2 de la plateforme — implémentée par Yeo Daniel.
             </p>
         </div>
+
+        <!-- Présentation de la filière (contenu SEO) -->
+        <div class="glass-card rounded-3xl p-7 md:p-10 mt-8 space-y-6">
+            <h2 class="section-title text-2xl md:text-3xl">Qu'est-ce que la MIAGE ?</h2>
+            <p class="text-body leading-relaxed">
+                La <strong class="text-light">MIAGE</strong> — <em>Méthodes Informatiques Appliquées à la Gestion des
+                Entreprises</em> — est une filière universitaire qui forme des informaticiens capables de comprendre les
+                besoins des organisations. Elle combine l'<strong class="text-light">informatique</strong>
+                (algorithmique, programmation, bases de données, réseaux, génie logiciel) et la
+                <strong class="text-light">gestion</strong> (comptabilité, économie, gestion financière, ressources
+                humaines). C'est cette double compétence qui fait la force des miagistes sur le marché du travail.
+            </p>
+            <p class="text-body leading-relaxed">
+                À l'<strong class="text-light">UFHB (Université Félix Houphouët-Boigny, Abidjan)</strong>, la MIAGE se
+                suit sur cinq années : Licence 1, 2 et 3, puis Master 1 et 2. Chaque niveau est organisé en
+                <strong class="text-light">UE</strong> (unités d'enseignement) et <strong class="text-light">ECUE</strong>,
+                avec des cours magistraux, des TD et des TP — exactement la structure que vous retrouvez dans notre
+                bibliothèque.
+            </p>
+            <h3 class="font-display font-bold text-xl pt-2">Quels débouchés après une MIAGE ?</h3>
+            <p class="text-body leading-relaxed">
+                Les diplômés MIAGE travaillent comme développeur d'applications, analyste-programmeur, administrateur de
+                bases de données ou de systèmes, analyste de données, chef de projet informatique, consultant ou
+                intégrateur d'ERP. La filière ouvre aussi la voie à la poursuite en doctorat et à l'entrepreneuriat
+                numérique.
+            </p>
+        </div>
+
+        <!-- FAQ (visible + données structurées) -->
+        <div class="glass-card rounded-3xl p-7 md:p-10 mt-8">
+            <h2 class="section-title text-2xl md:text-3xl mb-6">Questions fréquentes</h2>
+            <div class="space-y-4">
+                <details class="bg-soft rounded-2xl p-5 group">
+                    <summary class="font-semibold cursor-pointer text-light">C'est quoi E-MIAGE-GI ?</summary>
+                    <p class="text-body text-sm leading-relaxed mt-3">E-MIAGE-GI est la plateforme numérique de la communauté MIAGE de l'UFHB (Abidjan). Elle regroupe les cours, TD/TP, anciens sujets d'examens et maquettes, organisés par niveau, UE et ECUE — avec en plus des quiz d'entraînement et un classement mensuel.</p>
+                </details>
+                <details class="bg-soft rounded-2xl p-5 group">
+                    <summary class="font-semibold cursor-pointer text-light">Où trouver les cours de MIAGE à l'UFHB ?</summary>
+                    <p class="text-body text-sm leading-relaxed mt-3">Sur E-MIAGE-GI, dans la section Bibliothèque : choisissez votre niveau (Licence 1 à Master 2), votre semestre, puis l'UE et l'ECUE pour accéder aux documents et les télécharger.</p>
+                </details>
+                <details class="bg-soft rounded-2xl p-5 group">
+                    <summary class="font-semibold cursor-pointer text-light">L'accès est-il gratuit ?</summary>
+                    <p class="text-body text-sm leading-relaxed mt-3">Oui. La consultation et le téléchargement des documents sont gratuits. La création d'un compte étudiant (nom, prénom, niveau, date de naissance) est également gratuite et donne accès aux quiz, au classement et à votre espace personnel.</p>
+                </details>
+                <details class="bg-soft rounded-2xl p-5 group">
+                    <summary class="font-semibold cursor-pointer text-light">Comment obtenir mon identifiant permanent (IP) ?</summary>
+                    <p class="text-body text-sm leading-relaxed mt-3">Il est généré automatiquement lors de l'inscription : 3 premières lettres de votre nom + 1ʳᵉ lettre de votre prénom + votre date de naissance (JJMMAA) + un numéro. Il s'affiche juste après l'inscription — conservez-le, il sert à vous connecter.</p>
+                </details>
+                <details class="bg-soft rounded-2xl p-5 group">
+                    <summary class="font-semibold cursor-pointer text-light">Puis-je utiliser le site sur mon téléphone ?</summary>
+                    <p class="text-body text-sm leading-relaxed mt-3">Oui, E-MIAGE-GI est optimisé pour mobile et installable comme une application : sur Android via « Ajouter à l'écran d'accueil », sur iPhone via Partager → « Sur l'écran d'accueil ».</p>
+                </details>
+            </div>
+        </div>
     </div>
 </section>
+
+<!-- FAQPage : données structurées -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "C'est quoi E-MIAGE-GI ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "E-MIAGE-GI est la plateforme numérique de la communauté MIAGE de l'UFHB (Abidjan) : cours, TD/TP, anciens sujets, maquettes, quiz et classement mensuel, organisés par niveau, UE et ECUE." }
+    },
+    {
+      "@type": "Question",
+      "name": "Où trouver les cours de MIAGE à l'UFHB ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sur E-MIAGE-GI, dans la Bibliothèque : choisissez votre niveau (Licence 1 à Master 2), le semestre, puis l'UE et l'ECUE pour accéder aux documents et les télécharger." }
+    },
+    {
+      "@type": "Question",
+      "name": "L'accès à E-MIAGE-GI est-il gratuit ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Oui, la consultation et le téléchargement des documents sont gratuits, ainsi que la création d'un compte étudiant." }
+    },
+    {
+      "@type": "Question",
+      "name": "Comment obtenir son identifiant permanent (IP) ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "L'IP est généré automatiquement à l'inscription : 3 premières lettres du nom + première lettre du prénom + date de naissance (JJMMAA) + numéro. Il s'affiche après l'inscription et sert à se connecter." }
+    },
+    {
+      "@type": "Question",
+      "name": "E-MIAGE-GI fonctionne-t-il sur téléphone ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Oui, le site est optimisé pour mobile et installable comme application (PWA) sur Android et iPhone." }
+    }
+  ]
+}
+</script>
 {% endblock %}

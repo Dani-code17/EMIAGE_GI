@@ -1,48 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Sitemap E-MIAGE-GI (MIAGE UFHB) -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://emiage-gi.onrender.com/</loc>
+        <lastmod>2026-08-22</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
         <loc>https://emiage-gi.onrender.com/bibliotheque/</loc>
+        <lastmod>2026-08-22</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://emiage-gi.onrender.com/bibliotheque/l1/</loc>
+        <lastmod>2026-08-22</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://emiage-gi.onrender.com/bibliotheque/l1/</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
         <loc>https://emiage-gi.onrender.com/bibliotheque/l2/</loc>
+        <lastmod>2026-08-22</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.8</priority>
     </url>
     <url>
         <loc>https://emiage-gi.onrender.com/bibliotheque/l3/</loc>
+        <lastmod>2026-08-22</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.8</priority>
     </url>
     <url>
         <loc>https://emiage-gi.onrender.com/bibliotheque/m1/</loc>
+        <lastmod>2026-08-22</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
         <loc>https://emiage-gi.onrender.com/bibliotheque/m2/</loc>
+        <lastmod>2026-08-22</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
         <loc>https://emiage-gi.onrender.com/about/</loc>
+        <lastmod>2026-08-22</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.5</priority>
+        <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://emiage-gi.onrender.com/coming-soon/</loc>
+        <loc>https://emiage-gi.onrender.com/inscription/</loc>
+        <lastmod>2026-08-22</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.4</priority>
+        <priority>0.6</priority>
     </url>
 </urlset>

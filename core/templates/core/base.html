@@ -19,6 +19,63 @@
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
     <title>{% block title %}E-MIAGE-GI | La Plateforme en ligne des Miagistes{% endblock %}</title>
 
+    <!-- Open Graph (partage WhatsApp / Facebook / LinkedIn) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="E-MIAGE-GI">
+    <meta property="og:title" content="{% block og_title %}E-MIAGE-GI | Cours, TD/TP, examens et quiz — MIAGE UFHB{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Cours, TD/TP, anciens sujets, maquettes et quiz pour les étudiants MIAGE de l'UFHB (Abidjan). Accès gratuit et organisé par niveau, UE et ECUE.{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'core/logo/icon-512.png' %}{% endblock %}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block tw_title %}E-MIAGE-GI | Cours, TD/TP, examens et quiz — MIAGE UFHB{% endblock %}">
+    <meta name="twitter:description" content="Cours, TD/TP, anciens sujets, maquettes et quiz pour les étudiants MIAGE de l'UFHB (Abidjan).">
+    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'core/logo/icon-512.png' %}">
+
+    <!-- Données structurées (SEO / résultats enrichis) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "name": "E-MIAGE-GI",
+          "alternateName": ["E-MIAGE-GI", "Bibliothèque MIAGE UFHB"],
+          "url": "{{ request.scheme }}://{{ request.get_host }}",
+          "inLanguage": "fr",
+          "publisher": { "@id": "{{ request.scheme }}://{{ request.get_host }}#organisation" }
+        },
+        {
+          "@id": "{{ request.scheme }}://{{ request.get_host }}#organisation",
+          "@type": "EducationalOrganization",
+          "name": "E-MIAGE-GI — MetydaTech",
+          "description": "Plateforme numérique de la filière MIAGE (Méthodes Informatiques Appliquées à la Gestion des Entreprises) de l'UFHB à Abidjan : cours, TD/TP, anciens sujets, maquettes et quiz pour les étudiants.",
+          "url": "{{ request.scheme }}://{{ request.get_host }}",
+          "email": "metydatech@gmail.com",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Abidjan",
+            "addressCountry": "CI"
+          },
+          "areaServed": { "@type": "Country", "name": "Côte d'Ivoire" },
+          "sameAs": [
+            "https://www.instagram.com/jimiage2025",
+            "https://www.tiktok.com/@miage.ufhb",
+            "http://www.youtube.com/@JI-MIAGE"
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Performance : pré-connexion aux CDN -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <!-- CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

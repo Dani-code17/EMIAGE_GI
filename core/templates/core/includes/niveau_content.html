@@ -37,13 +37,14 @@
 
         <div class="text-center mb-8" data-animate>
             <p class="section-eyebrow">Bibliothèque · {{ niveau_label }}</p>
-            <h2 class="section-title text-3xl md:text-4xl mt-2">
+            <h1 class="section-title text-3xl md:text-4xl mt-2">
+                Cours {{ niveau_label }} MIAGE —
                 {% if semestre == 's1' %}Semestre 1
                 {% elif semestre == 's2' %}Semestre 2
                 {% else %}Sélectionne un semestre
                 {% endif %}
                 {% if category %} · {{ category|title }}{% endif %}
-            </h2>
+            </h1>
             <div class="underline-gradient w-14 mx-auto mt-3"></div>
         </div>
 
