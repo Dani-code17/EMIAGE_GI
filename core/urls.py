@@ -11,6 +11,7 @@ urlpatterns = [
     path('bibliotheque/m1/', views.niveau_m1, name='niveau_m1'),
     path('bibliotheque/m2/', views.niveau_m2, name='niveau_m2'),
     path('coming-soon/', views.coming_soon, name='coming_soon'),
+    path('journee-integration/', views.journee_integration, name='journee_integration'),
     path('about/', views.about, name='about'),
     path('telecharger/<int:doc_id>/', views.telecharger_document, name='telecharger_document'),
     path('bibliotheque/', views.bibliotheque_index, name='bibliotheque_index'),

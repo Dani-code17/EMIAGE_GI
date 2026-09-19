@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Document, UE, ECUE, Student, StudentStat, Prize, QuizQuestion, QuizAnswer, QuizAttempt
+from .models import (Document, UE, ECUE, Student, StudentStat, Prize, QuizQuestion, QuizAnswer,
+                     QuizAttempt, JIEdition, JIPayment, JIPhoto)
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
@@ -86,3 +87,51 @@ class QuizAttemptAdmin(admin.ModelAdmin):
     list_filter = ('ue', 'difficulty', 'created_at')
     search_fields = ('student__first_name', 'student__last_name', 'student__student_id', 'ue__name')
     date_hierarchy = 'created_at'
+
+
+# ===== Journée d'Intégration (JI-MIAGE) =====
+
+class JIPhotoInline(admin.TabularInline):
+    model = JIPhoto
+    extra = 1
+    fields = ('image_url', 'image', 'caption', 'order')
+
+
+class JIPaymentInline(admin.TabularInline):
+    model = JIPayment
+    extra = 1
+    fields = ('label', 'number', 'holder', 'link', 'instructions', 'is_active', 'order')
+
+
+@admin.register(JIEdition)
+class JIEditionAdmin(admin.ModelAdmin):
+    list_display = ('year', 'title', 'event_date', 'location', 'status', 'price', 'is_featured', 'order')
+    list_filter = ('status', 'is_featured')
+    search_fields = ('year', 'title', 'location')
+    list_editable = ('is_featured', 'order')
+    inlines = [JIPaymentInline, JIPhotoInline]
+    fieldsets = (
+        ('Identité', {'fields': ('year', 'title', 'subtitle', 'status', 'is_featured', 'order')}),
+        ('Événement', {'fields': ('event_date', 'event_time', 'location', 'price', 'description')}),
+        ('Affiche', {
+            'fields': ('poster_url', 'poster'),
+            'description': "Collez une URL d'image (recommandé : lien permanent) ou téléversez un fichier "
+                           "(le fichier peut être perdu lors d'un redéploiement sur l'hébergement gratuit).",
+        }),
+    )
+
+
+@admin.register(JIPayment)
+class JIPaymentAdmin(admin.ModelAdmin):
+    list_display = ('edition', 'label', 'number', 'holder', 'is_active', 'order')
+    list_filter = ('is_active', 'edition')
+    search_fields = ('label', 'number', 'holder')
+    list_editable = ('is_active', 'order')
+
+
+@admin.register(JIPhoto)
+class JIPhotoAdmin(admin.ModelAdmin):
+    list_display = ('edition', 'caption', 'image_url', 'order')
+    list_filter = ('edition',)
+    search_fields = ('caption',)
+    list_editable = ('order',)

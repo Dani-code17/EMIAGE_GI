@@ -1,0 +1,198 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Journée d'Intégration MIAGE (JI-MIAGE) — UFHB Abidjan | E-MIAGE-GI{% endblock %}
+{% block meta_description %}La Journée d'Intégration MIAGE (JI-MIAGE) de l'UFHB à Abidjan : date, lieu, programme, inscriptions et moyens de paiement. Revivez les éditions précédentes en photos.{% endblock %}
+{% block og_title %}Journée d'Intégration MIAGE — E-MIAGE-GI{% endblock %}
+{% block og_description %}Infos, inscriptions, paiement et archives photos de la Journée d'Intégration des miagistes de l'UFHB.{% endblock %}
+
+{% block content %}
+<section class="pt-28 md:pt-36 pb-16 px-4 md:px-6">
+    <div class="max-w-6xl mx-auto">
+
+        <!-- En-tête -->
+        <div class="text-center mb-12">
+            <p class="section-eyebrow">L'événement de la communauté</p>
+            <h1 class="section-title text-3xl md:text-5xl mt-2">La Journée d'Intégration</h1>
+            <div class="underline-gradient w-16 mx-auto mt-3 mb-5"></div>
+            <p class="text-muted max-w-2xl mx-auto text-sm md:text-base">
+                La JI-MIAGE : panel, conférences, débats, MIAGE Project, sport et moments de partage.
+                Retrouve ici toutes les informations, les inscriptions et les souvenirs des éditions précédentes.
+            </p>
+        </div>
+
+        {% if featured %}
+            <!-- ===== Édition en cours ===== -->
+            <div class="glass-card rounded-3xl overflow-hidden mb-14">
+                <div class="grid grid-cols-1 lg:grid-cols-5">
+                    <!-- Affiche -->
+                    {% if featured.poster_image %}
+                    <div class="lg:col-span-2 relative">
+                        <img src="{{ featured.poster_image }}" alt="Affiche {{ featured.title }}"
+                             class="w-full h-full min-h-[280px] object-cover">
+                    </div>
+                    {% endif %}
+                    <!-- Infos -->
+                    <div class="{% if featured.poster_image %}lg:col-span-3{% else %}lg:col-span-5{% endif %} p-6 md:p-10">
+                        <div class="flex flex-wrap items-center gap-3 mb-4">
+                            <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-gradient-to-r from-cyan to-teal text-white">
+                                JI {{ featured.year }}
+                            </span>
+                            <span class="text-xs font-bold px-3 py-1.5 rounded-full
+                                {% if featured.status == 'inscriptions' %}bg-accent/20 text-accent
+                                {% elif featured.status == 'passee' %}bg-soft text-muted
+                                {% else %}bg-cyan/20 text-cyan{% endif %}">
+                                {{ featured.status_label }}
+                            </span>
+                        </div>
+
+                        <h2 class="section-title text-2xl md:text-3xl mb-2">{{ featured.title }}</h2>
+                        {% if featured.subtitle %}
+                            <p class="text-teal font-medium mb-5">{{ featured.subtitle }}</p>
+                        {% endif %}
+
+                        <!-- Infos clés -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                            {% if featured.event_date %}
+                            <div class="glass-card rounded-2xl px-5 py-4 flex items-center gap-3">
+                                <i class="fas fa-calendar-day text-cyan"></i>
+                                <div>
+                                    <p class="text-xs text-muted uppercase tracking-wider">Date</p>
+                                    <p class="font-semibold">{{ featured.event_date|date:"d F Y" }}
+                                        {% if featured.event_time %}· {{ featured.event_time }}{% endif %}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if featured.location %}
+                            <div class="glass-card rounded-2xl px-5 py-4 flex items-center gap-3">
+                                <i class="fas fa-location-dot text-teal"></i>
+                                <div>
+                                    <p class="text-xs text-muted uppercase tracking-wider">Lieu</p>
+                                    <p class="font-semibold">{{ featured.location }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if featured.price %}
+                            <div class="glass-card rounded-2xl px-5 py-4 flex items-center gap-3">
+                                <i class="fas fa-ticket text-accent"></i>
+                                <div>
+                                    <p class="text-xs text-muted uppercase tracking-wider">Participation</p>
+                                    <p class="font-semibold">{{ featured.price }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        {% if featured.description %}
+                            <div class="text-body leading-relaxed whitespace-pre-line mb-6">{{ featured.description }}</div>
+                        {% endif %}
+
+                        <!-- Moyens de paiement -->
+                        {% if payments %}
+                            <div class="border-t border-soft pt-6">
+                                <h3 class="font-display font-bold text-lg mb-4 flex items-center gap-2">
+                                    <i class="fas fa-wallet text-accent"></i> Comment s'inscrire / payer
+                                </h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    {% for p in payments %}
+                                        <div class="glass-card rounded-2xl p-5">
+                                            <p class="font-semibold text-light mb-1">{{ p.label }}</p>
+                                            {% if p.number %}
+                                                <p class="font-mono text-lg text-accent">{{ p.number }}</p>
+                                            {% endif %}
+                                            {% if p.holder %}
+                                                <p class="text-xs text-muted mt-1">Titulaire : {{ p.holder }}</p>
+                                            {% endif %}
+                                            {% if p.instructions %}
+                                                <p class="text-xs text-muted mt-2">{{ p.instructions }}</p>
+                                            {% endif %}
+                                            {% if p.link %}
+                                                <a href="{{ p.link }}" target="_blank" rel="noopener"
+                                                   class="btn-primary inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full mt-3">
+                                                    <i class="fas fa-external-link-alt"></i> Payer en ligne
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <p class="text-xs text-muted mt-4">
+                                    <i class="fas fa-shield-halved mr-1"></i>
+                                    Vérifie toujours le numéro auprès du comité d'organisation avant tout paiement.
+                                </p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="glass-card rounded-3xl p-10 text-center text-muted mb-14">
+                <i class="fas fa-calendar-plus text-4xl mb-4 opacity-60"></i>
+                <p>Les informations de la prochaine Journée d'Intégration seront publiées très bientôt.</p>
+                <p class="text-sm mt-2">Reviens régulièrement, ou suis-nous sur TikTok et Instagram pour ne rien manquer.</p>
+            </div>
+        {% endif %}
+
+        <!-- ===== Archives des éditions précédentes ===== -->
+        {% if editions %}
+        <div class="mb-8">
+            <p class="section-eyebrow">Les souvenirs</p>
+            <h2 class="section-title text-2xl md:text-3xl mt-1 mb-2">Les éditions précédentes</h2>
+            <p class="text-muted text-sm">Revivez les moments forts des Journées d'Intégration passées.</p>
+        </div>
+
+        <div class="space-y-8">
+            {% for ed in editions %}
+                <div class="glass-card rounded-3xl p-6 md:p-8">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                        <div>
+                            <h3 class="section-title text-xl md:text-2xl">JI {{ ed.year }} — {{ ed.title }}</h3>
+                            <p class="text-sm text-muted mt-1">
+                                {% if ed.event_date %}<i class="fas fa-calendar-day mr-1"></i>{{ ed.event_date|date:"d F Y" }}{% endif %}
+                                {% if ed.location %} · <i class="fas fa-location-dot mx-1"></i>{{ ed.location }}{% endif %}
+                            </p>
+                        </div>
+                        <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-soft text-muted">Édition passée</span>
+                    </div>
+
+                    {% if ed.description %}
+                        <p class="text-body text-sm leading-relaxed mb-5">{{ ed.description }}</p>
+                    {% endif %}
+
+                    {% if ed.photos.all %}
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                            {% for photo in ed.photos.all %}
+                                {% if photo.src %}
+                                    <figure class="group relative overflow-hidden rounded-2xl">
+                                        <img src="{{ photo.src }}" alt="{{ photo.caption|default:ed.title }}"
+                                             loading="lazy"
+                                             class="w-full h-40 md:h-44 object-cover group-hover:scale-105 transition duration-500">
+                                        {% if photo.caption %}
+                                            <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent text-white text-xs px-3 py-2">
+                                                {{ photo.caption }}
+                                            </figcaption>
+                                        {% endif %}
+                                    </figure>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-sm text-muted"><i class="fas fa-images mr-2"></i>Les photos de cette édition seront ajoutées prochainement.</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Appel à contribution -->
+        <div class="glass-card rounded-3xl p-7 md:p-9 mt-12 text-center">
+            <h2 class="section-title text-xl md:text-2xl mb-3">Tu as des photos ou des souvenirs d'une ancienne JI ?</h2>
+            <p class="text-muted text-sm mb-5">
+                Envoie-les au comité d'organisation : ils rejoindront les archives de la communauté.
+            </p>
+            <a href="mailto:metydatech@gmail.com" class="btn-primary inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-full">
+                <i class="fas fa-paper-plane"></i> Envoyer mes photos
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

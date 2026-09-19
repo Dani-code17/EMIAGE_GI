@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.http import HttpResponse, StreamingHttpResponse
 from django.urls import reverse
-from .models import Document, UE, ECUE, Student, StudentStat, Prize, QuizQuestion, QuizAnswer, QuizAttempt
+from .models import (Document, UE, ECUE, Student, StudentStat, Prize, QuizQuestion, QuizAnswer,
+                     QuizAttempt, JIEdition, JIPayment, JIPhoto)
 from django.db.models import Q
 from collections import Counter
 from datetime import datetime
@@ -453,6 +454,32 @@ def niveau_m2(request):
 def coming_soon(request):
     """Simple page indicating the feature is in development."""
     return render(request, 'core/coming_soon.html')
+
+
+def journee_integration(request):
+    """Page dédiée à la Journée d'Intégration (JI-MIAGE).
+
+    Affiche l'édition mise en avant (infos, moyens de paiement, photos) et les
+    archives des éditions passées. Contenu géré depuis l'admin.
+    """
+    editions = JIEdition.objects.prefetch_related('payments', 'photos').all()
+
+    # Édition en cours : celle marquée « mise en avant », sinon la plus récente
+    featured = None
+    for e in editions:
+        if e.is_featured:
+            featured = e
+            break
+    if featured is None:
+        featured = editions[0] if editions else None
+
+    past = [e for e in editions if e != featured]
+
+    return render(request, 'core/journee_integration.html', {
+        'featured': featured,
+        'editions': past,
+        'payments': featured.payments.filter(is_active=True) if featured else [],
+    })
 
 
 def about(request):

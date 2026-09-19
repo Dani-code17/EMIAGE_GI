@@ -285,3 +285,104 @@ class QuizAttempt(models.Model):
     @property
     def percentage(self):
         return round((self.correct / self.total) * 100) if self.total else 0
+
+
+class JIEdition(models.Model):
+    """Une édition de la Journée d'Intégration (JI-MIAGE).
+
+    Le contenu est modifiable depuis l'admin : l'utilisateur peut mettre à jour
+    les infos (date, lieu, prix…), les moyens de paiement et les photos.
+    """
+
+    STATUS_CHOICES = [
+        ('avenir', 'À venir'),
+        ('inscriptions', 'Inscriptions ouvertes'),
+        ('passee', 'Passée'),
+    ]
+
+    year = models.CharField(max_length=20, verbose_name='Édition / année')  # ex: "2026"
+    title = models.CharField(max_length=200, verbose_name='Titre')
+    subtitle = models.CharField(max_length=250, blank=True, verbose_name='Sous-titre')
+    event_date = models.DateField(null=True, blank=True, verbose_name='Date')
+    event_time = models.CharField(max_length=50, blank=True, verbose_name='Heure')  # ex: "09h00"
+    location = models.CharField(max_length=200, blank=True, verbose_name='Lieu')
+    description = models.TextField(blank=True, verbose_name='Description / programme')
+    price = models.CharField(max_length=100, blank=True, verbose_name='Prix (ex: 5 000 FCFA)')
+    poster_url = models.URLField(blank=True, verbose_name='Affiche (URL)')
+    poster = models.ImageField(upload_to='ji/', blank=True, null=True, verbose_name='Affiche (fichier)')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='avenir', verbose_name='Statut')
+    is_featured = models.BooleanField(default=False, verbose_name="Édition mise en avant")
+    order = models.IntegerField(default=0, verbose_name='Ordre')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-order', '-year']
+        verbose_name = "Édition de la JI"
+        verbose_name_plural = "Éditions de la JI"
+
+    def __str__(self):
+        return f'JI {self.year} — {self.title}'
+
+    @property
+    def poster_image(self):
+        """Affiche : l'URL si fournie, sinon le fichier uploadé."""
+        if self.poster_url:
+            return self.poster_url
+        if self.poster:
+            return self.poster.url
+        return ''
+
+    @property
+    def status_label(self):
+        return dict(self.STATUS_CHOICES).get(self.status, '')
+
+
+class JIPayment(models.Model):
+    """Moyen de paiement / inscription à la JI (numéro, lien…)."""
+
+    edition = models.ForeignKey(JIEdition, related_name='payments', on_delete=models.CASCADE,
+                                null=True, blank=True, verbose_name='Édition')
+    label = models.CharField(max_length=100, verbose_name='Moyen (ex: Orange Money)')
+    number = models.CharField(max_length=60, blank=True, verbose_name='Numéro')
+    holder = models.CharField(max_length=120, blank=True, verbose_name='Titulaire')
+    instructions = models.CharField(max_length=250, blank=True, verbose_name='Instructions')
+    link = models.URLField(blank=True, verbose_name='Lien de paiement')
+    is_active = models.BooleanField(default=True, verbose_name='Actif')
+    order = models.IntegerField(default=0, verbose_name='Ordre')
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = 'Moyen de paiement JI'
+        verbose_name_plural = 'Moyens de paiement JI'
+
+    def __str__(self):
+        return f'{self.label} — {self.number or self.link}'
+
+
+class JIPhoto(models.Model):
+    """Photo d'une édition de la JI (pour les archives)."""
+
+    edition = models.ForeignKey(JIEdition, related_name='photos', on_delete=models.CASCADE,
+                               verbose_name='Édition')
+    image_url = models.URLField(blank=True, verbose_name='Photo (URL)')
+    image = models.ImageField(upload_to='ji/', blank=True, null=True, verbose_name='Photo (fichier)')
+    caption = models.CharField(max_length=200, blank=True, verbose_name='Légende')
+    order = models.IntegerField(default=0, verbose_name='Ordre')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = 'Photo JI'
+        verbose_name_plural = 'Photos JI'
+
+    def __str__(self):
+        return self.caption or f'Photo {self.pk}'
+
+    @property
+    def src(self):
+        """Source : l'URL si fournie, sinon le fichier uploadé."""
+        if self.image_url:
+            return self.image_url
+        if self.image:
+            return self.image.url
+        return ''

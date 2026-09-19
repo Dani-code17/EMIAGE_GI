@@ -173,6 +173,43 @@ class PageTests(TestCase):
         )
 
 
+class JourneeIntegrationTests(TestCase):
+    """Page Journée d'Intégration (contenu piloté par l'admin)."""
+
+    def test_page_accessible_sans_edition(self):
+        response = self.client.get(reverse('core:journee_integration'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Journée d'Intégration")
+
+    def test_page_affiche_edition_et_paiements(self):
+        from .models import JIEdition, JIPayment
+        ed = JIEdition.objects.create(
+            year='2026', title="JI MIAGE 2026", status='inscriptions',
+            is_featured=True, location='Amphi IRMA', price='5 000 FCFA',
+            description='Programme de la journée.',
+        )
+        JIPayment.objects.create(edition=ed, label='Orange Money', number='0700000000', is_active=True)
+        JIPayment.objects.create(edition=ed, label='Wave', number='0100000000', is_active=False)
+
+        response = self.client.get(reverse('core:journee_integration'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'JI MIAGE 2026')
+        self.assertContains(response, 'Amphi IRMA')
+        self.assertContains(response, 'Orange Money')
+        # Un moyen de paiement inactif n'est pas affiché
+        self.assertNotContains(response, 'Wave')
+        # L'édition mise en avant est bien sélectionnée
+        self.assertEqual(response.context['featured'], ed)
+
+    def test_archives_affichent_les_anciennes_editions(self):
+        from .models import JIEdition
+        JIEdition.objects.create(year='2026', title='JI 2026', is_featured=True)
+        JIEdition.objects.create(year='2025', title='JI 2025', status='passee')
+        response = self.client.get(reverse('core:journee_integration'))
+        self.assertContains(response, 'JI 2025')
+        self.assertEqual(len(response.context['editions']), 1)
+
+
 class StudentFlowTests(TestCase):
     """Parcours étudiant : inscription, connexion, espace, déconnexion."""
 
