@@ -5,7 +5,7 @@
             <h3 class="font-display font-bold text-xl mb-2">{{ document.title }}</h3>
             <p class="text-muted text-sm">{{ document.description }}</p>
         </div>
-        <span class="bg-primary text-light text-xs font-bold px-3 py-1 rounded-full">
+        <span class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">
             {{ document.get_category_display }}
         </span>
     </div>
@@ -21,7 +21,7 @@
     
     <div class="mt-6">
         <a href="{% url 'core:telecharger_document' document.id %}"
-           class="inline-flex items-center justify-center bg-secondary text-light font-bold py-2 px-4 rounded-full hover:bg-opacity-90 transition">
+           class="inline-flex items-center justify-center bg-secondary text-white font-bold py-2 px-4 rounded-full hover:bg-opacity-90 transition">
             <i class="fas fa-download mr-2"></i>
             Télécharger
         </a>

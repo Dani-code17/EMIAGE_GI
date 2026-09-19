@@ -96,7 +96,7 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     {% for p in payments %}
                                         <div class="glass-card rounded-2xl p-5">
-                                            <p class="font-semibold text-light mb-1">{{ p.label }}</p>
+                                            <p class="font-semibold text-body mb-1">{{ p.label }}</p>
                                             {% if p.number %}
                                                 <p class="font-mono text-lg text-accent">{{ p.number }}</p>
                                             {% endif %}
@@ -134,7 +134,7 @@
 
         <!-- ===== Archives des éditions précédentes ===== -->
         {% if editions %}
-        <div class="mb-8">
+        <div class="mb-8" id="archives">
             <p class="section-eyebrow">Les souvenirs</p>
             <h2 class="section-title text-2xl md:text-3xl mt-1 mb-2">Les éditions précédentes</h2>
             <p class="text-muted text-sm">Revivez les moments forts des Journées d'Intégration passées.</p>
@@ -192,6 +192,49 @@
             <a href="mailto:metydatech@gmail.com" class="btn-primary inline-flex items-center gap-2 font-semibold px-6 py-3 rounded-full">
                 <i class="fas fa-paper-plane"></i> Envoyer mes photos
             </a>
+        </div>
+
+        <!-- ===== La MIAGE en chiffres ===== -->
+        <div class="mt-14" data-animate>
+            <div class="text-center mb-8">
+                <p class="section-eyebrow">La communauté</p>
+                <h2 class="section-title text-2xl md:text-3xl mt-1">La MIAGE en chiffres</h2>
+            </div>
+            <div class="grid grid-cols-3 gap-3 md:gap-5 max-w-3xl mx-auto">
+                <div class="glass-card rounded-2xl p-5 text-center">
+                    <p class="font-display font-bold text-2xl md:text-3xl text-gradient">125+</p>
+                    <p class="text-xs text-muted mt-1">Étudiants</p>
+                </div>
+                <div class="glass-card rounded-2xl p-5 text-center">
+                    <p class="font-display font-bold text-2xl md:text-3xl text-gradient">500+</p>
+                    <p class="text-xs text-muted mt-1">Followers</p>
+                </div>
+                <div class="glass-card rounded-2xl p-5 text-center">
+                    <p class="font-display font-bold text-2xl md:text-3xl text-gradient">10+</p>
+                    <p class="text-xs text-muted mt-1">Années d'existence</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Galerie (moments forts) ===== -->
+        <div class="mt-14" data-animate>
+            <div class="text-center mb-8">
+                <p class="section-eyebrow">En images</p>
+                <h2 class="section-title text-2xl md:text-3xl mt-1">Les moments forts</h2>
+            </div>
+            <div class="grid grid-cols-3 gap-2.5 md:gap-3">
+                <img src="{% static 'core/jimiage/ji-2.jpg' %}" alt="Moment fort de la JI-MIAGE" class="col-span-2 row-span-2 w-full h-full min-h-[220px] md:min-h-[320px] object-cover rounded-2xl" loading="lazy">
+                <img src="{% static 'core/jimiage/ji-4.jpg' %}" alt="Participants de la Journée d'Intégration" class="w-full h-28 md:h-40 object-cover object-top rounded-2xl" loading="lazy">
+                <img src="{% static 'core/jimiage/ji-6.jpg' %}" alt="Activités de la JI-MIAGE" class="w-full h-28 md:h-40 object-cover rounded-2xl" loading="lazy">
+                <img src="{% static 'core/jimiage/ji-8.jpg' %}" alt="Ambiance de la Journée d'Intégration" class="w-full h-24 md:h-32 object-cover rounded-2xl" loading="lazy">
+                <img src="{% static 'core/jimiage/ji-7.jpg' %}" alt="Étudiants MIAGE à la JI" class="w-full h-24 md:h-32 object-cover rounded-2xl" loading="lazy">
+                <img src="{% static 'core/jimiage/ji-5.jpg' %}" alt="Moment de partage à la JI-MIAGE" class="w-full h-24 md:h-32 object-cover rounded-2xl" loading="lazy">
+                <img src="{% static 'core/jimiage/ji-9.jpg' %}" alt="Photo de groupe de la JI" class="w-full h-24 md:h-32 object-cover rounded-2xl" loading="lazy">
+                <img src="{% static 'core/jimiage/ji-3.jpg' %}" alt="Souvenir de la Journée d'Intégration" class="w-full h-24 md:h-32 object-cover rounded-2xl" loading="lazy">
+            </div>
+            <p class="text-center text-xs text-muted mt-5">
+                Toutes les photos des éditions passées sont dans <a href="#archives" class="text-primary hover:underline">les archives</a> ci-dessus.
+            </p>
         </div>
     </div>
 </section>
