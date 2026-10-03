@@ -1,0 +1,13 @@
+# Propriétaires du code : GitHub demandera automatiquement une relecture
+# à ces personnes quand une Pull Request touche les fichiers listés.
+
+# Par défaut : tout le dépôt appartient au mainteneur
+*                           @Dani-code17
+
+# Zones sensibles : toujours relues par le mainteneur
+/emiage_web/settings.py     @Dani-code17
+/requirements.txt           @Dani-code17
+/render.yaml                @Dani-code17
+/scripts/                   @Dani-code17
+/core/models.py             @Dani-code17
+/core/admin.py              @Dani-code17

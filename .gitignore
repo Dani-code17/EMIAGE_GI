@@ -29,3 +29,6 @@ media/
 
 # Artefacts de debug
 logs_tmp.json
+
+# Base SQLite locale (contient des données : ne doit pas être versionnée)
+db.sqlite3
