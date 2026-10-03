@@ -152,3 +152,31 @@ mais en pratique on branche la base Aiven via `DATABASE_URL`).
 
 > Les fichiers `media/` restent versionnés dans git (source de vérité et base de dev
 > locale), mais en production ils sont servis depuis R2.
+
+## Comptes et permissions
+
+### Compte propriétaire (superutilisateur)
+Un seul compte a tous les droits : le superutilisateur Django (`yeodaniel`), qui gère
+l'ensemble du site (documents, UE/ECUE, étudiants, quiz, prix…) via `/admin/`.
+
+L'espace d'administration personnalisé (`/admin-espace/`) est protégé par des
+identifiants distincts, définis par les variables d'environnement
+`ADMIN_LOGIN` / `ADMIN_PASSWORD` (valeurs par défaut dans `settings.py`).
+
+### Compte « éditeur JI » (comité d'organisation)
+Pour laisser le comité gérer **uniquement** la Journée d'Intégration, sans accès au
+reste de l'application :
+
+```bash
+python manage.py create_ji_editor --username comite_ji --password "MotDePasseFort"
+python manage.py create_ji_editor --username comite_ji --password "Nouveau" --email x@y.z  # mise à jour
+python manage.py create_ji_editor --username comite_ji --revoke                            # retirer les droits
+```
+
+Ce compte est `is_staff` (accès `/admin/`) mais **non superutilisateur** et ne possède
+que les 12 permissions des modèles de la JI (`JIEdition`, `JIPayment`, `JIPhoto`).
+Il ne voit donc que la section « Journée d'Intégration » dans l'admin ; tout autre
+modèle renvoie une erreur 403, et `/admin-espace/` lui est inaccessible.
+
+> Pour créer le compte sur la production, exécuter la commande avec la variable
+> `DATABASE_URL` de la base cible (Aiven).
