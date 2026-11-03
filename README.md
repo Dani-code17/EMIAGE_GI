@@ -1,64 +1,117 @@
-# E-MIAGE-GI
+# E-MIAGE-GI — Plateforme de ressources pédagogiques MIAGE
 
-Plateforme web de partage de ressources pédagogiques (cours, TD/TP, anciens sujets, maquettes)
-pour les étudiants de la filière **MIAGE**. Développée avec **Django 5.2**.
+> Plateforme web qui centralise les cours, TD/TP, anciens sujets et maquettes de la filière
+> **MIAGE** (L1 → M2), avec un espace étudiant, un quiz de révision et l'organisation de la
+> Journée d'Intégration.
 
-- Site en ligne : https://emiage-gi.onrender.com
-- Dépôt : https://github.com/Dani-code17/EMIAGE_GI
+**🇫🇷 Français** · [🇬🇧 English](#-english)
 
-## Stack
+- **Site en ligne :** https://emiage-gi.onrender.com
+- **Stack :** Django 5.2 · PostgreSQL · Cloudflare R2 · Render
 
-| Composant | Choix |
-|---|---|
-| Framework | Django 5.2 (Python) |
-| Base de données | PostgreSQL (**Aiven** free, via `DATABASE_URL`) — SQLite en local pour le développement |
-| Fichiers (médias) | **Cloudflare R2** (compatible S3, via django-storages) en production — disque local en dev |
-| Front | Templates Django + Tailwind CSS (CDN) |
-| Serveur | Gunicorn |
-| Statiques | WhiteNoise (`collectstatic` au build) |
-| Hébergement | Render (plan gratuit) |
+---
 
-## Structure
+## Ce que la plateforme résout
+
+Les ressources d'une filière se perdent dans des groupes WhatsApp et des dossiers Drive
+éparpillés. **E-MIAGE-GI** les rend **cherchables, filtrables et pérennes** :
+
+- **Bibliothèque structurée** par **niveau** (L1 → M2), **semestre** (S1 → S10),
+  **UE / ECUE** et **catégorie** (`Cours`, `TD/TP`, `Anciens sujets`, `Maquettes`).
+- **Comptes étudiants** générés à partir du nom + date de naissance : identifiant unique et
+  permanent (IP) du type `YEOD2608040001`, sans formulaire à remplir.
+- **Quiz de révision** (choix de niveau → questions → score) pour s'auto-évaluer.
+- **Journée d'Intégration** : édition, moyens de paiement et galerie photo gérés depuis
+  l'admin — délégués à un compte éditeur restreint au comité d'organisation.
+- **Statistiques d'usage** : visites par jour et temps passé sur le site, mesurés côté serveur.
+- **SEO & PWA** : `sitemap.xml`, `robots.txt`, `manifest.json` et service worker générés par Django.
+
+## Stack technique
+
+| Couche | Choix | Pourquoi |
+|---|---|---|
+| Backend | Django 5.2 (Python) | Admin puissant, migrations, ORM |
+| Base de données | PostgreSQL (**Aiven**, plan gratuit) via `dj-database-url` | SQLite en local, aucune ligne de code à changer |
+| Fichiers (médias) | **Cloudflare R2** (S3-compatible, `django-storages` + `boto3`) | Le disque de Render est limité à 512 Mo en gratuit |
+| Frontend | Templates Django + Tailwind CSS | Pas de SPA à maintenir pour un site de contenu |
+| Serveur | Gunicorn + WhiteNoise | Statiques servis sans serveur web dédié |
+| Déploiement | Render (`render.yaml`) | CI/CD par le dépôt, plan gratuit |
+
+## Architecture
 
 ```
-emiage_web/          Configuration Django (settings, urls, wsgi)
-core/                Application principale
-  models.py          Document, UE, ECUE
-  views.py           Pages home, /bibliotheque/l1..m2, about, sitemap…
-  templates/core/    Templates (base, home, niveau/*, includes/*)
-  management/commands/  Commandes d'import et de maintenance
-  migrations/        Schéma + données seedées (UE/ECUE L1, documents EOE)
-media/documents/     Fichiers pédagogiques (organisés par matière)
-scripts/             Scripts utilitaires (migration de données)
-render.yaml          Blueprint Render (web + PostgreSQL)
+emiage_web/                 Configuration Django (settings, urls, wsgi/asgi)
+core/
+  models.py                 Document, UE, ECUE, Student, StudentStat, JIEdition, JIPayment, JIPhoto
+  views.py                  Vues publiques, espace étudiant, quiz, admin-espace, sitemap/robots/sw
+  middleware.py             StudentActivityMiddleware : visites + temps passé
+  urls.py                   Routes de l'application
+  templates/core/           base, home, niveau/*, includes/*
+  management/commands/      Import de documents, seed UE/ECUE, création d'éditeur JI, upload R2
+scripts/                    Migration SQLite → PostgreSQL, scripts Render (déploiement, logs)
+render.yaml                 Blueprint Render
 ```
 
-## Développement local
+## Démarrage rapide
 
 ```bash
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py runserver
+python manage.py runserver        # http://127.0.0.1:8000
 ```
 
-- Sans `DATABASE_URL`, le projet utilise `db.sqlite3` (déjà peuplé).
-- Admin : `/admin/` (superuser créé via `python manage.py createsuperuser`).
+- Sans `DATABASE_URL`, le projet utilise `db.sqlite3`.
+- Back-office : `/admin/` (superutilisateur via `python manage.py createsuperuser`).
+- Espace d'administration métier personnalisé : `/admin-espace/`.
 
-### Variables d'environnement (optionnelles en local)
+### Variables d'environnement (toutes optionnelles en local)
 
-| Variable | Défaut | Description |
+| Variable | Défaut | Rôle |
 |---|---|---|
-| `DATABASE_URL` | `sqlite:///db.sqlite3` | URL de la base (PostgreSQL en prod) |
-| `DJANGO_SECRET_KEY` | clé de dev | À définir en production |
-| `DJANGO_DEBUG` | `True` | Mettre `False` en production |
+| `DATABASE_URL` | `sqlite:///db.sqlite3` | Connexion PostgreSQL en production |
+| `DJANGO_SECRET_KEY` | clé de dev | **À définir en production** |
+| `DJANGO_DEBUG` | `True` | `False` en production |
 | `DJANGO_ALLOWED_HOSTS` | hôtes de dev + Render | Séparés par des virgules |
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | `https://emiage-gi.onrender.com` | Origines HTTPS autorisées |
-| `USE_S3` | `False` | `True` en production : médias servis depuis Cloudflare R2 |
-| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | — | Identifiants API R2 (si `USE_S3=True`) |
-| `AWS_STORAGE_BUCKET_NAME` | — | Nom du bucket R2 |
+| `USE_S3` | `False` | `True` : médias servis depuis Cloudflare R2 |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | — | Token API R2 |
+| `AWS_STORAGE_BUCKET_NAME` | — | Bucket R2 |
 | `AWS_S3_ENDPOINT_URL` | — | `https://<account_id>.r2.cloudflarestorage.com` |
-| `AWS_S3_CUSTOM_DOMAIN` | — | Domaine public du bucket (optionnel, sinon URL S3) |
-| `MEDIA_BASE_URL` | `/media/` | Base des URLs de fichiers. En attendant R2 : `https://raw.githubusercontent.com/Dani-code17/emiage-media/main/media/` (fichiers servis depuis le dépôt GitHub `emiage-media`) |
+| `AWS_S3_CUSTOM_DOMAIN` | — | Domaine public du bucket |
+| `ADMIN_LOGIN` / `ADMIN_PASSWORD` | valeurs de dev | Accès à `/admin-espace/` |
+
+## Importer des documents
+
+`import_documents` lit un arborescence de dossiers, rattache chaque matière à son UE/ECUE
+et classe les fichiers en `COURS` / `TD_TP` / `EXAMS` d'après leur nom.
+
+```bash
+python manage.py import_documents --dry-run          # simulation, rien n'est créé
+python manage.py import_documents --level L1         # import réel du niveau L1
+python manage.py import_documents --folder "Anglais" # un seul dossier de matière
+```
+
+> Les UE/ECUE doivent exister avant l'import (`seed_ue_ecue` ou l'admin). L'import les
+> recherche par nom normalisé, il ne les crée pas.
+
+## Gestion des accès
+
+Le site distingue **trois niveaux de droits** :
+
+1. **Superutilisateur Django** — accès total (`/admin/` + `/admin-espace/`).
+2. **Éditeur JI (comité d'organisation)** — `is_staff` mais **non** superutilisateur, avec
+   uniquement les 12 permissions des modèles `JIEdition`, `JIPayment`, `JIPhoto` :
+
+   ```bash
+   python manage.py create_ji_editor --username comite_ji --password "MotDePasseFort"
+   python manage.py create_ji_editor --username comite_ji --password "Nouveau" --email x@y.z
+   python manage.py create_ji_editor --username comite_ji --revoke
+   ```
+
+   En dehors de la section « Journée d'Intégration », l'admin renvoie une **403**.
+
+3. **Étudiants** — identifiant permanent + mot de passe, accès limité à leur espace, au
+   téléchargement et au quiz.
 
 ## Tests
 
@@ -66,117 +119,48 @@ python manage.py runserver
 python manage.py test core
 ```
 
-## Importer des documents (multi-niveaux)
+## Déploiement
 
-La commande `import_documents` lit `media/documents/` et rattache chaque dossier de
-matière à son UE/ECUE (via un mapping dans la commande), puis classe les fichiers en
-`COURS` / `TD_TP` / `EXAMS` selon leur nom.
+Architecture en production : **Render** (Django) + **Aiven** (PostgreSQL) + **Cloudflare R2** (fichiers).
 
-```bash
-# Simuler l'import L1 (rien n'est créé)
-python manage.py import_documents --dry-run
+1. **Aiven** : créer un service PostgreSQL gratuit et copier le *Service URI*.
+2. **Cloudflare R2** : créer un bucket public + token API *(Object Read & Write)*.
+3. **Render** : **New → Blueprint** (le `render.yaml` du dépôt) puis renseigner
+   `DATABASE_URL`, `DJANGO_DEBUG=False`, `DJANGO_SECRET_KEY`, `DJANGO_ALLOWED_HOSTS`,
+   `USE_S3=True` et les variables `AWS_*`.
+4. Build : `pip install`, `collectstatic`, `migrate`.
+5. **Une seule fois** : migrer les données et pousser les fichiers
 
-# Importer réellement
-python manage.py import_documents --level L1
+   ```bash
+   DATABASE_URL="<URI Aiven>" bash scripts/migrate_sqlite_to_postgres.sh import
+   python manage.py upload_media_to_s3          # --dry-run / --check disponibles
+   ```
 
-# Importer un seul dossier de matière
-python manage.py import_documents --folder "Anglais"
-```
+---
 
-> Les UE/ECUE doivent exister en base avant l'import (commande `seed_ue_ecue` ou admin).
-> L'import ne crée pas les UE/ECUE manquantes — il les cherche par nom normalisé.
+## 🇬🇧 English
 
-## Migration des données vers PostgreSQL
+**E-MIAGE-GI** is a Django 5.2 web platform that centralises course material (lectures, labs,
+past exams, curriculum templates) for the **MIAGE** programme, from first year to Master's.
 
-Le projet utilise PostgreSQL en production (hébergé chez **Aiven**). Les données initiales ont
-été transférées depuis l'ancienne base SQLite avec le script :
+- **Structured library** browsable by year (L1→M2), semester (S1→S10), course unit (UE/ECUE)
+  and category (lectures, tutorials/labs, past exams, templates).
+- **Student accounts** provisioned from name + birth date into a stable permanent ID,
+  no sign-up form required.
+- **Self-assessment quizzes** per level, with instant scoring.
+- **Integration Day module** (edition, payment methods, photo gallery) delegated to a
+  restricted editor account for the organising committee — every other admin model returns 403.
+- **Usage analytics** (daily visits, time on site) tracked server-side by a middleware.
+- **SEO + PWA ready**: sitemap, robots.txt, web manifest and service worker served by Django.
 
-```bash
-# 1) Exporter depuis SQLite (ne pas définir DATABASE_URL) -> backup/data.json
-bash scripts/migrate_sqlite_to_postgres.sh export
-
-# 2) Importer dans PostgreSQL (DATABASE_URL = chaîne de connexion Aiven)
-DATABASE_URL="postgres://utilisateur:motdepasse@hote:5432/defaultdb" \
-  bash scripts/migrate_sqlite_to_postgres.sh import
-```
-
-Le script applique les migrations, charge les données (UE, ECUE, Documents, utilisateur
-admin) et réinitialise les séquences. À exécuter **une seule fois** sur une base vide.
-
-## Envoyer les fichiers vers Cloudflare R2
-
-En production, les fichiers pédagogiques sont servis depuis Cloudflare R2 (pas depuis le
-disque de Render, limité à 512 Mo sur le plan gratuit). Une fois le bucket créé :
+**Tech:** Django 5.2 · PostgreSQL (Aiven) · Cloudflare R2 via django-storages · Gunicorn +
+WhiteNoise · deployed on Render. SQLite for local development.
 
 ```bash
-# Variables requises
-export USE_S3=True
-export AWS_ACCESS_KEY_ID="..."
-export AWS_SECRET_ACCESS_KEY="..."
-export AWS_STORAGE_BUCKET_NAME="emiage-documents"
-export AWS_S3_ENDPOINT_URL="https://<account_id>.r2.cloudflarestorage.com"
-
-# Simuler l'envoi (ne transfère rien)
-python manage.py upload_media_to_s3 --dry-run
-
-# Envoyer les fichiers manquants (les clés = chemins relatifs, ex: documents/...)
-python manage.py upload_media_to_s3
-
-# Vérifier que tous les fichiers référencés en base existent dans le bucket
-python manage.py upload_media_to_s3 --check
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+python manage.py test core
 ```
 
-> Le bucket doit être **public** (lecture) : les URLs des fichiers seront
-> `https://<domaine-public>/documents/...` (configurer `AWS_S3_CUSTOM_DOMAIN`).
-
-## Déploiement (Render)
-
-Architecture en production : **Render** (application Django, plan gratuit) +
-**Aiven** (PostgreSQL) + **Cloudflare R2** (fichiers).
-
-Le fichier `render.yaml` décrit le service web (le PostgreSQL y est déclaré pour Render,
-mais en pratique on branche la base Aiven via `DATABASE_URL`).
-
-1. **Aiven** : créer une base PostgreSQL gratuite (console.aiven.io → Create service →
-   PostgreSQL → plan Free). Copier la chaîne de connexion (Service URI).
-2. **Cloudflare R2** : créer un bucket public + un token API (Object Read & Write).
-   Récupérer l'account ID (endpoint S3) et le domaine public du bucket.
-3. Sur https://dashboard.render.com, ouvrir le service (ou **New → Blueprint** avec ce dépôt)
-   et définir les variables d'environnement :
-   `DATABASE_URL` (Aiven), `DJANGO_DEBUG=False`, `DJANGO_SECRET_KEY`,
-   `DJANGO_ALLOWED_HOSTS=emiage-gi.onrender.com`, `USE_S3=True`, les `AWS_*` (R2).
-4. Au build : `pip install`, `collectstatic`, `migrate`.
-5. **Une seule fois** : importer les données dans la base Aiven
-   (`DATABASE_URL="<URI Aiven>" bash scripts/migrate_sqlite_to_postgres.sh import`)
-   puis envoyer les fichiers (`python manage.py upload_media_to_s3`).
-
-> Les fichiers `media/` restent versionnés dans git (source de vérité et base de dev
-> locale), mais en production ils sont servis depuis R2.
-
-## Comptes et permissions
-
-### Compte propriétaire (superutilisateur)
-Un seul compte a tous les droits : le superutilisateur Django (`yeodaniel`), qui gère
-l'ensemble du site (documents, UE/ECUE, étudiants, quiz, prix…) via `/admin/`.
-
-L'espace d'administration personnalisé (`/admin-espace/`) est protégé par des
-identifiants distincts, définis par les variables d'environnement
-`ADMIN_LOGIN` / `ADMIN_PASSWORD` (valeurs par défaut dans `settings.py`).
-
-### Compte « éditeur JI » (comité d'organisation)
-Pour laisser le comité gérer **uniquement** la Journée d'Intégration, sans accès au
-reste de l'application :
-
-```bash
-python manage.py create_ji_editor --username comite_ji --password "MotDePasseFort"
-python manage.py create_ji_editor --username comite_ji --password "Nouveau" --email x@y.z  # mise à jour
-python manage.py create_ji_editor --username comite_ji --revoke                            # retirer les droits
-```
-
-Ce compte est `is_staff` (accès `/admin/`) mais **non superutilisateur** et ne possède
-que les 12 permissions des modèles de la JI (`JIEdition`, `JIPayment`, `JIPhoto`).
-Il ne voit donc que la section « Journée d'Intégration » dans l'admin ; tout autre
-modèle renvoie une erreur 403, et `/admin-espace/` lui est inaccessible.
-
-> Pour créer le compte sur la production, exécuter la commande avec la variable
-> `DATABASE_URL` de la base cible (Aiven).
+**Author:** Yeo Daniel — [github.com/Dani-code17](https://github.com/Dani-code17)
